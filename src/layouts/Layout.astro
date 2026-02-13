@@ -47,6 +47,20 @@ const { title } = Astro.props;
     --caution-bg: rgba(251, 191, 36, 0.12);
     --avoid: #f87171;
     --avoid-bg: rgba(248, 113, 113, 0.12);
+    --tier1: #34d399;
+    --tier1-bg: rgba(52, 211, 153, 0.12);
+    --tier2: #60a5fa;
+    --tier2-bg: rgba(96, 165, 250, 0.12);
+    --tier3: #a78bfa;
+    --tier3-bg: rgba(167, 139, 250, 0.12);
+    --schedule-daily: #6ee7b7;
+    --schedule-daily-bg: rgba(110, 231, 183, 0.1);
+    --schedule-adderall: #93c5fd;
+    --schedule-adderall-bg: rgba(147, 197, 253, 0.1);
+    --schedule-off: #fcd34d;
+    --schedule-off-bg: rgba(252, 211, 77, 0.1);
+    --schedule-evening: #c4b5fd;
+    --schedule-evening-bg: rgba(196, 181, 253, 0.1);
     --radius: 8px;
   }
 
@@ -315,6 +329,90 @@ const { title } = Astro.props;
     border: 1px solid rgba(248, 113, 113, 0.3);
   }
 
+  /* Tier badges */
+  .badge-tier1 {
+    background: var(--tier1-bg);
+    color: var(--tier1);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+  }
+
+  .badge-tier2 {
+    background: var(--tier2-bg);
+    color: var(--tier2);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+  }
+
+  .badge-tier3 {
+    background: var(--tier3-bg);
+    color: var(--tier3);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+  }
+
+  /* Schedule badges */
+  .badge-schedule-daily {
+    background: var(--schedule-daily-bg);
+    color: var(--schedule-daily);
+    border: 1px solid rgba(110, 231, 183, 0.25);
+    font-size: 0.7rem;
+  }
+
+  .badge-schedule-adderall {
+    background: var(--schedule-adderall-bg);
+    color: var(--schedule-adderall);
+    border: 1px solid rgba(147, 197, 253, 0.25);
+    font-size: 0.7rem;
+  }
+
+  .badge-schedule-off {
+    background: var(--schedule-off-bg);
+    color: var(--schedule-off);
+    border: 1px solid rgba(252, 211, 77, 0.25);
+    font-size: 0.7rem;
+  }
+
+  .badge-schedule-evening {
+    background: var(--schedule-evening-bg);
+    color: var(--schedule-evening);
+    border: 1px solid rgba(196, 181, 253, 0.25);
+    font-size: 0.7rem;
+  }
+
+  /* Tier legend */
+  .tier-legend {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .tier-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tier-legend-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* Tier row left-border accents */
+  .tier-row-1 {
+    border-left: 3px solid var(--tier1);
+  }
+
+  .tier-row-2 {
+    border-left: 3px solid var(--tier2);
+  }
+
+  .tier-row-3 {
+    border-left: 3px solid var(--tier3);
+  }
+
   /* Detail row */
   .detail-row {
     background: var(--surface) !important;
@@ -328,9 +426,31 @@ const { title } = Astro.props;
     padding: 1rem 0.5rem;
   }
 
+  .detail-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+
   .detail-card h3 {
     font-size: 1.1rem;
+    margin-bottom: 0;
+    color: var(--primary);
+  }
+
+  .tier-reason {
+    font-size: 0.85rem;
+    color: var(--text-muted);
     margin-bottom: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    background: rgba(108, 140, 255, 0.06);
+    border-left: 3px solid var(--primary);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .tier-reason strong {
     color: var(--primary);
   }
 

@@ -4,29 +4,44 @@ import { supplements, conditions, type Supplement } from "../data/supplements";
 type SortKey = keyof Supplement;
 type SortDir = "asc" | "desc";
 
+const tierLabels: Record<number, string> = {
+  1: "Core",
+  2: "Add-On",
+  3: "Optional",
+};
+
+const tierDescriptions: Record<number, string> = {
+  1: "Start here — highest impact for ADHD + Adderall",
+  2: "Strong additions once core stack is stable",
+  3: "Situational — add based on individual needs",
+};
+
 export default function SupplementTable() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [conditionFilter, setConditionFilter] = useState("All");
   const [adderallFilter, setAdderallFilter] = useState("All");
   const [timeFilter, setTimeFilter] = useState("All");
-  const [sortKey, setSortKey] = useState<SortKey>("id");
+  const [tierFilter, setTierFilter] = useState("All");
+  const [scheduleFilter, setScheduleFilter] = useState("All");
+  const [sortKey, setSortKey] = useState<SortKey>("tier");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
   const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
     new Set([
+      "tier",
       "name",
-      "category",
       "treats",
       "dosage",
-      "frequency",
       "timeOfDay",
       "withMeals",
       "withAdderall",
+      "schedule",
     ])
   );
 
   const allColumns: { key: string; label: string }[] = [
+    { key: "tier", label: "Priority" },
     { key: "name", label: "Supplement" },
     { key: "category", label: "Category" },
     { key: "treats", label: "Treats" },
@@ -35,6 +50,7 @@ export default function SupplementTable() {
     { key: "timeOfDay", label: "Time of Day" },
     { key: "withMeals", label: "With Meals?" },
     { key: "withAdderall", label: "With Adderall?" },
+    { key: "schedule", label: "Schedule" },
     { key: "benefits", label: "Benefits" },
     { key: "sideEffects", label: "Side Effects" },
     { key: "notes", label: "Notes" },
@@ -42,6 +58,11 @@ export default function SupplementTable() {
 
   const categories = useMemo(
     () => ["All", ...new Set(supplements.map((s) => s.category))],
+    []
+  );
+
+  const schedules = useMemo(
+    () => ["All", ...new Set(supplements.map((s) => s.schedule))],
     []
   );
 
@@ -75,7 +96,8 @@ export default function SupplementTable() {
           s.name.toLowerCase().includes(q) ||
           s.treats.toLowerCase().includes(q) ||
           s.benefits.toLowerCase().includes(q) ||
-          s.category.toLowerCase().includes(q);
+          s.category.toLowerCase().includes(q) ||
+          s.tierReason.toLowerCase().includes(q);
         const matchesCategory =
           categoryFilter === "All" || s.category === categoryFilter;
         const matchesCondition =
@@ -93,12 +115,18 @@ export default function SupplementTable() {
         const matchesTime =
           timeFilter === "All" ||
           s.timeOfDay.toLowerCase().includes(timeFilter.toLowerCase());
+        const matchesTier =
+          tierFilter === "All" || s.tier === Number(tierFilter);
+        const matchesSchedule =
+          scheduleFilter === "All" || s.schedule === scheduleFilter;
         return (
           matchesSearch &&
           matchesCategory &&
           matchesCondition &&
           matchesAdderall &&
-          matchesTime
+          matchesTime &&
+          matchesTier &&
+          matchesSchedule
         );
       })
       .sort((a, b) => {
@@ -113,6 +141,8 @@ export default function SupplementTable() {
     conditionFilter,
     adderallFilter,
     timeFilter,
+    tierFilter,
+    scheduleFilter,
     sortKey,
     sortDir,
   ]);
@@ -126,8 +156,58 @@ export default function SupplementTable() {
     return <span className="badge badge-avoid">Avoid/Separate</span>;
   };
 
+  const getTierBadge = (tier: number) => {
+    const cls =
+      tier === 1
+        ? "badge-tier1"
+        : tier === 2
+          ? "badge-tier2"
+          : "badge-tier3";
+    return (
+      <span className={`badge ${cls}`} title={tierDescriptions[tier]}>
+        T{tier} {tierLabels[tier]}
+      </span>
+    );
+  };
+
+  const getScheduleBadge = (schedule: string) => {
+    if (schedule.includes("Off Days"))
+      return <span className="badge badge-schedule-off">{schedule}</span>;
+    if (schedule.includes("Adderall Days Only"))
+      return <span className="badge badge-schedule-adderall">{schedule}</span>;
+    if (schedule.includes("Evening on Adderall"))
+      return <span className="badge badge-schedule-evening">{schedule}</span>;
+    return <span className="badge badge-schedule-daily">{schedule}</span>;
+  };
+
+  const renderCell = (col: { key: string }, s: Supplement) => {
+    if (col.key === "withAdderall")
+      return getAdderallBadge(s.withAdderall);
+    if (col.key === "tier")
+      return getTierBadge(s.tier);
+    if (col.key === "schedule")
+      return getScheduleBadge(s.schedule);
+    return s[col.key as keyof Supplement] as string;
+  };
+
   return (
     <div className="table-container">
+      {/* Tier Legend */}
+      <div className="tier-legend">
+        <div className="tier-legend-item">
+          <span className="badge badge-tier1">T1 Core</span>
+          <span className="tier-legend-desc">{tierDescriptions[1]}</span>
+        </div>
+        <div className="tier-legend-item">
+          <span className="badge badge-tier2">T2 Add-On</span>
+          <span className="tier-legend-desc">{tierDescriptions[2]}</span>
+        </div>
+        <div className="tier-legend-item">
+          <span className="badge badge-tier3">T3 Optional</span>
+          <span className="tier-legend-desc">{tierDescriptions[3]}</span>
+        </div>
+      </div>
+
       {/* Filters */}
       <div className="filters">
         <div className="filter-row">
@@ -140,14 +220,26 @@ export default function SupplementTable() {
             />
           </div>
           <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+            value={tierFilter}
+            onChange={(e) => setTierFilter(e.target.value)}
           >
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c === "All" ? "All Categories" : c}
-              </option>
-            ))}
+            <option value="All">All Tiers</option>
+            <option value="1">Tier 1 — Core Stack</option>
+            <option value="2">Tier 2 — Add-Ons</option>
+            <option value="3">Tier 3 — Optional</option>
+          </select>
+          <select
+            value={scheduleFilter}
+            onChange={(e) => setScheduleFilter(e.target.value)}
+          >
+            <option value="All">All Schedules</option>
+            {schedules
+              .filter((s) => s !== "All")
+              .map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
           </select>
           <select
             value={conditionFilter}
@@ -157,6 +249,18 @@ export default function SupplementTable() {
             {conditions.map((c) => (
               <option key={c} value={c}>
                 {c}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="filter-row">
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c === "All" ? "All Categories" : c}
               </option>
             ))}
           </select>
@@ -202,6 +306,12 @@ export default function SupplementTable() {
       {/* Results count */}
       <div className="results-count">
         Showing {filtered.length} of {supplements.length} supplements
+        {tierFilter !== "All" && (
+          <span>
+            {" "}
+            — Tier {tierFilter}: {tierDescriptions[Number(tierFilter)]}
+          </span>
+        )}
       </div>
 
       {/* Table */}
@@ -231,15 +341,17 @@ export default function SupplementTable() {
           <tbody>
             {filtered.map((s) => (
               <>
-                <tr key={s.id} onClick={() => setExpandedRow(expandedRow === s.id ? null : s.id)}>
+                <tr
+                  key={s.id}
+                  className={`tier-row-${s.tier}`}
+                  onClick={() =>
+                    setExpandedRow(expandedRow === s.id ? null : s.id)
+                  }
+                >
                   {allColumns
                     .filter((col) => visibleColumns.has(col.key))
                     .map((col) => (
-                      <td key={col.key}>
-                        {col.key === "withAdderall"
-                          ? getAdderallBadge(s[col.key as keyof Supplement] as string)
-                          : (s[col.key as keyof Supplement] as string)}
-                      </td>
+                      <td key={col.key}>{renderCell(col, s)}</td>
                     ))}
                   <td className="expand-col">
                     <button
@@ -262,7 +374,14 @@ export default function SupplementTable() {
                       }
                     >
                       <div className="detail-card">
-                        <h3>{s.name}</h3>
+                        <div className="detail-header">
+                          <h3>{s.name}</h3>
+                          {getTierBadge(s.tier)}
+                          {getScheduleBadge(s.schedule)}
+                        </div>
+                        <div className="tier-reason">
+                          <strong>Why this tier:</strong> {s.tierReason}
+                        </div>
                         <div className="detail-grid">
                           <div>
                             <strong>Category:</strong> {s.category}
@@ -285,6 +404,10 @@ export default function SupplementTable() {
                           <div>
                             <strong>With Adderall:</strong>{" "}
                             {getAdderallBadge(s.withAdderall)} {s.withAdderall}
+                          </div>
+                          <div>
+                            <strong>Schedule:</strong>{" "}
+                            {getScheduleBadge(s.schedule)}
                           </div>
                           <div className="full-width">
                             <strong>Benefits:</strong> {s.benefits}

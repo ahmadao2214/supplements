@@ -1,3 +1,6 @@
+export type Tier = 1 | 2 | 3;
+export type Schedule = "Daily" | "Adderall Days Only" | "Off Days Only" | "Daily — Evening on Adderall Days";
+
 export interface Supplement {
   id: number;
   name: string;
@@ -11,6 +14,9 @@ export interface Supplement {
   benefits: string;
   sideEffects: string;
   notes: string;
+  tier: Tier;
+  tierReason: string;
+  schedule: Schedule;
 }
 
 export const supplements: Supplement[] = [
@@ -27,6 +33,9 @@ export const supplements: Supplement[] = [
     benefits: "Supports neurotransmitter function, reduces inflammation, improves attention and working memory",
     sideEffects: "Fishy aftertaste, mild GI upset at high doses",
     notes: "Look for high-EPA formulas (EPA:DHA ratio of 2:1 or higher) for best ADHD benefit",
+    tier: 1,
+    tierReason: "Strongest evidence-backed supplement for ADHD; foundational for brain health",
+    schedule: "Daily",
   },
   {
     id: 2,
@@ -41,6 +50,9 @@ export const supplements: Supplement[] = [
     benefits: "Crosses blood-brain barrier, calms nervous system, improves sleep quality, supports focus",
     sideEffects: "Mild drowsiness, loose stools at high doses",
     notes: "L-Threonate form is preferred for cognitive benefits; Glycinate is also good for anxiety/sleep",
+    tier: 1,
+    tierReason: "Reduces Adderall side effects (jaw clenching, anxiety, insomnia); most people are deficient",
+    schedule: "Daily",
   },
   {
     id: 3,
@@ -55,6 +67,9 @@ export const supplements: Supplement[] = [
     benefits: "Promotes calm focus, increases alpha brain waves, reduces anxiety without sedation",
     sideEffects: "Rare; mild headache or dizziness in some",
     notes: "Pairs exceptionally well with caffeine and Adderall to reduce edge/anxiety",
+    tier: 1,
+    tierReason: "Best Adderall companion — smooths stimulant edge without reducing effectiveness",
+    schedule: "Daily",
   },
   {
     id: 4,
@@ -69,6 +84,9 @@ export const supplements: Supplement[] = [
     benefits: "Regulates dopamine metabolism, supports attention and impulsivity control",
     sideEffects: "Nausea on empty stomach, copper depletion at high doses",
     notes: "Zinc deficiency is common in ADHD; take with food; pair with copper if using long-term at 30mg+",
+    tier: 1,
+    tierReason: "May enhance Adderall efficacy; common deficiency in ADHD; regulates dopamine",
+    schedule: "Daily",
   },
   {
     id: 5,
@@ -83,6 +101,9 @@ export const supplements: Supplement[] = [
     benefits: "Critical for dopamine synthesis, reduces restlessness, improves focus",
     sideEffects: "Constipation, stomach upset, dark stools",
     notes: "Get ferritin levels tested first — only supplement if deficient. Bisglycinate form is gentlest",
+    tier: 3,
+    tierReason: "Only supplement if blood test confirms deficiency; unnecessary if levels are normal",
+    schedule: "Daily",
   },
   {
     id: 6,
@@ -97,6 +118,9 @@ export const supplements: Supplement[] = [
     benefits: "Supports dopamine and serotonin production, improves mood and cognitive function",
     sideEffects: "Rare at normal doses; hypercalcemia at very high doses",
     notes: "Pair with Vitamin K2 (MK-7) for proper calcium metabolism. Get blood levels checked",
+    tier: 1,
+    tierReason: "Most people are deficient; directly supports dopamine and serotonin production",
+    schedule: "Daily",
   },
   {
     id: 7,
@@ -111,6 +135,9 @@ export const supplements: Supplement[] = [
     benefits: "Supports dopamine, serotonin, and norepinephrine synthesis; improves energy and mood",
     sideEffects: "Neon yellow urine (harmless), mild nausea if taken without food",
     notes: "Choose methylated forms (methylfolate, methylcobalamin) especially if MTHFR mutation suspected",
+    tier: 1,
+    tierReason: "Fuels neurotransmitter synthesis pipeline; foundational support for dopamine/serotonin/norepinephrine",
+    schedule: "Daily",
   },
   {
     id: 8,
@@ -125,6 +152,9 @@ export const supplements: Supplement[] = [
     benefits: "Precursor to dopamine and norepinephrine, improves focus under stress",
     sideEffects: "Headache, irritability, or anxiety if over-stimulated",
     notes: "NALT is more bioavailable than plain L-Tyrosine. Start low. Reduce dose on Adderall days",
+    tier: 1,
+    tierReason: "Direct dopamine precursor; already in use and tolerated with Adderall — keep in stack",
+    schedule: "Daily",
   },
   {
     id: 9,
@@ -139,6 +169,9 @@ export const supplements: Supplement[] = [
     benefits: "Boosts acetylcholine, enhances memory, learning, and mental clarity",
     sideEffects: "Headache, GI discomfort, fishy body odor at high doses",
     notes: "Good nootropic stack component. Can also use CDP-Choline (Citicoline) as an alternative",
+    tier: 2,
+    tierReason: "Strong nootropic that complements dopamine pathway via acetylcholine; add after core is stable",
+    schedule: "Daily",
   },
   {
     id: 10,
@@ -153,6 +186,9 @@ export const supplements: Supplement[] = [
     benefits: "Improves attention and memory, lowers cortisol, supports cell membrane health",
     sideEffects: "Mild GI upset, insomnia at high doses if taken at night",
     notes: "Studied specifically in ADHD children with positive results on attention and impulsivity",
+    tier: 3,
+    tierReason: "Good evidence but overlaps with other core stack supplements; add if budget allows",
+    schedule: "Daily",
   },
   {
     id: 11,
@@ -167,6 +203,9 @@ export const supplements: Supplement[] = [
     benefits: "Reduces mental fatigue, improves concentration, enhances stress resilience",
     sideEffects: "Insomnia, jitteriness, dry mouth",
     notes: "Adaptogen — works best cycled (5 days on, 2 days off). Avoid taking in the afternoon/evening",
+    tier: 3,
+    tierReason: "Stimulating like Adderall — risk of overstimulation; better as a weekend/off-day option",
+    schedule: "Off Days Only",
   },
   {
     id: 12,
@@ -181,6 +220,9 @@ export const supplements: Supplement[] = [
     benefits: "Enhances memory consolidation, reduces anxiety, neuroprotective",
     sideEffects: "GI upset, fatigue initially, dry mouth",
     notes: "Takes 8–12 weeks for full cognitive benefits. Be patient. Can cause initial lethargy",
+    tier: 1,
+    tierReason: "Already in use for 6 weeks — approaching full efficacy; strong evidence for memory and anxiety",
+    schedule: "Daily",
   },
   {
     id: 13,
@@ -195,6 +237,9 @@ export const supplements: Supplement[] = [
     benefits: "Promotes nerve growth factor (NGF), supports neuroplasticity, improves focus and clarity",
     sideEffects: "Rare; mild GI discomfort, skin itching in sensitive individuals",
     notes: "Look for fruiting body extract (not mycelium on grain). Dual-extraction preferred",
+    tier: 2,
+    tierReason: "Unique NGF-boosting mechanism not covered by other supplements; strong long-term benefit",
+    schedule: "Daily",
   },
   {
     id: 14,
@@ -209,6 +254,9 @@ export const supplements: Supplement[] = [
     benefits: "Lowers cortisol, reduces anxiety, improves sleep quality, stabilizes mood",
     sideEffects: "Drowsiness, GI upset, may affect thyroid function",
     notes: "KSM-66 is the most studied extract. Avoid with thyroid medications without consulting doctor",
+    tier: 2,
+    tierReason: "Excellent for managing Adderall crash and cortisol; add once core stack is established",
+    schedule: "Daily",
   },
   {
     id: 15,
@@ -223,6 +271,9 @@ export const supplements: Supplement[] = [
     benefits: "Promotes relaxation, reduces anxiety, supports sleep",
     sideEffects: "Drowsiness, tingling sensation, shortness of breath at high doses",
     notes: "Oral GABA may not cross BBB well — Pharma-GABA or Picamilon may be more effective",
+    tier: 3,
+    tierReason: "Questionable oral bioavailability (may not cross BBB); L-Theanine is a better alternative",
+    schedule: "Daily — Evening on Adderall Days",
   },
   {
     id: 16,
@@ -237,6 +288,9 @@ export const supplements: Supplement[] = [
     benefits: "Reduces anxiety and panic, supports serotonin signaling, helps with obsessive thoughts",
     sideEffects: "GI discomfort, nausea, gas at high doses",
     notes: "Higher doses (12-18g) studied for OCD/panic — start low. Powder form mixes well in water",
+    tier: 3,
+    tierReason: "More targeted for OCD/panic than core ADHD; consider if anxiety is a primary concern",
+    schedule: "Daily",
   },
   {
     id: 17,
@@ -251,6 +305,9 @@ export const supplements: Supplement[] = [
     benefits: "Antioxidant, supports adrenal function, aids dopamine synthesis",
     sideEffects: "GI upset, diarrhea at high doses",
     notes: "Vitamin C makes urine acidic which accelerates Adderall excretion. Take in the evening only",
+    tier: 3,
+    tierReason: "Useful antioxidant but requires strict timing separation from Adderall; not essential to supplement",
+    schedule: "Daily — Evening on Adderall Days",
   },
   {
     id: 18,
@@ -265,6 +322,9 @@ export const supplements: Supplement[] = [
     benefits: "Supports gut-brain axis, improves mood and cognitive function via microbiome",
     sideEffects: "Temporary bloating, gas during initial adjustment",
     notes: "Look for strains like L. rhamnosus, B. longum, L. plantarum. Refrigerated brands often better quality",
+    tier: 2,
+    tierReason: "Growing gut-brain axis evidence; supports mood and cognition indirectly but meaningfully",
+    schedule: "Daily",
   },
   {
     id: 19,
@@ -279,6 +339,9 @@ export const supplements: Supplement[] = [
     benefits: "Supports cellular energy production, antioxidant protection, reduces brain fog",
     sideEffects: "Rare; mild GI upset, insomnia",
     notes: "Ubiquinol form is more bioavailable than Ubiquinone. Important if taking statins",
+    tier: 3,
+    tierReason: "General energy support; not ADHD-specific but helpful for brain fog and mitochondrial health",
+    schedule: "Daily",
   },
   {
     id: 20,
@@ -293,6 +356,9 @@ export const supplements: Supplement[] = [
     benefits: "Regulates circadian rhythm, improves sleep onset, antioxidant",
     sideEffects: "Morning grogginess, vivid dreams, headache",
     notes: "Lower doses (0.5-1mg) are often more effective than high doses. Extended-release for staying asleep",
+    tier: 2,
+    tierReason: "Directly counteracts Adderall insomnia; essential if sleep is disrupted on stimulant days",
+    schedule: "Adderall Days Only",
   },
   {
     id: 21,
@@ -307,6 +373,9 @@ export const supplements: Supplement[] = [
     benefits: "Improves cerebral blood flow, supports working memory and attention",
     sideEffects: "Headache, GI upset, increased bleeding risk",
     notes: "Avoid if on blood thinners. Look for standardized extract (24% flavone glycosides, 6% terpene lactones)",
+    tier: 3,
+    tierReason: "Mild cognitive benefit; cerebral blood flow support is nice-to-have, not essential",
+    schedule: "Daily",
   },
   {
     id: 22,
@@ -321,6 +390,9 @@ export const supplements: Supplement[] = [
     benefits: "Directs calcium to bones (away from arteries), essential companion to Vitamin D3",
     sideEffects: "Rare at normal doses",
     notes: "Always pair with Vitamin D3 supplementation. MK-7 form has longest half-life",
+    tier: 2,
+    tierReason: "Essential companion to Vitamin D3; if you take D3, you should take K2",
+    schedule: "Daily",
   },
   {
     id: 23,
@@ -335,6 +407,9 @@ export const supplements: Supplement[] = [
     benefits: "Precursor to serotonin and melatonin, improves mood and sleep quality",
     sideEffects: "Nausea, drowsiness, vivid dreams",
     notes: "Do NOT combine with SSRIs or other serotonergic drugs — risk of serotonin syndrome",
+    tier: 3,
+    tierReason: "Serotonin interaction risk requires careful management; only if sleep/mood is primary concern",
+    schedule: "Daily — Evening on Adderall Days",
   },
   {
     id: 24,
@@ -349,6 +424,9 @@ export const supplements: Supplement[] = [
     benefits: "Supports brain ATP production, improves short-term memory and reasoning under stress",
     sideEffects: "Water retention, GI bloating initially",
     notes: "Well-studied for both physical and cognitive performance. Monohydrate is the gold standard form",
+    tier: 3,
+    tierReason: "Strong general cognitive evidence but not ADHD-specific; great if you also exercise",
+    schedule: "Daily",
   },
 ];
 
