@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SupplementTable from "../components/SupplementTable";
+---
+
+<Layout title="ADHD Supplement Database">
+  <div class="header">
+    <h1>ADHD / ADD Supplement Database</h1>
+    <p>
+      Interactive reference table — dosages, timing, Adderall compatibility, and
+      more.
+    </p>
+    <div class="disclaimer">
+      This is for informational purposes only and is not medical advice. Always
+      consult with a healthcare professional before starting any supplement
+      regimen, especially when combining with prescription medications like
+      Adderall.
+    </div>
+  </div>
+  <SupplementTable client:load />
+</Layout>

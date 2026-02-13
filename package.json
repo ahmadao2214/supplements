@@ -1,0 +1,27 @@
+{
+  "name": "supplements",
+  "version": "1.0.0",
+  "description": "ADHD/ADD Supplement Database — interactive reference table",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:23388/git/ahmadao2214/supplements"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@astrojs/netlify": "^6.6.4",
+    "@astrojs/react": "^4.4.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^5.17.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  }
+}
