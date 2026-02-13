@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { supplements, conditions, type Supplement } from "../data/supplements";
 
 type SortKey = keyof Supplement;
@@ -16,29 +16,101 @@ const tierDescriptions: Record<number, string> = {
   3: "Situational — add based on individual needs",
 };
 
+// --- URL query param helpers ---
+const isBrowser = typeof window !== "undefined";
+
+function getParams(): URLSearchParams {
+  if (!isBrowser) return new URLSearchParams();
+  return new URLSearchParams(window.location.search);
+}
+
+function readParam(key: string, fallback: string): string {
+  return getParams().get(key) ?? fallback;
+}
+
+function readColumns(fallback: string[]): Set<string> {
+  const raw = getParams().get("cols");
+  if (raw) return new Set(raw.split(",").filter(Boolean));
+  return new Set(fallback);
+}
+
+const DEFAULT_COLS = [
+  "tier",
+  "name",
+  "treats",
+  "dosage",
+  "timeOfDay",
+  "withMeals",
+  "withAdderall",
+  "schedule",
+];
+
 export default function SupplementTable() {
-  const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("All");
-  const [conditionFilter, setConditionFilter] = useState("All");
-  const [adderallFilter, setAdderallFilter] = useState("All");
-  const [timeFilter, setTimeFilter] = useState("All");
-  const [tierFilter, setTierFilter] = useState("All");
-  const [scheduleFilter, setScheduleFilter] = useState("All");
-  const [sortKey, setSortKey] = useState<SortKey>("tier");
-  const [sortDir, setSortDir] = useState<SortDir>("asc");
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
-  const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
-    new Set([
-      "tier",
-      "name",
-      "treats",
-      "dosage",
-      "timeOfDay",
-      "withMeals",
-      "withAdderall",
-      "schedule",
-    ])
+  const [search, setSearch] = useState(() => readParam("q", ""));
+  const [categoryFilter, setCategoryFilter] = useState(() =>
+    readParam("cat", "All")
   );
+  const [conditionFilter, setConditionFilter] = useState(() =>
+    readParam("cond", "All")
+  );
+  const [adderallFilter, setAdderallFilter] = useState(() =>
+    readParam("add", "All")
+  );
+  const [timeFilter, setTimeFilter] = useState(() =>
+    readParam("time", "All")
+  );
+  const [tierFilter, setTierFilter] = useState(() =>
+    readParam("tier", "All")
+  );
+  const [scheduleFilter, setScheduleFilter] = useState(() =>
+    readParam("sched", "All")
+  );
+  const [sortKey, setSortKey] = useState<SortKey>(
+    () => readParam("sort", "tier") as SortKey
+  );
+  const [sortDir, setSortDir] = useState<SortDir>(
+    () => readParam("dir", "asc") as SortDir
+  );
+  const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [visibleColumns, setVisibleColumns] = useState<Set<string>>(() =>
+    readColumns(DEFAULT_COLS)
+  );
+
+  // Sync state -> URL
+  const syncUrl = useCallback(() => {
+    if (!isBrowser) return;
+    const p = new URLSearchParams();
+    if (search) p.set("q", search);
+    if (categoryFilter !== "All") p.set("cat", categoryFilter);
+    if (conditionFilter !== "All") p.set("cond", conditionFilter);
+    if (adderallFilter !== "All") p.set("add", adderallFilter);
+    if (timeFilter !== "All") p.set("time", timeFilter);
+    if (tierFilter !== "All") p.set("tier", tierFilter);
+    if (scheduleFilter !== "All") p.set("sched", scheduleFilter);
+    if (sortKey !== "tier") p.set("sort", sortKey);
+    if (sortDir !== "asc") p.set("dir", sortDir);
+    const colStr = [...visibleColumns].sort().join(",");
+    const defaultStr = [...DEFAULT_COLS].sort().join(",");
+    if (colStr !== defaultStr) p.set("cols", colStr);
+    const qs = p.toString();
+    const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+    window.history.replaceState(null, "", url);
+  }, [
+    search,
+    categoryFilter,
+    conditionFilter,
+    adderallFilter,
+    timeFilter,
+    tierFilter,
+    scheduleFilter,
+    sortKey,
+    sortDir,
+    visibleColumns,
+  ]);
+
+  useEffect(() => {
+    syncUrl();
+  }, [syncUrl]);
 
   const allColumns: { key: string; label: string }[] = [
     { key: "tier", label: "Priority" },
@@ -54,6 +126,7 @@ export default function SupplementTable() {
     { key: "benefits", label: "Benefits" },
     { key: "sideEffects", label: "Side Effects" },
     { key: "notes", label: "Notes" },
+    { key: "purchaseUrl", label: "Buy" },
   ];
 
   const categories = useMemo(
@@ -181,12 +254,24 @@ export default function SupplementTable() {
   };
 
   const renderCell = (col: { key: string }, s: Supplement) => {
-    if (col.key === "withAdderall")
-      return getAdderallBadge(s.withAdderall);
-    if (col.key === "tier")
-      return getTierBadge(s.tier);
-    if (col.key === "schedule")
-      return getScheduleBadge(s.schedule);
+    if (col.key === "withAdderall") return getAdderallBadge(s.withAdderall);
+    if (col.key === "tier") return getTierBadge(s.tier);
+    if (col.key === "schedule") return getScheduleBadge(s.schedule);
+    if (col.key === "purchaseUrl") {
+      return s.purchaseUrl ? (
+        <a
+          href={s.purchaseUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="buy-link"
+          onClick={(e) => e.stopPropagation()}
+        >
+          Buy
+        </a>
+      ) : (
+        <span className="buy-pending">--</span>
+      );
+    }
     return s[col.key as keyof Supplement] as string;
   };
 
@@ -343,7 +428,7 @@ export default function SupplementTable() {
               <>
                 <tr
                   key={s.id}
-                  className={`tier-row-${s.tier}`}
+                  className={`tier-row tier-row-${s.tier}`}
                   onClick={() =>
                     setExpandedRow(expandedRow === s.id ? null : s.id)
                   }
@@ -378,6 +463,16 @@ export default function SupplementTable() {
                           <h3>{s.name}</h3>
                           {getTierBadge(s.tier)}
                           {getScheduleBadge(s.schedule)}
+                          {s.purchaseUrl && (
+                            <a
+                              href={s.purchaseUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="buy-link"
+                            >
+                              Buy on Swanson
+                            </a>
+                          )}
                         </div>
                         <div className="tier-reason">
                           <strong>Why this tier:</strong> {s.tierReason}

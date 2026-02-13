@@ -17,6 +17,7 @@ export interface Supplement {
   tier: Tier;
   tierReason: string;
   schedule: Schedule;
+  purchaseUrl: string;
 }
 
 export const supplements: Supplement[] = [
@@ -36,6 +37,7 @@ export const supplements: Supplement[] = [
     tier: 1,
     tierReason: "Strongest evidence-backed supplement for ADHD; foundational for brain health",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 2,
@@ -53,6 +55,7 @@ export const supplements: Supplement[] = [
     tier: 1,
     tierReason: "Reduces Adderall side effects (jaw clenching, anxiety, insomnia); most people are deficient",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 3,
@@ -70,6 +73,7 @@ export const supplements: Supplement[] = [
     tier: 1,
     tierReason: "Best Adderall companion — smooths stimulant edge without reducing effectiveness",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 4,
@@ -87,6 +91,7 @@ export const supplements: Supplement[] = [
     tier: 1,
     tierReason: "May enhance Adderall efficacy; common deficiency in ADHD; regulates dopamine",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 5,
@@ -104,6 +109,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Only supplement if blood test confirms deficiency; unnecessary if levels are normal",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 6,
@@ -121,6 +127,7 @@ export const supplements: Supplement[] = [
     tier: 1,
     tierReason: "Most people are deficient; directly supports dopamine and serotonin production",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 7,
@@ -138,6 +145,7 @@ export const supplements: Supplement[] = [
     tier: 1,
     tierReason: "Fuels neurotransmitter synthesis pipeline; foundational support for dopamine/serotonin/norepinephrine",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 8,
@@ -155,6 +163,7 @@ export const supplements: Supplement[] = [
     tier: 1,
     tierReason: "Direct dopamine precursor; already in use and tolerated with Adderall — keep in stack",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 9,
@@ -172,6 +181,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Strong nootropic that complements dopamine pathway via acetylcholine; add after core is stable",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 10,
@@ -189,6 +199,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Good evidence but overlaps with other core stack supplements; add if budget allows",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 11,
@@ -206,6 +217,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Stimulating like Adderall — risk of overstimulation; better as a weekend/off-day option",
     schedule: "Off Days Only",
+    purchaseUrl: "",
   },
   {
     id: 12,
@@ -223,6 +235,7 @@ export const supplements: Supplement[] = [
     tier: 1,
     tierReason: "Already in use for 6 weeks — approaching full efficacy; strong evidence for memory and anxiety",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 13,
@@ -240,6 +253,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Unique NGF-boosting mechanism not covered by other supplements; strong long-term benefit",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 14,
@@ -257,6 +271,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Excellent for managing Adderall crash and cortisol; add once core stack is established",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 15,
@@ -274,6 +289,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Questionable oral bioavailability (may not cross BBB); L-Theanine is a better alternative",
     schedule: "Daily — Evening on Adderall Days",
+    purchaseUrl: "",
   },
   {
     id: 16,
@@ -291,6 +307,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "More targeted for OCD/panic than core ADHD; consider if anxiety is a primary concern",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 17,
@@ -308,6 +325,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Useful antioxidant but requires strict timing separation from Adderall; not essential to supplement",
     schedule: "Daily — Evening on Adderall Days",
+    purchaseUrl: "",
   },
   {
     id: 18,
@@ -325,6 +343,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Growing gut-brain axis evidence; supports mood and cognition indirectly but meaningfully",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 19,
@@ -342,6 +361,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "General energy support; not ADHD-specific but helpful for brain fog and mitochondrial health",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 20,
@@ -359,6 +379,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Directly counteracts Adderall insomnia; essential if sleep is disrupted on stimulant days",
     schedule: "Adderall Days Only",
+    purchaseUrl: "",
   },
   {
     id: 21,
@@ -376,6 +397,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Mild cognitive benefit; cerebral blood flow support is nice-to-have, not essential",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 22,
@@ -393,6 +415,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Essential companion to Vitamin D3; if you take D3, you should take K2",
     schedule: "Daily",
+    purchaseUrl: "",
   },
   {
     id: 23,
@@ -410,6 +433,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Serotonin interaction risk requires careful management; only if sleep/mood is primary concern",
     schedule: "Daily — Evening on Adderall Days",
+    purchaseUrl: "",
   },
   {
     id: 24,
@@ -427,6 +451,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Strong general cognitive evidence but not ADHD-specific; great if you also exercise",
     schedule: "Daily",
+    purchaseUrl: "",
   },
 ];
 
