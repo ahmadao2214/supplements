@@ -453,6 +453,24 @@ export const supplements: Supplement[] = [
     schedule: "Daily",
     purchaseUrl: "",
   },
+  {
+    id: 25,
+    name: "Saffron Extract (Crocus sativus)",
+    category: "Herbal Extract",
+    treats: "ADHD, Mood, Depression",
+    dosage: "20–30 mg (standardized extract)",
+    frequency: "1–2x daily",
+    timeOfDay: "Morning",
+    withMeals: "Optional",
+    withAdderall: "Yes — safe to combine",
+    benefits: "Improves attention and mood, antidepressant effects comparable to fluoxetine in some studies, reduces impulsivity",
+    sideEffects: "Nausea, dry mouth, drowsiness, appetite changes at high doses",
+    notes: "Look for standardized extract (3.5% lepticrosalides or 2% crocin). Studies show comparable efficacy to methylphenidate for ADHD in children",
+    tier: 2,
+    tierReason: "Promising ADHD evidence (head-to-head with methylphenidate); strong mood support complements stimulant stack",
+    schedule: "Daily",
+    purchaseUrl: "",
+  },
 ];
 
 export const categories = [...new Set(supplements.map((s) => s.category))];
