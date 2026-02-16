@@ -567,6 +567,204 @@ const { title } = Astro.props;
     font-size: 0.95rem;
   }
 
+  /* Cart checkbox + qty stepper */
+  .cart-header {
+    cursor: default;
+  }
+
+  .cart-header:hover {
+    color: var(--text-muted);
+  }
+
+  .cart-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .cart-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .cart-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .cart-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+    cursor: pointer;
+  }
+
+  .qty-stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .qty-btn {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .qty-btn:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+  }
+
+  .qty-value {
+    width: 22px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--bg);
+    line-height: 22px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Selected row highlight */
+  .cart-selected {
+    outline: 1px solid rgba(108, 140, 255, 0.25);
+    outline-offset: -1px;
+  }
+
+  .tier-row-1.cart-selected {
+    background: rgba(52, 211, 153, 0.12);
+  }
+
+  .tier-row-2.cart-selected {
+    background: rgba(96, 165, 250, 0.12);
+  }
+
+  .tier-row-3.cart-selected {
+    background: rgba(167, 139, 250, 0.10);
+  }
+
+  /* Cart summary bar */
+  .cart-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.25s ease-out, opacity 0.2s ease-out;
+    pointer-events: none;
+  }
+
+  .cart-bar-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .cart-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .cart-bar-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .cart-bar-count {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  .cart-bar-names {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cart-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .cart-bar-clear {
+    padding: 0.4rem 0.75rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .cart-bar-clear:hover {
+    border-color: var(--avoid);
+    color: var(--avoid);
+  }
+
+  .cart-bar-open {
+    padding: 0.45rem 1rem;
+    background: var(--primary);
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+
+  .cart-bar-open:hover {
+    background: var(--primary-dim);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .cart-bar {
+      transition: none;
+    }
+
+    .qty-btn,
+    .cart-bar-clear,
+    .cart-bar-open,
+    tbody tr {
+      transition: none;
+    }
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     .header {
@@ -596,6 +794,26 @@ const { title } = Astro.props;
 
     .detail-grid {
       grid-template-columns: 1fr;
+    }
+
+    .cart-bar-inner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+    }
+
+    .cart-bar-names {
+      white-space: normal;
+    }
+
+    .cart-bar-actions {
+      justify-content: stretch;
+    }
+
+    .cart-bar-clear,
+    .cart-bar-open {
+      flex: 1;
+      text-align: center;
     }
   }
 </style>
