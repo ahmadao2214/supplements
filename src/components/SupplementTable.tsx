@@ -256,21 +256,22 @@ export default function SupplementTable() {
   const formatTimeOfDay = (val: string) => {
     const lower = val.toLowerCase();
     if (lower.includes("morning") || lower.startsWith("afternoon"))
-      return <>☀️ {val}</>;
+      return <span className="badge badge-time-day">☀️ {val}</span>;
     if (lower.includes("evening") || lower.includes("bed"))
-      return <>🌙 {val}</>;
+      return <span className="badge badge-time-night">🌙 {val}</span>;
     return <>{val}</>;
   };
 
   const formatWithMeals = (val: string) => {
     const lower = val.toLowerCase();
-    if (lower.includes("fat")) return <>🥑 {val}</>;
+    if (lower.includes("fat"))
+      return <span className="badge badge-meal-fat">🥑 {val}</span>;
     if (lower.startsWith("yes") || lower.includes("with breakfast"))
-      return <>🍽️ {val}</>;
+      return <span className="badge badge-meal-yes">🍽️ {val}</span>;
     if (lower.includes("without") || lower.includes("empty stomach") || lower.includes("before food"))
-      return <>🚫🍽️ {val}</>;
+      return <span className="badge badge-meal-no">🚫🍽️ {val}</span>;
     if (lower === "optional" || lower === "no preference")
-      return <>➖ {val}</>;
+      return <span className="badge badge-meal-optional">➖ {val}</span>;
     return <>{val}</>;
   };
 

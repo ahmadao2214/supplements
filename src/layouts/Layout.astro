@@ -61,6 +61,18 @@ const { title } = Astro.props;
     --schedule-off-bg: rgba(252, 211, 77, 0.1);
     --schedule-evening: #c4b5fd;
     --schedule-evening-bg: rgba(196, 181, 253, 0.1);
+    --time-day: #f59e0b;
+    --time-day-bg: rgba(245, 158, 11, 0.1);
+    --time-night: #818cf8;
+    --time-night-bg: rgba(129, 140, 248, 0.1);
+    --meal-yes: #2dd4bf;
+    --meal-yes-bg: rgba(45, 212, 191, 0.1);
+    --meal-fat: #a3e635;
+    --meal-fat-bg: rgba(163, 230, 53, 0.1);
+    --meal-no: #fb923c;
+    --meal-no-bg: rgba(251, 146, 60, 0.1);
+    --meal-optional: #94a3b8;
+    --meal-optional-bg: rgba(148, 163, 184, 0.08);
     --radius: 8px;
   }
 
@@ -375,6 +387,44 @@ const { title } = Astro.props;
     color: var(--schedule-evening);
     border: 1px solid rgba(196, 181, 253, 0.25);
     font-size: 0.7rem;
+  }
+
+  /* Time of day badges */
+  .badge-time-day {
+    background: var(--time-day-bg);
+    color: var(--time-day);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+  }
+
+  .badge-time-night {
+    background: var(--time-night-bg);
+    color: var(--time-night);
+    border: 1px solid rgba(129, 140, 248, 0.25);
+  }
+
+  /* With meals badges */
+  .badge-meal-yes {
+    background: var(--meal-yes-bg);
+    color: var(--meal-yes);
+    border: 1px solid rgba(45, 212, 191, 0.25);
+  }
+
+  .badge-meal-fat {
+    background: var(--meal-fat-bg);
+    color: var(--meal-fat);
+    border: 1px solid rgba(163, 230, 53, 0.25);
+  }
+
+  .badge-meal-no {
+    background: var(--meal-no-bg);
+    color: var(--meal-no);
+    border: 1px solid rgba(251, 146, 60, 0.25);
+  }
+
+  .badge-meal-optional {
+    background: var(--meal-optional-bg);
+    color: var(--meal-optional);
+    border: 1px solid rgba(148, 163, 184, 0.15);
   }
 
   /* Tier legend */
