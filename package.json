@@ -18,8 +18,7 @@
   "dependencies": {
     "@astrojs/netlify": "^6.6.4",
     "@astrojs/react": "^4.4.2",
-    "@rollup/rollup-darwin-arm64": "^4.57.1",
-    "@types/react": "^19.2.14",
+"@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "astro": "^5.17.2",
     "react": "^19.2.4",
