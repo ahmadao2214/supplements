@@ -78,7 +78,11 @@ const DEFAULT_COLS = [
   "schedule",
 ];
 
-export default function SupplementTable() {
+interface Props {
+  prices?: Record<number, number>;
+}
+
+export default function SupplementTable({ prices = {} }: Props) {
   const [search, setSearch] = useState(() => readParam("q", ""));
   const [categoryFilter, setCategoryFilter] = useState(() =>
     readParam("cat", "All")
@@ -330,6 +334,19 @@ export default function SupplementTable() {
     return count;
   }, [cartItems]);
 
+  const cartSubtotal = useMemo(() => {
+    let total = 0;
+    let allPriced = true;
+    for (const [id, qty] of cartItems) {
+      if (prices[id]) {
+        total += prices[id] * qty;
+      } else {
+        allPriced = false;
+      }
+    }
+    return { total, allPriced };
+  }, [cartItems, prices]);
+
   const openSwansonCart = useCallback(() => {
     if (cartItems.size === 0) return;
     const url = buildCartUrl(cartItems, supplements);
@@ -411,6 +428,7 @@ export default function SupplementTable() {
       }
       const inCart = cartItems.has(s.id);
       const qty = cartItems.get(s.id) ?? 1;
+      const price = prices[s.id];
       return (
         <div className="cart-cell" onClick={(e) => e.stopPropagation()}>
           <label className="cart-checkbox-label">
@@ -422,6 +440,9 @@ export default function SupplementTable() {
               aria-label={`Add ${s.name} to cart`}
             />
           </label>
+          {inCart && price && (
+            <span className="cart-cell-price">${price.toFixed(2)}</span>
+          )}
           {inCart && (
             <div className="qty-stepper">
               <button
@@ -440,6 +461,9 @@ export default function SupplementTable() {
                 +
               </button>
             </div>
+          )}
+          {inCart && price && qty > 1 && (
+            <span className="cart-cell-line-total">${(price * qty).toFixed(2)}</span>
           )}
         </div>
       );
@@ -732,6 +756,11 @@ export default function SupplementTable() {
             <span className="cart-bar-count">
               {cartItems.size} {cartItems.size === 1 ? "item" : "items"}
               {cartTotal !== cartItems.size && ` (${cartTotal} total)`}
+              {cartSubtotal.total > 0 && (
+                <span className="cart-bar-subtotal">
+                  {" — "}${cartSubtotal.total.toFixed(2)}{!cartSubtotal.allPriced && "+"}
+                </span>
+              )}
             </span>
             <span className="cart-bar-names">
               {[...cartItems]

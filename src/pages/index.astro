@@ -1,6 +1,24 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import SupplementTable from "../components/SupplementTable";
+import { supplements } from "../data/supplements";
+
+// Fetch prices from Swanson's Shopify API at build time
+const prices: Record<number, number> = {};
+const suppsWithUrls = supplements.filter(s => s.purchaseUrl);
+
+await Promise.all(suppsWithUrls.map(async (s) => {
+  try {
+    const handleMatch = s.purchaseUrl.match(/\/p\/([^?]+)/);
+    if (!handleMatch) return;
+    const res = await fetch(`https://www.swansonvitamins.com/products/${handleMatch[1]}.json`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const variantId = s.purchaseUrl.match(/variant=(\d+)/)?.[1];
+    const variant = data.product?.variants?.find((v: any) => String(v.id) === variantId);
+    if (variant?.price) prices[s.id] = parseFloat(variant.price);
+  } catch { /* graceful fallback — no price shown */ }
+}));
 ---
 
 <Layout title="ADHD Supplement Database">
@@ -17,5 +35,5 @@ import SupplementTable from "../components/SupplementTable";
       Adderall.
     </div>
   </div>
-  <SupplementTable client:load />
+  <SupplementTable prices={prices} client:load />
 </Layout>

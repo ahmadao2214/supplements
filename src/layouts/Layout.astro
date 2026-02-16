@@ -586,6 +586,21 @@ const { title } = Astro.props;
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .cart-cell-price {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cart-cell-line-total {
+    font-size: 0.7rem;
+    color: var(--primary);
+    font-variant-numeric: tabular-nums;
+    width: 100%;
+    padding-left: 1.4rem;
   }
 
   .cart-checkbox-label {
@@ -701,6 +716,10 @@ const { title } = Astro.props;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--primary);
+  }
+
+  .cart-bar-subtotal {
+    font-variant-numeric: tabular-nums;
   }
 
   .cart-bar-names {
