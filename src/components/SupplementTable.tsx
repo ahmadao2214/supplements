@@ -223,10 +223,10 @@ export default function SupplementTable() {
   const getAdderallBadge = (val: string) => {
     const lower = val.toLowerCase();
     if (lower.includes("yes"))
-      return <span className="badge badge-safe">Safe</span>;
+      return <span className="badge badge-safe">✅ Safe</span>;
     if (lower.includes("cautious") || lower.includes("caution"))
-      return <span className="badge badge-caution">Caution</span>;
-    return <span className="badge badge-avoid">Avoid/Separate</span>;
+      return <span className="badge badge-caution">⚠️ Caution</span>;
+    return <span className="badge badge-avoid">🚫 Avoid/Separate</span>;
   };
 
   const getTierBadge = (tier: number) => {
@@ -245,18 +245,49 @@ export default function SupplementTable() {
 
   const getScheduleBadge = (schedule: string) => {
     if (schedule.includes("Off Days"))
-      return <span className="badge badge-schedule-off">{schedule}</span>;
+      return <span className="badge badge-schedule-off">🔄 {schedule}</span>;
     if (schedule.includes("Adderall Days Only"))
-      return <span className="badge badge-schedule-adderall">{schedule}</span>;
+      return <span className="badge badge-schedule-adderall">💊 {schedule}</span>;
     if (schedule.includes("Evening on Adderall"))
-      return <span className="badge badge-schedule-evening">{schedule}</span>;
-    return <span className="badge badge-schedule-daily">{schedule}</span>;
+      return <span className="badge badge-schedule-evening">🌙 {schedule}</span>;
+    return <span className="badge badge-schedule-daily">📅 {schedule}</span>;
+  };
+
+  const formatTimeOfDay = (val: string) => {
+    const lower = val.toLowerCase();
+    if (lower.includes("morning") || lower.startsWith("afternoon"))
+      return <>☀️ {val}</>;
+    if (lower.includes("evening") || lower.includes("bed"))
+      return <>🌙 {val}</>;
+    return <>{val}</>;
+  };
+
+  const formatWithMeals = (val: string) => {
+    const lower = val.toLowerCase();
+    if (lower.includes("fat")) return <>🥑 {val}</>;
+    if (lower.startsWith("yes") || lower.includes("with breakfast"))
+      return <>🍽️ {val}</>;
+    if (lower.includes("without") || lower.includes("empty stomach") || lower.includes("before food"))
+      return <>🚫🍽️ {val}</>;
+    if (lower === "optional" || lower === "no preference")
+      return <>➖ {val}</>;
+    return <>{val}</>;
+  };
+
+  const formatFrequency = (val: string) => {
+    if (val.startsWith("1–3")) return <>①②③ {val}</>;
+    if (val.startsWith("1–2")) return <>①② {val}</>;
+    if (val.startsWith("1x")) return <>① {val}</>;
+    return <>{val}</>;
   };
 
   const renderCell = (col: { key: string }, s: Supplement) => {
     if (col.key === "withAdderall") return getAdderallBadge(s.withAdderall);
     if (col.key === "tier") return getTierBadge(s.tier);
     if (col.key === "schedule") return getScheduleBadge(s.schedule);
+    if (col.key === "timeOfDay") return formatTimeOfDay(s.timeOfDay);
+    if (col.key === "withMeals") return formatWithMeals(s.withMeals);
+    if (col.key === "frequency") return formatFrequency(s.frequency);
     if (col.key === "purchaseUrl") {
       return s.purchaseUrl ? (
         <a
@@ -488,13 +519,13 @@ export default function SupplementTable() {
                             <strong>Dosage:</strong> {s.dosage}
                           </div>
                           <div>
-                            <strong>Frequency:</strong> {s.frequency}
+                            <strong>Frequency:</strong> {formatFrequency(s.frequency)}
                           </div>
                           <div>
-                            <strong>Time of Day:</strong> {s.timeOfDay}
+                            <strong>Time of Day:</strong> {formatTimeOfDay(s.timeOfDay)}
                           </div>
                           <div>
-                            <strong>With Meals:</strong> {s.withMeals}
+                            <strong>With Meals:</strong> {formatWithMeals(s.withMeals)}
                           </div>
                           <div>
                             <strong>With Adderall:</strong>{" "}
