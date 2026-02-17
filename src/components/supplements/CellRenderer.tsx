@@ -9,6 +9,10 @@ import {
   getAdderallEmoji,
   getAdderallLabel,
   getScheduleEmoji,
+  getTimeLabel,
+  getTimeEmoji,
+  getMealLabel,
+  getMealEmoji,
 } from "../../lib/format-utils";
 
 interface CellRendererProps {
@@ -44,16 +48,24 @@ export const CellRenderer = React.memo(function CellRenderer({ colKey, supplemen
     }
     case "timeOfDay": {
       const type = classifyTimeOfDay(s.timeOfDay);
-      if (type === "day") return <span className="badge badge-time-day">&#x2600;&#xFE0F; {s.timeOfDay}</span>;
-      if (type === "night") return <span className="badge badge-time-night">&#x1F319; {s.timeOfDay}</span>;
+      if (type) {
+        return (
+          <span className={`badge badge-time-${type}`} title={s.timeOfDay}>
+            {getTimeEmoji(type)} {getTimeLabel(type)}
+          </span>
+        );
+      }
       return <>{s.timeOfDay}</>;
     }
     case "withMeals": {
       const type = classifyMeals(s.withMeals);
-      if (type === "fat") return <span className="badge badge-meal-fat">&#x1F951; {s.withMeals}</span>;
-      if (type === "yes") return <span className="badge badge-meal-yes">&#x1F37D;&#xFE0F; {s.withMeals}</span>;
-      if (type === "no") return <span className="badge badge-meal-no">&#x1F6AB;&#x1F37D;&#xFE0F; {s.withMeals}</span>;
-      if (type === "optional") return <span className="badge badge-meal-optional">&#x2796; {s.withMeals}</span>;
+      if (type) {
+        return (
+          <span className={`badge badge-meal-${type}`} title={s.withMeals}>
+            {getMealEmoji(type)} {getMealLabel(type)}
+          </span>
+        );
+      }
       return <>{s.withMeals}</>;
     }
     case "frequency": {

@@ -9,6 +9,10 @@ import {
   getAdderallEmoji,
   getAdderallLabel,
   getScheduleEmoji,
+  getTimeLabel,
+  getTimeEmoji,
+  getMealLabel,
+  getMealEmoji,
 } from "../../lib/format-utils";
 
 interface DetailRowProps {
@@ -45,10 +49,10 @@ export const DetailRow = React.memo(function DetailRow({ supplement: s, colSpan 
               </a>
             )}
           </div>
-          <div className="text-sm text-sage-400/70 mb-3 px-2.5 py-1.5 bg-cyan-400/5 border-l-3 border-cyan-400 rounded-r-lg font-body">
+          <div className="text-sm text-sage-400/70 mb-3 px-2.5 py-1.5 bg-cyan-400/5 border-l-3 border-cyan-400 rounded-r-lg font-display">
             <strong className="text-cyan-400">Why this tier:</strong> {s.tierReason}
           </div>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-x-6 gap-y-2 text-sm font-body text-sage-200/80">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-x-6 gap-y-2 text-sm font-display text-sage-200/80">
             <div><strong className="text-sage-400/50">Category:</strong> {s.category}</div>
             <div><strong className="text-sage-400/50">Treats:</strong> {s.treats}</div>
             <div><strong className="text-sage-400/50">Dosage:</strong> {s.dosage}</div>
@@ -60,17 +64,21 @@ export const DetailRow = React.memo(function DetailRow({ supplement: s, colSpan 
             </div>
             <div>
               <strong className="text-sage-400/50">Time of Day:</strong>{" "}
-              {timeType === "day" ? <span className="badge badge-time-day">&#x2600;&#xFE0F; {s.timeOfDay}</span> :
-               timeType === "night" ? <span className="badge badge-time-night">&#x1F319; {s.timeOfDay}</span> :
-               s.timeOfDay}
+              {timeType ? (
+                <span className={`badge badge-time-${timeType}`}>{getTimeEmoji(timeType)} {getTimeLabel(timeType)}</span>
+              ) : s.timeOfDay}
+              {timeType && s.timeOfDay !== getTimeLabel(timeType) && (
+                <span className="text-sage-400/40 text-xs ml-1">({s.timeOfDay})</span>
+              )}
             </div>
             <div>
               <strong className="text-sage-400/50">With Meals:</strong>{" "}
-              {mealType === "fat" ? <span className="badge badge-meal-fat">&#x1F951; {s.withMeals}</span> :
-               mealType === "yes" ? <span className="badge badge-meal-yes">&#x1F37D;&#xFE0F; {s.withMeals}</span> :
-               mealType === "no" ? <span className="badge badge-meal-no">&#x1F6AB;&#x1F37D;&#xFE0F; {s.withMeals}</span> :
-               mealType === "optional" ? <span className="badge badge-meal-optional">&#x2796; {s.withMeals}</span> :
-               s.withMeals}
+              {mealType ? (
+                <span className={`badge badge-meal-${mealType}`}>{getMealEmoji(mealType)} {getMealLabel(mealType)}</span>
+              ) : s.withMeals}
+              {mealType && s.withMeals !== getMealLabel(mealType) && (
+                <span className="text-sage-400/40 text-xs ml-1">({s.withMeals})</span>
+              )}
             </div>
             <div>
               <strong className="text-sage-400/50">With Adderall:</strong>{" "}

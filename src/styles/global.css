@@ -3,14 +3,14 @@
 
 /* ─── Design Tokens ─── */
 @theme {
-  /* Surfaces — warm forest blacks */
-  --color-surface-900: #0C0F0D;
-  --color-surface-800: #151A16;
-  --color-surface-700: #1D231E;
-  --color-surface-600: #252D27;
-  --color-surface-500: #2E3830;
-  --color-surface-hover: #2E3830;
-  --color-surface-border: #3A4A3D;
+  /* Surfaces — neutral dark */
+  --color-surface-900: #0b0b0e;
+  --color-surface-800: #141417;
+  --color-surface-700: #1c1c20;
+  --color-surface-600: #242428;
+  --color-surface-500: #2e2e33;
+  --color-surface-hover: #2e2e33;
+  --color-surface-border: #38383f;
 
   /* Primary — Sage green */
   --color-sage-50: #f0f5f1;
@@ -62,13 +62,13 @@
 
   /* Tier status colors */
   --color-tier1: #4A7C59;
-  --color-tier1-bg: rgba(74, 124, 89, 0.10);
+  --color-tier1-bg: rgba(74, 124, 89, 0.08);
   --color-tier1-border: rgba(74, 124, 89, 0.30);
   --color-tier2: #3B5998;
-  --color-tier2-bg: rgba(59, 89, 152, 0.10);
+  --color-tier2-bg: rgba(59, 89, 152, 0.08);
   --color-tier2-border: rgba(59, 89, 152, 0.30);
   --color-tier3: #7B5EA7;
-  --color-tier3-bg: rgba(123, 94, 167, 0.10);
+  --color-tier3-bg: rgba(123, 94, 167, 0.08);
   --color-tier3-border: rgba(123, 94, 167, 0.30);
 
   /* Status — warm earth tones */
@@ -97,6 +97,8 @@
   --color-time-day-bg: rgba(212, 168, 67, 0.10);
   --color-time-night: #8e6dbc;
   --color-time-night-bg: rgba(142, 109, 188, 0.10);
+  --color-time-flex: #7a9eb5;
+  --color-time-flex-bg: rgba(122, 158, 181, 0.10);
 
   /* Meal badges */
   --color-meal-yes: #5fa67a;
@@ -190,7 +192,7 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-sage-600);
+    background: #555;
   }
 }
 
@@ -204,47 +206,33 @@
   }
 
   .tier-row-1 {
-    background: var(--color-tier1-bg);
     border-left-color: var(--color-tier1);
   }
 
   .tier-row-1:hover {
-    background: rgba(74, 124, 89, 0.18);
+    background: rgba(74, 124, 89, 0.08);
   }
 
   .tier-row-2 {
-    background: var(--color-tier2-bg);
     border-left-color: var(--color-tier2);
   }
 
   .tier-row-2:hover {
-    background: rgba(59, 89, 152, 0.18);
+    background: rgba(59, 89, 152, 0.08);
   }
 
   .tier-row-3 {
-    background: var(--color-tier3-bg);
     border-left-color: var(--color-tier3);
   }
 
   .tier-row-3:hover {
-    background: rgba(123, 94, 167, 0.15);
+    background: rgba(123, 94, 167, 0.08);
   }
 
   .tier-row.cart-selected {
-    outline: 1px solid rgba(0, 212, 204, 0.2);
+    outline: 1px solid rgba(0, 212, 204, 0.15);
     outline-offset: -1px;
-  }
-
-  .tier-row-1.cart-selected {
-    background: rgba(74, 124, 89, 0.16);
-  }
-
-  .tier-row-2.cart-selected {
-    background: rgba(59, 89, 152, 0.16);
-  }
-
-  .tier-row-3.cart-selected {
-    background: rgba(123, 94, 167, 0.14);
+    background: rgba(0, 212, 204, 0.04);
   }
 
   /* Badge base */
@@ -339,6 +327,12 @@
     background: var(--color-time-night-bg);
     color: var(--color-time-night);
     border: 1px solid rgba(142, 109, 188, 0.25);
+  }
+
+  .badge-time-flex {
+    background: var(--color-time-flex-bg);
+    color: var(--color-time-flex);
+    border: 1px solid rgba(122, 158, 181, 0.25);
   }
 
   /* Meal badges */

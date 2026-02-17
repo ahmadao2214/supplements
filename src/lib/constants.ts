@@ -13,12 +13,10 @@ export const tierDescriptions: Record<number, string> = {
 export const DEFAULT_COLS = [
   "tier",
   "name",
-  "treats",
   "dosage",
+  "frequency",
   "timeOfDay",
-  "withMeals",
   "withAdderall",
-  "schedule",
 ];
 
 export const allColumns: { key: string; label: string }[] = [

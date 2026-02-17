@@ -3,13 +3,13 @@ import { tierLabels, tierDescriptions } from "../../lib/constants";
 
 export const TierLegend = React.memo(function TierLegend() {
   return (
-    <div className="flex gap-5 flex-wrap mb-4 px-4 py-3 bg-surface-800 border border-surface-border rounded-xl">
+    <div className="flex gap-4 flex-wrap mb-3 text-xs">
       {([1, 2, 3] as const).map((tier) => (
-        <div key={tier} className="flex items-center gap-2">
+        <div key={tier} className="flex items-center gap-1.5">
           <span className={`badge badge-tier${tier}`}>
             T{tier} {tierLabels[tier]}
           </span>
-          <span className="text-xs text-sage-400/60 font-body">
+          <span className="text-sage-400/50 font-display">
             {tierDescriptions[tier]}
           </span>
         </div>

@@ -112,7 +112,7 @@ export default function SupplementDatabase({ prices = {} }: Props) {
             onSelectAll={cart.handleSelectAll}
           />
           {filters.filtered.length === 0 && (
-            <div className="text-center py-8 text-sage-400/50 font-body">
+            <div className="text-center py-8 text-sage-400/50 font-display">
               No supplements match your filters. Try adjusting your search criteria.
             </div>
           )}

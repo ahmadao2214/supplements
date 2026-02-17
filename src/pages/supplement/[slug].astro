@@ -11,6 +11,10 @@ import {
   getAdderallEmoji,
   getAdderallLabel,
   getScheduleEmoji,
+  getTimeLabel,
+  getTimeEmoji,
+  getMealLabel,
+  getMealEmoji,
 } from "../../lib/format-utils";
 import { tierLabels, tierDescriptions } from "../../lib/constants";
 
@@ -49,17 +53,10 @@ if (s.purchaseUrl) {
   } catch { /* graceful fallback */ }
 }
 
-const mealBadgeMap: Record<string, { cls: string; emoji: string }> = {
-  fat: { cls: "badge-meal-fat", emoji: "🥑" },
-  yes: { cls: "badge-meal-yes", emoji: "🍽️" },
-  no: { cls: "badge-meal-no", emoji: "🚫🍽️" },
-  optional: { cls: "badge-meal-optional", emoji: "➖" },
-};
-
-const timeBadgeMap: Record<string, { cls: string; emoji: string }> = {
-  day: { cls: "badge-time-day", emoji: "☀️" },
-  night: { cls: "badge-time-night", emoji: "🌙" },
-};
+const mealLabel = getMealLabel(mealType);
+const mealEmoji = getMealEmoji(mealType);
+const timeLabel = getTimeLabel(timeType);
+const timeEm = getTimeEmoji(timeType);
 ---
 
 <Layout title={`${s.name} — ADHD Supplement Database`} description={`${s.name}: ${s.treats}. ${s.benefits}`}>
@@ -87,7 +84,7 @@ const timeBadgeMap: Record<string, { cls: string; emoji: string }> = {
         </div>
 
         <!-- Tier reason -->
-        <div class="text-sm text-sage-400/70 mb-4 px-3 py-2 bg-cyan-400/5 border-l-3 border-cyan-400 rounded-r-lg font-body">
+        <div class="text-sm text-sage-400/70 mb-4 px-3 py-2 bg-cyan-400/5 border-l-3 border-cyan-400 rounded-r-lg font-display">
           <strong class="text-cyan-400">Why {tierLabels[s.tier]}:</strong> {s.tierReason}
         </div>
 
@@ -107,31 +104,37 @@ const timeBadgeMap: Record<string, { cls: string; emoji: string }> = {
       <!-- Frequency -->
       <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
         <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Frequency</div>
-        <div class="text-sm text-sage-200 font-body">{s.frequency}</div>
+        <div class="text-sm text-sage-200 font-display">{s.frequency}</div>
       </div>
 
       <!-- Time of Day -->
       <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
         <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Time of Day</div>
         <div class="text-sm">
-          {timeType && timeBadgeMap[timeType] ? (
-            <span class={`badge ${timeBadgeMap[timeType].cls}`}>{timeBadgeMap[timeType].emoji} {s.timeOfDay}</span>
+          {timeType ? (
+            <span class={`badge badge-time-${timeType}`}>{timeEm} {timeLabel}</span>
           ) : (
             <span class="text-sage-200">{s.timeOfDay}</span>
           )}
         </div>
+        {timeType && s.timeOfDay !== timeLabel && (
+          <div class="text-xs text-sage-400/40 mt-1 font-display">{s.timeOfDay}</div>
+        )}
       </div>
 
       <!-- With Meals -->
       <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
         <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">With Meals?</div>
         <div class="text-sm">
-          {mealType && mealBadgeMap[mealType] ? (
-            <span class={`badge ${mealBadgeMap[mealType].cls}`}>{mealBadgeMap[mealType].emoji} {s.withMeals}</span>
+          {mealType ? (
+            <span class={`badge badge-meal-${mealType}`}>{mealEmoji} {mealLabel}</span>
           ) : (
             <span class="text-sage-200">{s.withMeals}</span>
           )}
         </div>
+        {mealType && s.withMeals !== mealLabel && (
+          <div class="text-xs text-sage-400/40 mt-1 font-display">{s.withMeals}</div>
+        )}
       </div>
 
       <!-- Adderall Compatibility -->
@@ -140,7 +143,7 @@ const timeBadgeMap: Record<string, { cls: string; emoji: string }> = {
         <div class="text-sm">
           <span class={`badge badge-${adderallType}`}>{getAdderallEmoji(adderallType)} {getAdderallLabel(adderallType)}</span>
         </div>
-        <div class="text-xs text-sage-400/60 mt-1 font-body">{s.withAdderall}</div>
+        <div class="text-xs text-sage-400/60 mt-1 font-display">{s.withAdderall}</div>
       </div>
 
       <!-- Schedule -->
@@ -198,7 +201,7 @@ const timeBadgeMap: Record<string, { cls: string; emoji: string }> = {
               <span class={`badge badge-tier${r.tier} shrink-0 mt-0.5`}>T{r.tier}</span>
               <div class="min-w-0">
                 <div class="text-sm font-display font-semibold text-sage-200 truncate">{r.name}</div>
-                <div class="text-xs text-sage-400/50 font-body truncate">{r.treats}</div>
+                <div class="text-xs text-sage-400/50 font-display truncate">{r.treats}</div>
               </div>
             </a>
           ))}

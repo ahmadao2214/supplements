@@ -46,7 +46,7 @@ export const SupplementCard = React.memo(function SupplementCard({
         <span className="text-xs text-sage-400/50 font-display mb-2">{s.category}</span>
 
         {/* Treats */}
-        <p className="text-xs text-sage-400/70 font-body mb-3 line-clamp-2">{s.treats}</p>
+        <p className="text-xs text-sage-400/70 font-display mb-3 line-clamp-2">{s.treats}</p>
 
         {/* Dosage */}
         <div className="text-xs text-sage-200/70 font-mono mb-3">
