@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import SupplementTable from "../components/SupplementTable";
+import SupplementDatabase from "../components/supplements/SupplementDatabase";
 import { supplements } from "../data/supplements";
 
 // Fetch prices from Swanson's Shopify API at build time
@@ -22,18 +22,23 @@ await Promise.all(suppsWithUrls.map(async (s) => {
 ---
 
 <Layout title="ADHD Supplement Database">
-  <div class="header">
-    <h1>ADHD / ADD Supplement Database</h1>
-    <p>
-      Interactive reference table — dosages, timing, Adderall compatibility, and
-      more.
-    </p>
-    <div class="disclaimer">
-      This is for informational purposes only and is not medical advice. Always
-      consult with a healthcare professional before starting any supplement
-      regimen, especially when combining with prescription medications like
-      Adderall.
+  <!-- Hero gradient header -->
+  <div class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-sage-800/40 via-surface-900 to-depth-800/30"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-4">
+      <h1 class="font-display text-2xl sm:text-3xl font-bold text-sage-200 tracking-tight">
+        ADHD / ADD Supplement Database
+      </h1>
+      <p class="mt-1 text-sm sm:text-base text-sage-400/80 font-body">
+        Interactive reference table — dosages, timing, Adderall compatibility, and more.
+      </p>
+      <div class="mt-3 px-4 py-3 rounded-xl bg-caution-bg border border-caution-border text-sm text-caution font-body">
+        This is for informational purposes only and is not medical advice. Always
+        consult with a healthcare professional before starting any supplement
+        regimen, especially when combining with prescription medications like
+        Adderall.
+      </div>
     </div>
   </div>
-  <SupplementTable prices={prices} client:load />
+  <SupplementDatabase prices={prices} client:load />
 </Layout>

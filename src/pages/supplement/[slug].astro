@@ -1,0 +1,209 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SupplementDetail from "../../components/supplements/SupplementDetail";
+import { supplements, type Supplement } from "../../data/supplements";
+import { getRelatedSupplements } from "../../lib/supplement-utils";
+import {
+  classifyAdderall,
+  classifySchedule,
+  classifyTimeOfDay,
+  classifyMeals,
+  getAdderallEmoji,
+  getAdderallLabel,
+  getScheduleEmoji,
+} from "../../lib/format-utils";
+import { tierLabels, tierDescriptions } from "../../lib/constants";
+
+export function getStaticPaths() {
+  return supplements.map((s) => ({
+    params: { slug: s.slug },
+    props: { supplement: s },
+  }));
+}
+
+interface Props {
+  supplement: Supplement;
+}
+
+const { supplement: s } = Astro.props;
+const related = getRelatedSupplements(s, 4);
+const adderallType = classifyAdderall(s.withAdderall);
+const schedCls = classifySchedule(s.schedule);
+const timeType = classifyTimeOfDay(s.timeOfDay);
+const mealType = classifyMeals(s.withMeals);
+
+// Fetch price for this supplement
+let price: number | undefined;
+if (s.purchaseUrl) {
+  try {
+    const handleMatch = s.purchaseUrl.match(/\/p\/([^?]+)/);
+    if (handleMatch) {
+      const res = await fetch(`https://www.swansonvitamins.com/products/${handleMatch[1]}.json`);
+      if (res.ok) {
+        const data = await res.json();
+        const variantId = s.purchaseUrl.match(/variant=(\d+)/)?.[1];
+        const variant = data.product?.variants?.find((v: any) => String(v.id) === variantId);
+        if (variant?.price) price = parseFloat(variant.price);
+      }
+    }
+  } catch { /* graceful fallback */ }
+}
+
+const mealBadgeMap: Record<string, { cls: string; emoji: string }> = {
+  fat: { cls: "badge-meal-fat", emoji: "🥑" },
+  yes: { cls: "badge-meal-yes", emoji: "🍽️" },
+  no: { cls: "badge-meal-no", emoji: "🚫🍽️" },
+  optional: { cls: "badge-meal-optional", emoji: "➖" },
+};
+
+const timeBadgeMap: Record<string, { cls: string; emoji: string }> = {
+  day: { cls: "badge-time-day", emoji: "☀️" },
+  night: { cls: "badge-time-night", emoji: "🌙" },
+};
+---
+
+<Layout title={`${s.name} — ADHD Supplement Database`} description={`${s.name}: ${s.treats}. ${s.benefits}`}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+    <!-- Back link -->
+    <a href="/" class="inline-flex items-center gap-1.5 text-sm text-sage-400/60 hover:text-cyan-400 transition-colors font-display mb-6 focus-ring">
+      ← Back to Database
+    </a>
+
+    <!-- Hero -->
+    <div class="relative overflow-hidden rounded-xl bg-surface-800 border border-surface-border mb-6">
+      <div class={`h-1.5 ${s.tier === 1 ? 'bg-tier1' : s.tier === 2 ? 'bg-tier2' : 'bg-tier3'}`}></div>
+      <div class="p-6">
+        <div class="flex items-start justify-between gap-4 flex-wrap mb-3">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-display font-bold text-sage-200 tracking-tight mb-1">
+              {s.name}
+            </h1>
+            <span class="text-sm text-sage-400/60 font-display">{s.category}</span>
+          </div>
+          <div class="flex gap-2 shrink-0">
+            <span class={`badge badge-tier${s.tier}`}>T{s.tier} {tierLabels[s.tier]}</span>
+            <span class={`badge badge-${schedCls}`}>{getScheduleEmoji(s.schedule)} {s.schedule}</span>
+          </div>
+        </div>
+
+        <!-- Tier reason -->
+        <div class="text-sm text-sage-400/70 mb-4 px-3 py-2 bg-cyan-400/5 border-l-3 border-cyan-400 rounded-r-lg font-body">
+          <strong class="text-cyan-400">Why {tierLabels[s.tier]}:</strong> {s.tierReason}
+        </div>
+
+        <!-- Cart action (React island) -->
+        <SupplementDetail supplement={s} price={price} client:visible />
+      </div>
+    </div>
+
+    <!-- Info Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <!-- Dosage -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Dosage</div>
+        <div class="text-sm text-sage-200 font-mono">{s.dosage}</div>
+      </div>
+
+      <!-- Frequency -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Frequency</div>
+        <div class="text-sm text-sage-200 font-body">{s.frequency}</div>
+      </div>
+
+      <!-- Time of Day -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Time of Day</div>
+        <div class="text-sm">
+          {timeType && timeBadgeMap[timeType] ? (
+            <span class={`badge ${timeBadgeMap[timeType].cls}`}>{timeBadgeMap[timeType].emoji} {s.timeOfDay}</span>
+          ) : (
+            <span class="text-sage-200">{s.timeOfDay}</span>
+          )}
+        </div>
+      </div>
+
+      <!-- With Meals -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">With Meals?</div>
+        <div class="text-sm">
+          {mealType && mealBadgeMap[mealType] ? (
+            <span class={`badge ${mealBadgeMap[mealType].cls}`}>{mealBadgeMap[mealType].emoji} {s.withMeals}</span>
+          ) : (
+            <span class="text-sage-200">{s.withMeals}</span>
+          )}
+        </div>
+      </div>
+
+      <!-- Adderall Compatibility -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">With Adderall?</div>
+        <div class="text-sm">
+          <span class={`badge badge-${adderallType}`}>{getAdderallEmoji(adderallType)} {getAdderallLabel(adderallType)}</span>
+        </div>
+        <div class="text-xs text-sage-400/60 mt-1 font-body">{s.withAdderall}</div>
+      </div>
+
+      <!-- Schedule -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Schedule</div>
+        <div class="text-sm">
+          <span class={`badge badge-${schedCls}`}>{getScheduleEmoji(s.schedule)} {s.schedule}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-width sections -->
+    <div class="space-y-4 mb-6">
+      <!-- Treats -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-2">Treats</div>
+        <div class="flex flex-wrap gap-2">
+          {s.treats.split(",").map((t: string) => (
+            <span class="px-2.5 py-0.5 bg-sage-800/50 text-sage-300 text-xs rounded-full font-display border border-sage-700/50">
+              {t.trim()}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Benefits -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-2">Benefits</div>
+        <p class="text-sm text-sage-200/80 font-body leading-relaxed">{s.benefits}</p>
+      </div>
+
+      <!-- Side Effects -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-2">Side Effects</div>
+        <p class="text-sm text-sage-200/80 font-body leading-relaxed">{s.sideEffects}</p>
+      </div>
+
+      <!-- Notes -->
+      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
+        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-2">Notes</div>
+        <p class="text-sm text-sage-200/80 font-body leading-relaxed">{s.notes}</p>
+      </div>
+    </div>
+
+    <!-- Related Supplements -->
+    {related.length > 0 && (
+      <div>
+        <h2 class="text-lg font-display font-bold text-sage-300 mb-3">Related Supplements</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {related.map((r) => (
+            <a
+              href={`/supplement/${r.slug}`}
+              class="flex items-start gap-3 p-3 bg-surface-800 border border-surface-border rounded-xl hover:border-sage-600/50 hover:shadow-card transition-all focus-ring"
+            >
+              <span class={`badge badge-tier${r.tier} shrink-0 mt-0.5`}>T{r.tier}</span>
+              <div class="min-w-0">
+                <div class="text-sm font-display font-semibold text-sage-200 truncate">{r.name}</div>
+                <div class="text-xs text-sage-400/50 font-body truncate">{r.treats}</div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</Layout>

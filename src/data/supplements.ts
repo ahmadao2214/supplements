@@ -4,6 +4,7 @@ export type Schedule = "Daily" | "Adderall Days Only" | "Off Days Only" | "Daily
 export interface Supplement {
   id: number;
   name: string;
+  slug: string;
   category: string;
   treats: string;
   dosage: string;
@@ -24,6 +25,7 @@ export const supplements: Supplement[] = [
   {
     id: 1,
     name: "Omega-3 Fish Oil (EPA/DHA)",
+    slug: "omega-3-fish-oil",
     category: "Essential Fatty Acid",
     treats: "ADHD, Focus, Brain Health",
     dosage: "1,000–2,000 mg (combined EPA+DHA)",
@@ -42,6 +44,7 @@ export const supplements: Supplement[] = [
   {
     id: 2,
     name: "Magnesium L-Threonate",
+    slug: "magnesium-l-threonate",
     category: "Mineral",
     treats: "ADHD, Anxiety, Sleep",
     dosage: "1,000–2,000 mg (144 mg elemental Mg)",
@@ -60,6 +63,7 @@ export const supplements: Supplement[] = [
   {
     id: 3,
     name: "L-Theanine",
+    slug: "l-theanine",
     category: "Amino Acid",
     treats: "ADHD, Anxiety, Focus",
     dosage: "100–200 mg",
@@ -78,6 +82,7 @@ export const supplements: Supplement[] = [
   {
     id: 4,
     name: "Zinc",
+    slug: "zinc",
     category: "Mineral",
     treats: "ADHD, Immune Support",
     dosage: "15–30 mg",
@@ -96,6 +101,7 @@ export const supplements: Supplement[] = [
   {
     id: 5,
     name: "Iron (Ferrous Bisglycinate)",
+    slug: "iron",
     category: "Mineral",
     treats: "ADHD, Energy, Dopamine Production",
     dosage: "18–36 mg",
@@ -114,6 +120,7 @@ export const supplements: Supplement[] = [
   {
     id: 6,
     name: "Vitamin D3",
+    slug: "vitamin-d3",
     category: "Vitamin",
     treats: "ADHD, Mood, Immune Support",
     dosage: "1,000–5,000 IU",
@@ -132,6 +139,7 @@ export const supplements: Supplement[] = [
   {
     id: 7,
     name: "B-Complex (Methylated)",
+    slug: "b-complex",
     category: "Vitamin",
     treats: "ADHD, Energy, Mood",
     dosage: "1 capsule (methylated B-complex)",
@@ -150,6 +158,7 @@ export const supplements: Supplement[] = [
   {
     id: 8,
     name: "L-Tyrosine",
+    slug: "l-tyrosine",
     category: "Amino Acid",
     treats: "ADHD, Focus, Dopamine Support",
     dosage: "500–1,000 mg",
@@ -168,6 +177,7 @@ export const supplements: Supplement[] = [
   {
     id: 9,
     name: "Alpha-GPC",
+    slug: "alpha-gpc",
     category: "Choline Source",
     treats: "ADHD, Memory, Focus",
     dosage: "300–600 mg",
@@ -186,6 +196,7 @@ export const supplements: Supplement[] = [
   {
     id: 10,
     name: "Phosphatidylserine (PS)",
+    slug: "phosphatidylserine",
     category: "Phospholipid",
     treats: "ADHD, Memory, Cortisol Management",
     dosage: "100–200 mg",
@@ -204,6 +215,7 @@ export const supplements: Supplement[] = [
   {
     id: 11,
     name: "Rhodiola Rosea",
+    slug: "rhodiola-rosea",
     category: "Adaptogen",
     treats: "ADHD, Fatigue, Stress",
     dosage: "200–400 mg (3% rosavins, 1% salidroside)",
@@ -222,6 +234,7 @@ export const supplements: Supplement[] = [
   {
     id: 12,
     name: "Bacopa Monnieri",
+    slug: "bacopa-monnieri",
     category: "Adaptogen / Herb",
     treats: "ADHD, Memory, Anxiety",
     dosage: "300–450 mg (standardized to 50% bacosides)",
@@ -240,6 +253,7 @@ export const supplements: Supplement[] = [
   {
     id: 13,
     name: "Lion's Mane Mushroom",
+    slug: "lions-mane-mushroom",
     category: "Medicinal Mushroom",
     treats: "ADHD, Neuroplasticity, Focus",
     dosage: "500–1,000 mg",
@@ -258,6 +272,7 @@ export const supplements: Supplement[] = [
   {
     id: 14,
     name: "Ashwagandha (KSM-66)",
+    slug: "ashwagandha",
     category: "Adaptogen",
     treats: "Anxiety, Stress, ADHD (hyperactivity)",
     dosage: "300–600 mg",
@@ -276,6 +291,7 @@ export const supplements: Supplement[] = [
   {
     id: 15,
     name: "GABA",
+    slug: "gaba",
     category: "Amino Acid / Neurotransmitter",
     treats: "Anxiety, Sleep, ADHD (restlessness)",
     dosage: "250–750 mg",
@@ -294,6 +310,7 @@ export const supplements: Supplement[] = [
   {
     id: 16,
     name: "Inositol (Myo-Inositol)",
+    slug: "inositol",
     category: "B-Vitamin Relative",
     treats: "Anxiety, OCD tendencies, ADHD",
     dosage: "2,000–4,000 mg",
@@ -312,6 +329,7 @@ export const supplements: Supplement[] = [
   {
     id: 17,
     name: "Vitamin C",
+    slug: "vitamin-c",
     category: "Vitamin",
     treats: "Immune Support, Adderall Management",
     dosage: "500–1,000 mg",
@@ -330,6 +348,7 @@ export const supplements: Supplement[] = [
   {
     id: 18,
     name: "Probiotics (Multi-Strain)",
+    slug: "probiotics",
     category: "Gut Health",
     treats: "Gut-Brain Axis, Mood, ADHD",
     dosage: "10–50 billion CFU",
@@ -348,6 +367,7 @@ export const supplements: Supplement[] = [
   {
     id: 19,
     name: "CoQ10 (Ubiquinol)",
+    slug: "coq10",
     category: "Antioxidant / Enzyme",
     treats: "Energy, Mitochondrial Support",
     dosage: "100–200 mg",
@@ -366,6 +386,7 @@ export const supplements: Supplement[] = [
   {
     id: 20,
     name: "Melatonin",
+    slug: "melatonin",
     category: "Hormone / Sleep Aid",
     treats: "Sleep, ADHD-related insomnia",
     dosage: "0.5–3 mg",
@@ -384,6 +405,7 @@ export const supplements: Supplement[] = [
   {
     id: 21,
     name: "Ginkgo Biloba",
+    slug: "ginkgo-biloba",
     category: "Herbal Extract",
     treats: "ADHD, Memory, Circulation",
     dosage: "120–240 mg (standardized extract)",
@@ -402,6 +424,7 @@ export const supplements: Supplement[] = [
   {
     id: 22,
     name: "Vitamin K2 (MK-7)",
+    slug: "vitamin-k2",
     category: "Vitamin",
     treats: "Calcium Metabolism, Bone/Heart Health",
     dosage: "100–200 mcg",
@@ -420,6 +443,7 @@ export const supplements: Supplement[] = [
   {
     id: 23,
     name: "L-Tryptophan / 5-HTP",
+    slug: "l-tryptophan-5-htp",
     category: "Amino Acid",
     treats: "Mood, Sleep, Anxiety",
     dosage: "100–200 mg (5-HTP) or 500 mg (L-Tryptophan)",
@@ -438,6 +462,7 @@ export const supplements: Supplement[] = [
   {
     id: 24,
     name: "Creatine Monohydrate",
+    slug: "creatine-monohydrate",
     category: "Amino Acid Derivative",
     treats: "Brain Energy, Cognitive Performance",
     dosage: "3–5 g",
@@ -456,6 +481,7 @@ export const supplements: Supplement[] = [
   {
     id: 25,
     name: "Saffron Extract (Crocus sativus)",
+    slug: "saffron-extract",
     category: "Herbal Extract",
     treats: "ADHD, Mood, Depression",
     dosage: "20–30 mg (standardized extract)",
@@ -474,6 +500,7 @@ export const supplements: Supplement[] = [
   {
     id: 26,
     name: "SAM-e (S-Adenosylmethionine)",
+    slug: "sam-e",
     category: "Amino Acid Derivative",
     treats: "Mood, Depression, Brain Health",
     dosage: "200–400 mg",
@@ -492,6 +519,7 @@ export const supplements: Supplement[] = [
   {
     id: 27,
     name: "Vitamin E (Tocotrienols)",
+    slug: "vitamin-e",
     category: "Vitamin",
     treats: "Brain Health, Antioxidant Protection",
     dosage: "200–400 IU (mixed tocopherols/tocotrienols)",
@@ -510,6 +538,7 @@ export const supplements: Supplement[] = [
   {
     id: 28,
     name: "L-Glutathione",
+    slug: "l-glutathione",
     category: "Antioxidant",
     treats: "Brain Health, Detoxification, Oxidative Stress",
     dosage: "250–500 mg",
@@ -528,6 +557,7 @@ export const supplements: Supplement[] = [
   {
     id: 29,
     name: "Vinpocetine",
+    slug: "vinpocetine",
     category: "Nootropic",
     treats: "Memory, Focus, Cerebral Circulation",
     dosage: "10–20 mg",
@@ -546,6 +576,7 @@ export const supplements: Supplement[] = [
   {
     id: 30,
     name: "Turmeric / Curcumin",
+    slug: "turmeric-curcumin",
     category: "Herbal Extract",
     treats: "Brain Health, Inflammation, Mood",
     dosage: "500–1,000 mg (standardized curcuminoids)",
@@ -564,6 +595,7 @@ export const supplements: Supplement[] = [
   {
     id: 31,
     name: "Olive Leaf Extract",
+    slug: "olive-leaf-extract",
     category: "Herbal Extract",
     treats: "Brain Health, Immune Support, Antioxidant",
     dosage: "500–1,000 mg",
@@ -582,6 +614,7 @@ export const supplements: Supplement[] = [
   {
     id: 32,
     name: "Pregnenolone",
+    slug: "pregnenolone",
     category: "Hormone Precursor",
     treats: "Memory, Mood, Brain Health",
     dosage: "10–30 mg",
@@ -600,6 +633,7 @@ export const supplements: Supplement[] = [
   {
     id: 33,
     name: "Gotu Kola (Centella asiatica)",
+    slug: "gotu-kola",
     category: "Herbal Extract",
     treats: "Memory, Anxiety, Brain Health",
     dosage: "250–500 mg",
@@ -618,6 +652,7 @@ export const supplements: Supplement[] = [
   {
     id: 34,
     name: "Rosemary Extract",
+    slug: "rosemary-extract",
     category: "Herbal Extract",
     treats: "Memory, Focus, Antioxidant",
     dosage: "250–500 mg",
@@ -636,6 +671,7 @@ export const supplements: Supplement[] = [
   {
     id: 35,
     name: "Benfotiamine",
+    slug: "benfotiamine",
     category: "Vitamin",
     treats: "Brain Health, Nerve Health, Blood Sugar",
     dosage: "150–300 mg",
@@ -654,6 +690,7 @@ export const supplements: Supplement[] = [
   {
     id: 36,
     name: "Black Chokeberry (Aronia melanocarpa)",
+    slug: "black-chokeberry",
     category: "Antioxidant",
     treats: "Brain Health, Cardiovascular, Antioxidant",
     dosage: "500–1,000 mg (extract) or 100 mL juice",
@@ -672,6 +709,7 @@ export const supplements: Supplement[] = [
   {
     id: 37,
     name: "Spirulina",
+    slug: "spirulina",
     category: "Superfood / Algae",
     treats: "Brain Health, Energy, Nutritional Support",
     dosage: "1,000–3,000 mg",
@@ -690,6 +728,7 @@ export const supplements: Supplement[] = [
   {
     id: 38,
     name: "Lithium Orotate",
+    slug: "lithium-orotate",
     category: "Mineral",
     treats: "Mood, Neuroprotection, Brain Health",
     dosage: "5–20 mg (elemental lithium)",
@@ -708,6 +747,7 @@ export const supplements: Supplement[] = [
   {
     id: 39,
     name: "Folic Acid (5-MTHF)",
+    slug: "folic-acid",
     category: "Vitamin",
     treats: "Mood, Brain Health, Methylation",
     dosage: "400–800 mcg",
@@ -726,6 +766,7 @@ export const supplements: Supplement[] = [
   {
     id: 40,
     name: "Panax Ginseng",
+    slug: "panax-ginseng",
     category: "Adaptogen",
     treats: "ADHD, Energy, Focus, Stress",
     dosage: "200–400 mg (standardized to 4–7% ginsenosides)",

@@ -1,0 +1,28 @@
+/* Lexend Deca — Display / Headings (variable font) */
+@font-face {
+  font-family: 'Lexend Deca';
+  src: url('/fonts/lexend-deca-400.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 105%;
+}
+
+/* Source Serif 4 — Body text (variable font) */
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url('/fonts/source-serif-4-400.woff2') format('woff2');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 100%;
+}
+
+/* JetBrains Mono — Data / monospace */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

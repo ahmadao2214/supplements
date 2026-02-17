@@ -1,0 +1,394 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+/* ─── Design Tokens ─── */
+@theme {
+  /* Surfaces — warm forest blacks */
+  --color-surface-900: #0C0F0D;
+  --color-surface-800: #151A16;
+  --color-surface-700: #1D231E;
+  --color-surface-600: #252D27;
+  --color-surface-500: #2E3830;
+  --color-surface-hover: #2E3830;
+  --color-surface-border: #3A4A3D;
+
+  /* Primary — Sage green */
+  --color-sage-50: #f0f5f1;
+  --color-sage-100: #dce8de;
+  --color-sage-200: #b8d1bc;
+  --color-sage-300: #8bb592;
+  --color-sage-400: #6a9e73;
+  --color-sage-500: #4A7C59;
+  --color-sage-600: #3b6347;
+  --color-sage-700: #2d4a36;
+  --color-sage-800: #1e3224;
+  --color-sage-900: #0f1912;
+
+  /* Secondary — Research blue */
+  --color-research-50: #eef2fb;
+  --color-research-100: #d4ddf4;
+  --color-research-200: #a9bbe9;
+  --color-research-300: #7e99de;
+  --color-research-400: #5a7bcf;
+  --color-research-500: #3B5998;
+  --color-research-600: #2f477a;
+  --color-research-700: #24365b;
+  --color-research-800: #18243d;
+  --color-research-900: #0c121e;
+
+  /* Accent — MAPS-inspired cyan */
+  --color-cyan-50: #e0fffe;
+  --color-cyan-100: #b3fff9;
+  --color-cyan-200: #66fff3;
+  --color-cyan-300: #33f5e8;
+  --color-cyan-400: #00D4CC;
+  --color-cyan-500: #00b3ac;
+  --color-cyan-600: #009089;
+  --color-cyan-700: #006c67;
+  --color-cyan-800: #004844;
+  --color-cyan-900: #002422;
+
+  /* Depth purple */
+  --color-depth-50: #f3eff8;
+  --color-depth-100: #e1d8ef;
+  --color-depth-200: #c3b1df;
+  --color-depth-300: #a58acf;
+  --color-depth-400: #8e6dbc;
+  --color-depth-500: #7B5EA7;
+  --color-depth-600: #624b86;
+  --color-depth-700: #4a3864;
+  --color-depth-800: #312643;
+  --color-depth-900: #191321;
+
+  /* Tier status colors */
+  --color-tier1: #4A7C59;
+  --color-tier1-bg: rgba(74, 124, 89, 0.10);
+  --color-tier1-border: rgba(74, 124, 89, 0.30);
+  --color-tier2: #3B5998;
+  --color-tier2-bg: rgba(59, 89, 152, 0.10);
+  --color-tier2-border: rgba(59, 89, 152, 0.30);
+  --color-tier3: #7B5EA7;
+  --color-tier3-bg: rgba(123, 94, 167, 0.10);
+  --color-tier3-border: rgba(123, 94, 167, 0.30);
+
+  /* Status — warm earth tones */
+  --color-safe: #5fa67a;
+  --color-safe-bg: rgba(95, 166, 122, 0.12);
+  --color-safe-border: rgba(95, 166, 122, 0.30);
+  --color-caution: #d4a843;
+  --color-caution-bg: rgba(212, 168, 67, 0.12);
+  --color-caution-border: rgba(212, 168, 67, 0.30);
+  --color-avoid: #c75a5a;
+  --color-avoid-bg: rgba(199, 90, 90, 0.12);
+  --color-avoid-border: rgba(199, 90, 90, 0.30);
+
+  /* Schedule badges */
+  --color-sched-daily: #6a9e73;
+  --color-sched-daily-bg: rgba(106, 158, 115, 0.10);
+  --color-sched-adderall: #7e99de;
+  --color-sched-adderall-bg: rgba(126, 153, 222, 0.10);
+  --color-sched-off: #d4a843;
+  --color-sched-off-bg: rgba(212, 168, 67, 0.10);
+  --color-sched-evening: #a58acf;
+  --color-sched-evening-bg: rgba(165, 138, 207, 0.10);
+
+  /* Time badges */
+  --color-time-day: #d4a843;
+  --color-time-day-bg: rgba(212, 168, 67, 0.10);
+  --color-time-night: #8e6dbc;
+  --color-time-night-bg: rgba(142, 109, 188, 0.10);
+
+  /* Meal badges */
+  --color-meal-yes: #5fa67a;
+  --color-meal-yes-bg: rgba(95, 166, 122, 0.10);
+  --color-meal-fat: #8bb592;
+  --color-meal-fat-bg: rgba(139, 181, 146, 0.10);
+  --color-meal-no: #c78a5a;
+  --color-meal-no-bg: rgba(199, 138, 90, 0.10);
+  --color-meal-optional: #7a8a7d;
+  --color-meal-optional-bg: rgba(122, 138, 125, 0.08);
+
+  /* Typography */
+  --font-display: 'Lexend Deca', system-ui, sans-serif;
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-elevated: 0 8px 30px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-glow-sage: 0 0 20px rgba(74, 124, 89, 0.15);
+  --shadow-glow-cyan: 0 0 20px rgba(0, 212, 204, 0.15);
+
+  /* Animations */
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-fade-in: fade-in 0.2s ease-out;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ─── Base Layer ─── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-surface-900);
+    color: #d4dbd6;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-surface-800);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-500);
+    border-radius: var(--radius-full);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-sage-600);
+  }
+}
+
+/* ─── Component Layer ─── */
+@layer components {
+  /* Tier row styles */
+  .tier-row {
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.1s;
+  }
+
+  .tier-row-1 {
+    background: var(--color-tier1-bg);
+    border-left-color: var(--color-tier1);
+  }
+
+  .tier-row-1:hover {
+    background: rgba(74, 124, 89, 0.18);
+  }
+
+  .tier-row-2 {
+    background: var(--color-tier2-bg);
+    border-left-color: var(--color-tier2);
+  }
+
+  .tier-row-2:hover {
+    background: rgba(59, 89, 152, 0.18);
+  }
+
+  .tier-row-3 {
+    background: var(--color-tier3-bg);
+    border-left-color: var(--color-tier3);
+  }
+
+  .tier-row-3:hover {
+    background: rgba(123, 94, 167, 0.15);
+  }
+
+  .tier-row.cart-selected {
+    outline: 1px solid rgba(0, 212, 204, 0.2);
+    outline-offset: -1px;
+  }
+
+  .tier-row-1.cart-selected {
+    background: rgba(74, 124, 89, 0.16);
+  }
+
+  .tier-row-2.cart-selected {
+    background: rgba(59, 89, 152, 0.16);
+  }
+
+  .tier-row-3.cart-selected {
+    background: rgba(123, 94, 167, 0.14);
+  }
+
+  /* Badge base */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-full);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+
+  /* Status badges */
+  .badge-safe {
+    background: var(--color-safe-bg);
+    color: var(--color-safe);
+    border: 1px solid var(--color-safe-border);
+  }
+
+  .badge-caution {
+    background: var(--color-caution-bg);
+    color: var(--color-caution);
+    border: 1px solid var(--color-caution-border);
+  }
+
+  .badge-avoid {
+    background: var(--color-avoid-bg);
+    color: var(--color-avoid);
+    border: 1px solid var(--color-avoid-border);
+  }
+
+  /* Tier badges */
+  .badge-tier1 {
+    background: var(--color-tier1-bg);
+    color: var(--color-tier1);
+    border: 1px solid var(--color-tier1-border);
+  }
+
+  .badge-tier2 {
+    background: var(--color-tier2-bg);
+    color: var(--color-tier2);
+    border: 1px solid var(--color-tier2-border);
+  }
+
+  .badge-tier3 {
+    background: var(--color-tier3-bg);
+    color: var(--color-tier3);
+    border: 1px solid var(--color-tier3-border);
+  }
+
+  /* Schedule badges */
+  .badge-schedule-daily {
+    background: var(--color-sched-daily-bg);
+    color: var(--color-sched-daily);
+    border: 1px solid rgba(106, 158, 115, 0.25);
+    font-size: 0.7rem;
+  }
+
+  .badge-schedule-adderall {
+    background: var(--color-sched-adderall-bg);
+    color: var(--color-sched-adderall);
+    border: 1px solid rgba(126, 153, 222, 0.25);
+    font-size: 0.7rem;
+  }
+
+  .badge-schedule-off {
+    background: var(--color-sched-off-bg);
+    color: var(--color-sched-off);
+    border: 1px solid rgba(212, 168, 67, 0.25);
+    font-size: 0.7rem;
+  }
+
+  .badge-schedule-evening {
+    background: var(--color-sched-evening-bg);
+    color: var(--color-sched-evening);
+    border: 1px solid rgba(165, 138, 207, 0.25);
+    font-size: 0.7rem;
+  }
+
+  /* Time of day badges */
+  .badge-time-day {
+    background: var(--color-time-day-bg);
+    color: var(--color-time-day);
+    border: 1px solid rgba(212, 168, 67, 0.25);
+  }
+
+  .badge-time-night {
+    background: var(--color-time-night-bg);
+    color: var(--color-time-night);
+    border: 1px solid rgba(142, 109, 188, 0.25);
+  }
+
+  /* Meal badges */
+  .badge-meal-yes {
+    background: var(--color-meal-yes-bg);
+    color: var(--color-meal-yes);
+    border: 1px solid rgba(95, 166, 122, 0.25);
+  }
+
+  .badge-meal-fat {
+    background: var(--color-meal-fat-bg);
+    color: var(--color-meal-fat);
+    border: 1px solid rgba(139, 181, 146, 0.25);
+  }
+
+  .badge-meal-no {
+    background: var(--color-meal-no-bg);
+    color: var(--color-meal-no);
+    border: 1px solid rgba(199, 138, 90, 0.25);
+  }
+
+  .badge-meal-optional {
+    background: var(--color-meal-optional-bg);
+    color: var(--color-meal-optional);
+    border: 1px solid rgba(122, 138, 125, 0.15);
+  }
+}
+
+/* ─── Utility Layer ─── */
+@layer utilities {
+  .focus-ring {
+    outline: none;
+  }
+
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--color-cyan-400);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  .font-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
