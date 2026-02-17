@@ -38,7 +38,7 @@ export function DataTable({
   onSelectAll,
 }: DataTableProps) {
   return (
-    <div className="overflow-x-auto border border-surface-border rounded-xl shadow-card">
+    <div className="overflow-auto max-h-[calc(100vh-220px)] border border-surface-border rounded-xl shadow-card">
       <table className="w-full border-collapse text-sm">
         <TableHeader
           visibleColumns={visibleColumns}
