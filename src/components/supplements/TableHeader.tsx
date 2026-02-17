@@ -24,7 +24,7 @@ export const TableHeader = React.memo(function TableHeader({
   onSelectAll,
 }: TableHeaderProps) {
   return (
-    <thead className="sticky top-0 z-10">
+    <thead>
       <tr>
         {allColumns
           .filter((col) => visibleColumns.has(col.key))
