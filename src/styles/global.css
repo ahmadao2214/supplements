@@ -199,6 +199,11 @@
 /* ─── Component Layer ─── */
 @layer components {
   /* Tier row styles */
+  /* Alternating row stripes */
+  .tier-row-stripe {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
   .tier-row {
     border-left: 3px solid transparent;
     cursor: pointer;

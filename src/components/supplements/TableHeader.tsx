@@ -68,8 +68,7 @@ export const TableHeader = React.memo(function TableHeader({
               </th>
             )
           )}
-        <th className="bg-surface-800 px-3 py-2.5 text-center font-semibold text-xs uppercase tracking-wider text-sage-400/50 border-b-2 border-surface-border w-[50px] font-display">
-          Details
+        <th className="bg-surface-800 px-3 py-2.5 text-center text-sage-400/30 border-b-2 border-surface-border w-[40px] font-display">
         </th>
       </tr>
     </thead>

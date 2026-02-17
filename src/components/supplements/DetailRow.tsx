@@ -56,12 +56,7 @@ export const DetailRow = React.memo(function DetailRow({ supplement: s, colSpan 
             <div><strong className="text-sage-400/50">Category:</strong> {s.category}</div>
             <div><strong className="text-sage-400/50">Treats:</strong> {s.treats}</div>
             <div><strong className="text-sage-400/50">Dosage:</strong> {s.dosage}</div>
-            <div>
-              <strong className="text-sage-400/50">Frequency:</strong>{" "}
-              {s.frequency.startsWith("1–3") ? <>&#x2460;&#x2461;&#x2462; {s.frequency}</> :
-               s.frequency.startsWith("1–2") ? <>&#x2460;&#x2461; {s.frequency}</> :
-               s.frequency.startsWith("1x") ? <>&#x2460; {s.frequency}</> : s.frequency}
-            </div>
+            <div><strong className="text-sage-400/50">Frequency:</strong> {s.frequency}</div>
             <div>
               <strong className="text-sage-400/50">Time of Day:</strong>{" "}
               {timeType ? (

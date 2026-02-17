@@ -5,9 +5,9 @@ export const tierLabels: Record<number, string> = {
 };
 
 export const tierDescriptions: Record<number, string> = {
-  1: "Start here — highest impact for ADHD + Adderall",
-  2: "Strong additions once core stack is stable",
-  3: "Situational — add based on individual needs",
+  1: "Start here — highest impact",
+  2: "Strong additions to core stack",
+  3: "Situational — individual needs",
 };
 
 export const DEFAULT_COLS = [

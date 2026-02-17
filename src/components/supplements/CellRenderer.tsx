@@ -69,11 +69,7 @@ export const CellRenderer = React.memo(function CellRenderer({ colKey, supplemen
       return <>{s.withMeals}</>;
     }
     case "frequency": {
-      const val = s.frequency;
-      if (val.startsWith("1–3")) return <>&#x2460;&#x2461;&#x2462; {val}</>;
-      if (val.startsWith("1–2")) return <>&#x2460;&#x2461; {val}</>;
-      if (val.startsWith("1x")) return <>&#x2460; {val}</>;
-      return <>{val}</>;
+      return <>{s.frequency}</>;
     }
     case "name": {
       return (

@@ -15,6 +15,7 @@ interface TableRowProps {
   price?: number;
   onCartToggle: (id: number) => void;
   onCartSetQty: (id: number, qty: number) => void;
+  striped?: boolean;
 }
 
 export const TableRow = React.memo(
@@ -28,6 +29,7 @@ export const TableRow = React.memo(
     price,
     onCartToggle,
     onCartSetQty,
+    striped,
   }: TableRowProps) {
     const visibleCols = allColumns.filter((col) => visibleColumns.has(col.key));
     const colSpan = visibleCols.length + 1;
@@ -35,12 +37,12 @@ export const TableRow = React.memo(
     return (
       <>
         <tr
-          className={`tier-row tier-row-${s.tier}${inCart ? " cart-selected" : ""}`}
+          className={`tier-row tier-row-${s.tier}${inCart ? " cart-selected" : ""}${striped ? " tier-row-stripe" : ""} group/row`}
           onClick={() => onToggleExpand(s.id)}
           aria-expanded={isExpanded}
         >
           {visibleCols.map((col) => (
-            <td key={col.key} className="px-3 py-2 border-b border-surface-border align-top max-w-[280px] font-body text-sage-200/90">
+            <td key={col.key} className="px-3 py-2 border-b border-surface-border align-top max-w-[280px] font-display text-sage-200/90">
               {col.key === "purchaseUrl" ? (
                 <CartCell
                   suppId={s.id}
@@ -58,16 +60,12 @@ export const TableRow = React.memo(
             </td>
           ))}
           <td className="px-3 py-2 border-b border-surface-border text-center w-[50px]">
-            <button
-              className="w-7 h-7 inline-flex items-center justify-center bg-surface-700 border border-surface-border text-sage-300 rounded-lg text-base leading-none hover:bg-sage-700 hover:border-sage-500 transition-colors focus-ring"
-              aria-label={isExpanded ? `Collapse ${s.name} details` : `Expand ${s.name} details`}
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleExpand(s.id);
-              }}
+            <span
+              className={`inline-flex items-center justify-center w-5 h-5 text-sage-400/40 group-hover/row:text-sage-300 transition-all text-xs ${isExpanded ? "rotate-90" : ""}`}
+              aria-hidden="true"
             >
-              {isExpanded ? "−" : "+"}
-            </button>
+              ›
+            </span>
           </td>
         </tr>
         {isExpanded && <DetailRow supplement={s} colSpan={colSpan} />}
@@ -80,5 +78,6 @@ export const TableRow = React.memo(
     prev.inCart === next.inCart &&
     prev.cartQty === next.cartQty &&
     prev.visibleColumns === next.visibleColumns &&
-    prev.price === next.price
+    prev.price === next.price &&
+    prev.striped === next.striped
 );

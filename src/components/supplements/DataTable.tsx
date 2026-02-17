@@ -49,7 +49,7 @@ export function DataTable({
           onSelectAll={onSelectAll}
         />
         <tbody>
-          {filtered.map((s) => (
+          {filtered.map((s, i) => (
             <TableRow
               key={s.id}
               supplement={s}
@@ -61,6 +61,7 @@ export function DataTable({
               price={prices[s.id]}
               onCartToggle={onCartToggle}
               onCartSetQty={onCartSetQty}
+              striped={i % 2 === 1}
             />
           ))}
         </tbody>
