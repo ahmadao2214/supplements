@@ -34,7 +34,7 @@ export const TableHeader = React.memo(function TableHeader({
               <th
                 key={col.key}
                 scope="col"
-                className={`${thCls} ${col.key === "tier" ? "pl-5 pr-1 w-10" : "px-4"}`}
+                className={`${thCls} ${["timeOfDay", "withAdderall"].includes(col.key) ? "px-4 w-20" : "px-4"}`}
                 aria-sort={sortKey === col.key ? (sortDir === "asc" ? "ascending" : "descending") : undefined}
               >
                 <button

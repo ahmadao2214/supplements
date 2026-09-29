@@ -39,7 +39,7 @@ export const TableRow = React.memo(
           onClick={() => onToggleExpand(s.id)}
         >
           {visibleCols.map((col) => (
-            <td key={col.key} className={`py-3 border-b border-surface-border align-middle max-w-[300px] text-sm text-ink-soft ${col.key === "tier" ? "pl-5 pr-1 w-10" : "px-4"}`}>
+            <td key={col.key} className={`py-3 border-b border-surface-border align-middle max-w-[300px] text-sm text-ink-soft ${["timeOfDay", "withAdderall"].includes(col.key) ? "px-4 w-20" : "px-4"}`}>
               {col.key === "purchaseUrl" ? (
                 <CartCell
                   suppId={s.id}

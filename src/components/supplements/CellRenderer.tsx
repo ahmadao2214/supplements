@@ -1,7 +1,7 @@
 import React from "react";
 import type { Supplement } from "../../data/supplements";
-import { TierIcon } from "../ui/Icons";
-import { AdderallLabel, ScheduleLabel, TimeLabel, MealLabel, SupplementName } from "../ui/SupplementBadges";
+import { tierLabels } from "../../lib/constants";
+import { AdderallFlag, ScheduleLabel, TimeIcon, MealLabel, SupplementName } from "../ui/SupplementBadges";
 
 interface CellRendererProps {
   colKey: string;
@@ -11,17 +11,17 @@ interface CellRendererProps {
 export const CellRenderer = React.memo(function CellRenderer({ colKey, supplement: s }: CellRendererProps) {
   switch (colKey) {
     case "tier":
-      return <TierIcon tier={s.tier} />;
+      return <>{tierLabels[s.tier]}</>;
     case "withAdderall":
-      return <AdderallLabel supplement={s} />;
+      return <AdderallFlag supplement={s} />;
     case "schedule":
       return <ScheduleLabel supplement={s} />;
     case "timeOfDay":
-      return <TimeLabel supplement={s} />;
+      return <TimeIcon supplement={s} />;
     case "withMeals":
       return <MealLabel supplement={s} />;
     case "dosage":
-      return <span className="font-mono text-[0.8125rem] text-ink-soft">{s.dosage}</span>;
+      return <span className="font-tabular">{s.dosage}</span>;
     case "name":
       return (
         <a

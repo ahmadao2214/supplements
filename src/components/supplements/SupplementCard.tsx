@@ -1,7 +1,7 @@
 import React from "react";
 import type { Supplement } from "../../data/supplements";
-import { TierIcon, PlusIcon, CheckIcon } from "../ui/Icons";
-import { AdderallLabel, TimeLabel } from "../ui/SupplementBadges";
+import { PlusIcon, CheckIcon } from "../ui/Icons";
+import { AdderallFlag, TimeIcon } from "../ui/SupplementBadges";
 
 interface SupplementCardProps {
   supplement: Supplement;
@@ -17,7 +17,6 @@ export const SupplementCard = React.memo(function SupplementCard({
   return (
     <article className={`relative flex flex-col panel p-4 transition-colors hover:border-surface-500 ${inCart ? "!border-sage-500/50" : ""}`}>
       <div className="flex items-start gap-3">
-        <TierIcon tier={s.tier} className="mt-0.5" />
         <div className="min-w-0 flex-1">
           <h2 className="font-display text-base font-semibold leading-snug">
             <a href={`/supplement/${s.slug}`} className="hover:text-sage-300 transition-colors focus-ring after:absolute after:inset-0">
@@ -41,10 +40,16 @@ export const SupplementCard = React.memo(function SupplementCard({
         )}
       </div>
 
-      <p className="font-mono text-xs text-ink-muted mt-3 pl-7">{s.dosage}</p>
-      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 pl-7 text-[0.8125rem]">
-        <TimeLabel supplement={s} />
-        <AdderallLabel supplement={s} long />
+      <div className="flex items-center justify-between gap-3 mt-auto pt-4 text-[0.8125rem] text-ink-muted">
+        <span className="truncate">
+          <span className="font-tabular">{s.dosage}</span>
+          <span className="text-ink-faint"> · </span>
+          {s.frequency}
+        </span>
+        <span className="flex items-center gap-2.5 shrink-0">
+          <AdderallFlag supplement={s} />
+          <TimeIcon supplement={s} />
+        </span>
       </div>
     </article>
   );

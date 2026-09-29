@@ -13,6 +13,7 @@ import { CartBar } from "./CartBar";
 import { ViewToggle } from "./ViewToggle";
 import { MobileList } from "./MobileList";
 import { PlusIcon, CheckIcon } from "../ui/Icons";
+import { IconLegend } from "../ui/IconLegend";
 
 const CardGrid = lazy(() => import("./CardGrid").then((m) => ({ default: m.CardGrid })));
 
@@ -161,6 +162,8 @@ export default function SupplementDatabase({ prices = {} }: Props) {
           />
         </Suspense>
       )}
+
+      {!empty && <IconLegend className="mt-4 px-1" />}
 
       <CartBar
         itemCount={cart.cartItems.size}

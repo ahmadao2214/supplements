@@ -1,6 +1,3 @@
-import type { Tier } from "../../data/supplements";
-import { tierLabels, tierDescriptions } from "../../lib/constants";
-
 type IconProps = { size?: number; className?: string };
 
 const base = (size: number) => ({
@@ -10,35 +7,6 @@ const base = (size: number) => ({
   fill: "none",
   "aria-hidden": true as const,
 });
-
-/**
- * Tier marks — shape carries the meaning so no text or color is required:
- * Core = solid dot (foundation), Add-On = plus (build on core), Optional = dashed ring (situational).
- * Pass `decorative` when the tier name is already shown as text next to the icon.
- */
-export function TierIcon({ tier, size = 16, className = "", decorative = false }: IconProps & { tier: Tier; decorative?: boolean }) {
-  const tone = tier === 1 ? "text-sage-300" : tier === 2 ? "text-ink-soft" : "text-ink-muted";
-  return (
-    <span
-      className={`inline-flex shrink-0 ${tone} ${className}`}
-      title={decorative ? undefined : `${tierLabels[tier]} — ${tierDescriptions[tier]}`}
-    >
-      <svg {...base(size)}>
-        {tier === 1 && <circle cx="8" cy="8" r="5.5" fill="currentColor" />}
-        {tier === 2 && (
-          <>
-            <circle cx="8" cy="8" r="5.75" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M8 5.25v5.5M5.25 8h5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </>
-        )}
-        {tier === 3 && (
-          <circle cx="8" cy="8" r="5.75" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2.3 2.2" />
-        )}
-      </svg>
-      {!decorative && <span className="sr-only">{tierLabels[tier]}</span>}
-    </span>
-  );
-}
 
 export function SunIcon({ size = 14, className = "" }: IconProps) {
   return (

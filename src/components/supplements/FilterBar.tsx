@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { SearchInput } from "./SearchInput";
 import { tierLabels } from "../../lib/constants";
-import { TierIcon } from "../ui/Icons";
 import type { Supplement } from "../../data/supplements";
 
 type SortKey = keyof Supplement;
@@ -139,7 +138,6 @@ export const FilterBar = React.memo(function FilterBar(props: FilterBarProps) {
               aria-pressed={props.tierFilter === String(t)}
               onClick={() => props.setTierFilter(props.tierFilter === String(t) ? "All" : String(t))}
             >
-              <TierIcon tier={t} size={14} decorative />
               {tierLabels[t]}
             </button>
           ))}

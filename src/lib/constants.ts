@@ -11,7 +11,6 @@ export const tierDescriptions: Record<number, string> = {
 };
 
 export const DEFAULT_COLS = [
-  "tier",
   "name",
   "dosage",
   "frequency",

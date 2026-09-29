@@ -7,18 +7,47 @@ import {
   getTimeLabel,
   getMealLabel,
 } from "../../lib/format-utils";
-import { TierIcon, SunIcon, MoonIcon, ClockIcon, CheckIcon, AlertIcon, BanIcon } from "./Icons";
+import { SunIcon, MoonIcon, ClockIcon, CheckIcon, AlertIcon, BanIcon } from "./Icons";
 
 type S = { supplement: Supplement };
 
 const meta = "inline-flex items-center gap-1.5 whitespace-nowrap";
 
-/** Tier icon with its name — for places that explain a single supplement. */
+/** Tier name — for places that explain a single supplement. */
 export function TierLabel({ supplement: s }: S) {
+  return <span className="font-semibold text-ink">{tierLabels[s.tier]}</span>;
+}
+
+const adderallText = {
+  safe: { short: "Safe", long: "Adderall-safe" },
+  caution: { short: "Caution", long: "Caution with Adderall" },
+  avoid: { short: "Separate", long: "Separate from Adderall" },
+};
+
+const timeIcons = { day: SunIcon, night: MoonIcon, flex: ClockIcon };
+
+/** Icon only, for list rows; the words live in the legend and details. */
+export function TimeIcon({ supplement: s }: S) {
+  const type = classifyTimeOfDay(s.timeOfDay);
+  if (!type) return null;
+  const Icon = timeIcons[type];
   return (
-    <span className={`${meta} text-sm text-ink-soft`}>
-      <TierIcon tier={s.tier} decorative />
-      {tierLabels[s.tier]}
+    <span className="inline-flex text-ink-muted" title={s.timeOfDay}>
+      <Icon size={16} />
+      <span className="sr-only">{getTimeLabel(type)}</span>
+    </span>
+  );
+}
+
+/** Nothing when safe; a warning icon only when Adderall needs attention. */
+export function AdderallFlag({ supplement: s }: S) {
+  const type = classifyAdderall(s.withAdderall);
+  if (type === "safe") return null;
+  const Icon = type === "caution" ? AlertIcon : BanIcon;
+  return (
+    <span className={`inline-flex ${type === "caution" ? "text-caution" : "text-avoid"}`} title={s.withAdderall}>
+      <Icon size={16} />
+      <span className="sr-only">{adderallText[type].long}</span>
     </span>
   );
 }
@@ -26,7 +55,7 @@ export function TierLabel({ supplement: s }: S) {
 export function TimeLabel({ supplement: s }: S) {
   const type = classifyTimeOfDay(s.timeOfDay);
   if (!type) return <span>{s.timeOfDay}</span>;
-  const Icon = type === "day" ? SunIcon : type === "night" ? MoonIcon : ClockIcon;
+  const Icon = timeIcons[type];
   return (
     <span className={`${meta} text-ink-soft`} title={s.timeOfDay}>
       <Icon className="text-ink-muted" />
@@ -35,11 +64,6 @@ export function TimeLabel({ supplement: s }: S) {
   );
 }
 
-const adderallText = {
-  safe: { short: "Safe", long: "Adderall-safe" },
-  caution: { short: "Caution", long: "Caution with Adderall" },
-  avoid: { short: "Separate", long: "Separate from Adderall" },
-};
 
 /** Neutral when safe; color is reserved for the cases that need attention. */
 export function AdderallLabel({ supplement: s, long = false }: S & { long?: boolean }) {

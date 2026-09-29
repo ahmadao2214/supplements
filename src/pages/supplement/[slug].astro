@@ -5,7 +5,6 @@ import { supplements, type Supplement } from "../../data/supplements";
 import { getRelatedSupplements } from "../../lib/supplement-utils";
 import { classifyTimeOfDay, classifyMeals, getTimeLabel, getMealLabel } from "../../lib/format-utils";
 import { TierLabel, AdderallLabel, ScheduleLabel, TimeLabel, MealLabel } from "../../components/ui/SupplementBadges";
-import { TierIcon } from "../../components/ui/Icons";
 
 export function getStaticPaths() {
   return supplements.map((s) => ({
@@ -72,7 +71,8 @@ const mealNote = mealType && s.withMeals !== getMealLabel(mealType) ? s.withMeal
       <dl class="grid grid-cols-2 md:grid-cols-3 text-sm text-ink-soft">
         <div class="p-4 border-b border-surface-border md:border-r col-span-2 md:col-span-1">
           <dt class="eyebrow mb-1.5">Dosage</dt>
-          <dd class="font-mono text-ink">{s.dosage}</dd>
+          <dd class="font-tabular text-ink">{s.dosage}</dd>
+          {s.dosageNote && <dd class="mt-1 text-xs text-ink-muted">{s.dosageNote}</dd>}
         </div>
         <div class="p-4 border-b border-r border-surface-border">
           <dt class="eyebrow mb-1.5">Frequency</dt>
@@ -88,7 +88,7 @@ const mealNote = mealType && s.withMeals !== getMealLabel(mealType) ? s.withMeal
         </div>
         <div class="p-4 md:border-r border-surface-border max-md:border-b">
           <dt class="eyebrow mb-1.5">Adderall</dt>
-          <dd><AdderallLabel supplement={s} long /><span class="block mt-1 text-xs text-ink-muted">{s.withAdderall}</span></dd>
+          <dd><AdderallLabel supplement={s} long />{s.withAdderall !== "Yes — safe to combine" && <span class="block mt-1 text-xs text-ink-muted">{s.withAdderall}</span>}</dd>
         </div>
         <div class="p-4 col-span-2 md:col-span-1">
           <dt class="eyebrow mb-1.5">Schedule</dt>
@@ -126,7 +126,6 @@ const mealNote = mealType && s.withMeals !== getMealLabel(mealType) ? s.withMeal
                 href={`/supplement/${r.slug}`}
                 class="flex items-center gap-3 px-4 py-3 hover:bg-surface-hover transition-colors focus-ring"
               >
-                <TierIcon tier={r.tier} />
                 <span class="min-w-0 flex-1">
                   <span class="block text-sm font-semibold text-ink">{r.name}</span>
                   {r.form && <span class="block text-xs text-ink-muted">{r.form}</span>}

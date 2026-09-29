@@ -1,7 +1,7 @@
 import React from "react";
 import type { Supplement } from "../../data/supplements";
-import { TierIcon, PlusIcon, CheckIcon } from "../ui/Icons";
-import { AdderallLabel, TimeLabel, SupplementName } from "../ui/SupplementBadges";
+import { PlusIcon, CheckIcon } from "../ui/Icons";
+import { AdderallFlag, TimeIcon, SupplementName } from "../ui/SupplementBadges";
 import { QtyStepperButton } from "../ui/QtyStepperButton";
 import { SupplementFacts } from "./SupplementFacts";
 import { formatPrice } from "../../lib/format-utils";
@@ -42,25 +42,28 @@ const MobileItem = React.memo(function MobileItem({
       <div className="flex items-stretch">
         <button
           type="button"
-          className="flex-1 min-w-0 flex gap-3 text-left pl-4 pr-2 py-3.5 focus-ring"
+          className="flex-1 min-w-0 text-left pl-4 pr-1 py-3.5 focus-ring"
           aria-expanded={isExpanded}
           onClick={() => onToggleExpand(s.id)}
         >
-          <TierIcon tier={s.tier} className="mt-0.5" />
-          <span className="min-w-0 flex-1">
+          <span className="flex items-start justify-between gap-3">
             <SupplementName supplement={s} className="text-[0.9375rem]" />
-            <span className="block mt-1.5 font-mono text-xs text-ink-muted truncate">{s.dosage}</span>
-            <span className="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-[0.8125rem]">
-              <TimeLabel supplement={s} />
-              <AdderallLabel supplement={s} long />
+            <span className="flex items-center gap-2.5 pt-0.5 shrink-0">
+              <AdderallFlag supplement={s} />
+              <TimeIcon supplement={s} />
             </span>
+          </span>
+          <span className="block mt-1 text-[0.8125rem] text-ink-muted truncate">
+            <span className="font-tabular">{s.dosage}</span>
+            <span className="text-ink-faint"> · </span>
+            {s.frequency}
           </span>
         </button>
         {s.purchaseUrl ? (
           <button
             type="button"
             onClick={() => onCartToggle(s.id)}
-            className="shrink-0 w-14 flex items-center justify-center focus-ring"
+            className="shrink-0 w-14 flex items-start justify-center pt-3 focus-ring"
             aria-pressed={inCart}
             aria-label={inCart ? `Remove ${s.name} from cart` : `Add ${s.name} to cart`}
           >
@@ -76,7 +79,7 @@ const MobileItem = React.memo(function MobileItem({
       </div>
 
       {inCart && (
-        <div className="flex items-center justify-between gap-3 pl-11 pr-3 pb-3 -mt-1">
+        <div className="flex items-center justify-between gap-3 pl-4 pr-3 pb-3 -mt-1">
           <span className="text-xs text-ink-muted font-mono font-tabular">
             {price ? formatPrice(price * qty) : null}
           </span>
@@ -91,7 +94,7 @@ const MobileItem = React.memo(function MobileItem({
       )}
 
       {isExpanded && (
-        <div className="pl-11 pr-4 pb-5 pt-1">
+        <div className="px-4 pb-5 pt-1">
           <SupplementFacts supplement={s} />
         </div>
       )}
