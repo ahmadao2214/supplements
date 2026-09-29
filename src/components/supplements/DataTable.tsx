@@ -18,8 +18,6 @@ interface DataTableProps {
   prices: Record<number, number>;
   onCartToggle: (id: number) => void;
   onCartSetQty: (id: number, qty: number) => void;
-  selectAllState: "none" | "some" | "all";
-  onSelectAll: () => void;
 }
 
 export function DataTable({
@@ -34,8 +32,6 @@ export function DataTable({
   prices,
   onCartToggle,
   onCartSetQty,
-  selectAllState,
-  onSelectAll,
 }: DataTableProps) {
   return (
     <div className="overflow-x-auto panel shadow-card">
@@ -45,8 +41,6 @@ export function DataTable({
           sortKey={sortKey}
           sortDir={sortDir}
           onSort={onSort}
-          selectAllState={selectAllState}
-          onSelectAll={onSelectAll}
         />
         <tbody>
           {filtered.map((s) => (

@@ -1,58 +1,74 @@
 import type { Supplement } from "../../data/supplements";
-import { tierLabels, tierDescriptions } from "../../lib/constants";
+import { tierLabels } from "../../lib/constants";
 import {
   classifyAdderall,
-  classifySchedule,
   classifyTimeOfDay,
   classifyMeals,
-  getAdderallLabel,
   getTimeLabel,
   getMealLabel,
 } from "../../lib/format-utils";
+import { TierIcon, SunIcon, MoonIcon, ClockIcon, CheckIcon, AlertIcon, BanIcon } from "./Icons";
 
 type S = { supplement: Supplement };
 
-export function TierBadge({ supplement: s, short = false }: S & { short?: boolean }) {
+const meta = "inline-flex items-center gap-1.5 whitespace-nowrap";
+
+/** Tier icon with its name — for places that explain a single supplement. */
+export function TierLabel({ supplement: s }: S) {
   return (
-    <span className={`badge badge-tier${s.tier}`} title={tierDescriptions[s.tier]}>
-      {short ? `T${s.tier}` : tierLabels[s.tier]}
+    <span className={`${meta} text-sm text-ink-soft`}>
+      <TierIcon tier={s.tier} decorative />
+      {tierLabels[s.tier]}
     </span>
   );
 }
 
-export function AdderallBadge({ supplement: s }: S) {
-  const type = classifyAdderall(s.withAdderall);
-  return (
-    <span className={`badge badge-dot badge-${type}`} title={s.withAdderall}>
-      {getAdderallLabel(type)}
-    </span>
-  );
-}
-
-export function ScheduleBadge({ supplement: s, short = false }: S & { short?: boolean }) {
-  return (
-    <span className={`badge badge-dot badge-${classifySchedule(s.schedule)}`} title={s.schedule}>
-      {short ? s.schedule.replace("Daily — ", "") : s.schedule}
-    </span>
-  );
-}
-
-export function TimeBadge({ supplement: s }: S) {
+export function TimeLabel({ supplement: s }: S) {
   const type = classifyTimeOfDay(s.timeOfDay);
   if (!type) return <span>{s.timeOfDay}</span>;
+  const Icon = type === "day" ? SunIcon : type === "night" ? MoonIcon : ClockIcon;
   return (
-    <span className={`badge badge-dot badge-time-${type}`} title={s.timeOfDay}>
+    <span className={`${meta} text-ink-soft`} title={s.timeOfDay}>
+      <Icon className="text-ink-muted" />
       {getTimeLabel(type)}
     </span>
   );
 }
 
-export function MealBadge({ supplement: s }: S) {
-  const type = classifyMeals(s.withMeals);
-  if (!type) return <span>{s.withMeals}</span>;
+const adderallText = {
+  safe: { short: "Safe", long: "Adderall-safe" },
+  caution: { short: "Caution", long: "Caution with Adderall" },
+  avoid: { short: "Separate", long: "Separate from Adderall" },
+};
+
+/** Neutral when safe; color is reserved for the cases that need attention. */
+export function AdderallLabel({ supplement: s, long = false }: S & { long?: boolean }) {
+  const type = classifyAdderall(s.withAdderall);
+  const Icon = type === "safe" ? CheckIcon : type === "caution" ? AlertIcon : BanIcon;
+  const tone = type === "safe" ? "text-ink-muted" : type === "caution" ? "text-caution" : "text-avoid";
   return (
-    <span className={`badge badge-dot badge-meal-${type}`} title={s.withMeals}>
-      {getMealLabel(type)}
+    <span className={`${meta} ${tone}`} title={s.withAdderall}>
+      <Icon />
+      {adderallText[type][long ? "long" : "short"]}
+    </span>
+  );
+}
+
+export function MealLabel({ supplement: s }: S) {
+  const type = classifyMeals(s.withMeals);
+  return <span>{type ? getMealLabel(type) : s.withMeals}</span>;
+}
+
+export function ScheduleLabel({ supplement: s }: S) {
+  return <span>{s.schedule.replace("Daily — ", "Daily; ")}</span>;
+}
+
+/** Name with the specific form underneath, so names scan at a glance. */
+export function SupplementName({ supplement: s, className = "" }: S & { className?: string }) {
+  return (
+    <span className={`block min-w-0 ${className}`}>
+      <span className="block font-semibold text-ink leading-snug">{s.name}</span>
+      {s.form && <span className="block text-[0.8125rem] text-ink-muted leading-snug">{s.form}</span>}
     </span>
   );
 }

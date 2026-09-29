@@ -3,7 +3,10 @@ export type Schedule = "Daily" | "Adderall Days Only" | "Off Days Only" | "Daily
 
 export interface Supplement {
   id: number;
+  /** Short common name, e.g. "Magnesium" */
   name: string;
+  /** Specific form or standardization, e.g. "L-Threonate" (may be empty) */
+  form: string;
   slug: string;
   category: string;
   treats: string;
@@ -24,7 +27,8 @@ export interface Supplement {
 export const supplements: Supplement[] = [
   {
     id: 1,
-    name: "Omega-3 Fish Oil (EPA/DHA)",
+    name: "Omega-3",
+    form: "Fish oil, EPA/DHA",
     slug: "omega-3-fish-oil",
     category: "Essential Fatty Acid",
     treats: "ADHD, Focus, Brain Health",
@@ -43,7 +47,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 2,
-    name: "Magnesium L-Threonate",
+    name: "Magnesium",
+    form: "L-Threonate",
     slug: "magnesium-l-threonate",
     category: "Mineral",
     treats: "ADHD, Anxiety, Sleep",
@@ -63,6 +68,7 @@ export const supplements: Supplement[] = [
   {
     id: 3,
     name: "L-Theanine",
+    form: "",
     slug: "l-theanine",
     category: "Amino Acid",
     treats: "ADHD, Anxiety, Focus",
@@ -82,6 +88,7 @@ export const supplements: Supplement[] = [
   {
     id: 4,
     name: "Zinc",
+    form: "",
     slug: "zinc",
     category: "Mineral",
     treats: "ADHD, Immune Support",
@@ -100,7 +107,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 5,
-    name: "Iron (Ferrous Bisglycinate)",
+    name: "Iron",
+    form: "Ferrous bisglycinate",
     slug: "iron",
     category: "Mineral",
     treats: "ADHD, Energy, Dopamine Production",
@@ -120,6 +128,7 @@ export const supplements: Supplement[] = [
   {
     id: 6,
     name: "Vitamin D3",
+    form: "",
     slug: "vitamin-d3",
     category: "Vitamin",
     treats: "ADHD, Mood, Immune Support",
@@ -138,7 +147,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 7,
-    name: "B-Complex (Methylated)",
+    name: "B-Complex",
+    form: "Methylated",
     slug: "b-complex",
     category: "Vitamin",
     treats: "ADHD, Energy, Mood",
@@ -158,6 +168,7 @@ export const supplements: Supplement[] = [
   {
     id: 8,
     name: "L-Tyrosine",
+    form: "",
     slug: "l-tyrosine",
     category: "Amino Acid",
     treats: "ADHD, Focus, Dopamine Support",
@@ -177,6 +188,7 @@ export const supplements: Supplement[] = [
   {
     id: 9,
     name: "Alpha-GPC",
+    form: "",
     slug: "alpha-gpc",
     category: "Choline Source",
     treats: "ADHD, Memory, Focus",
@@ -195,7 +207,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 10,
-    name: "Phosphatidylserine (PS)",
+    name: "Phosphatidylserine",
+    form: "",
     slug: "phosphatidylserine",
     category: "Phospholipid",
     treats: "ADHD, Memory, Cortisol Management",
@@ -214,7 +227,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 11,
-    name: "Rhodiola Rosea",
+    name: "Rhodiola",
+    form: "",
     slug: "rhodiola-rosea",
     category: "Adaptogen",
     treats: "ADHD, Fatigue, Stress",
@@ -233,7 +247,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 12,
-    name: "Bacopa Monnieri",
+    name: "Bacopa",
+    form: "",
     slug: "bacopa-monnieri",
     category: "Adaptogen / Herb",
     treats: "ADHD, Memory, Anxiety",
@@ -252,7 +267,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 13,
-    name: "Lion's Mane Mushroom",
+    name: "Lion's Mane",
+    form: "",
     slug: "lions-mane-mushroom",
     category: "Medicinal Mushroom",
     treats: "ADHD, Neuroplasticity, Focus",
@@ -271,7 +287,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 14,
-    name: "Ashwagandha (KSM-66)",
+    name: "Ashwagandha",
+    form: "KSM-66",
     slug: "ashwagandha",
     category: "Adaptogen",
     treats: "Anxiety, Stress, ADHD (hyperactivity)",
@@ -291,6 +308,7 @@ export const supplements: Supplement[] = [
   {
     id: 15,
     name: "GABA",
+    form: "",
     slug: "gaba",
     category: "Amino Acid / Neurotransmitter",
     treats: "Anxiety, Sleep, ADHD (restlessness)",
@@ -309,7 +327,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 16,
-    name: "Inositol (Myo-Inositol)",
+    name: "Inositol",
+    form: "Myo-inositol",
     slug: "inositol",
     category: "B-Vitamin Relative",
     treats: "Anxiety, OCD tendencies, ADHD",
@@ -329,6 +348,7 @@ export const supplements: Supplement[] = [
   {
     id: 17,
     name: "Vitamin C",
+    form: "",
     slug: "vitamin-c",
     category: "Vitamin",
     treats: "Immune Support, Adderall Management",
@@ -347,7 +367,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 18,
-    name: "Probiotics (Multi-Strain)",
+    name: "Probiotics",
+    form: "Multi-strain",
     slug: "probiotics",
     category: "Gut Health",
     treats: "Gut-Brain Axis, Mood, ADHD",
@@ -366,7 +387,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 19,
-    name: "CoQ10 (Ubiquinol)",
+    name: "CoQ10",
+    form: "Ubiquinol",
     slug: "coq10",
     category: "Antioxidant / Enzyme",
     treats: "Energy, Mitochondrial Support",
@@ -386,6 +408,7 @@ export const supplements: Supplement[] = [
   {
     id: 20,
     name: "Melatonin",
+    form: "",
     slug: "melatonin",
     category: "Hormone / Sleep Aid",
     treats: "Sleep, ADHD-related insomnia",
@@ -404,7 +427,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 21,
-    name: "Ginkgo Biloba",
+    name: "Ginkgo",
+    form: "",
     slug: "ginkgo-biloba",
     category: "Herbal Extract",
     treats: "ADHD, Memory, Circulation",
@@ -423,7 +447,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 22,
-    name: "Vitamin K2 (MK-7)",
+    name: "Vitamin K2",
+    form: "MK-7",
     slug: "vitamin-k2",
     category: "Vitamin",
     treats: "Calcium Metabolism, Bone/Heart Health",
@@ -442,7 +467,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 23,
-    name: "L-Tryptophan / 5-HTP",
+    name: "5-HTP",
+    form: "or L-Tryptophan",
     slug: "l-tryptophan-5-htp",
     category: "Amino Acid",
     treats: "Mood, Sleep, Anxiety",
@@ -461,7 +487,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 24,
-    name: "Creatine Monohydrate",
+    name: "Creatine",
+    form: "Monohydrate",
     slug: "creatine-monohydrate",
     category: "Amino Acid Derivative",
     treats: "Brain Energy, Cognitive Performance",
@@ -480,7 +507,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 25,
-    name: "Saffron Extract (Crocus sativus)",
+    name: "Saffron",
+    form: "Extract",
     slug: "saffron-extract",
     category: "Herbal Extract",
     treats: "ADHD, Mood, Depression",
@@ -499,7 +527,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 26,
-    name: "SAM-e (S-Adenosylmethionine)",
+    name: "SAM-e",
+    form: "",
     slug: "sam-e",
     category: "Amino Acid Derivative",
     treats: "Mood, Depression, Brain Health",
@@ -518,7 +547,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 27,
-    name: "Vitamin E (Tocotrienols)",
+    name: "Vitamin E",
+    form: "Tocotrienols",
     slug: "vitamin-e",
     category: "Vitamin",
     treats: "Brain Health, Antioxidant Protection",
@@ -537,7 +567,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 28,
-    name: "L-Glutathione",
+    name: "Glutathione",
+    form: "",
     slug: "l-glutathione",
     category: "Antioxidant",
     treats: "Brain Health, Detoxification, Oxidative Stress",
@@ -557,6 +588,7 @@ export const supplements: Supplement[] = [
   {
     id: 29,
     name: "Vinpocetine",
+    form: "",
     slug: "vinpocetine",
     category: "Nootropic",
     treats: "Memory, Focus, Cerebral Circulation",
@@ -575,7 +607,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 30,
-    name: "Turmeric / Curcumin",
+    name: "Turmeric",
+    form: "Curcumin",
     slug: "turmeric-curcumin",
     category: "Herbal Extract",
     treats: "Brain Health, Inflammation, Mood",
@@ -594,7 +627,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 31,
-    name: "Olive Leaf Extract",
+    name: "Olive Leaf",
+    form: "Extract",
     slug: "olive-leaf-extract",
     category: "Herbal Extract",
     treats: "Brain Health, Immune Support, Antioxidant",
@@ -614,6 +648,7 @@ export const supplements: Supplement[] = [
   {
     id: 32,
     name: "Pregnenolone",
+    form: "",
     slug: "pregnenolone",
     category: "Hormone Precursor",
     treats: "Memory, Mood, Brain Health",
@@ -632,7 +667,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 33,
-    name: "Gotu Kola (Centella asiatica)",
+    name: "Gotu Kola",
+    form: "",
     slug: "gotu-kola",
     category: "Herbal Extract",
     treats: "Memory, Anxiety, Brain Health",
@@ -651,7 +687,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 34,
-    name: "Rosemary Extract",
+    name: "Rosemary",
+    form: "Extract",
     slug: "rosemary-extract",
     category: "Herbal Extract",
     treats: "Memory, Focus, Antioxidant",
@@ -671,6 +708,7 @@ export const supplements: Supplement[] = [
   {
     id: 35,
     name: "Benfotiamine",
+    form: "Vitamin B1",
     slug: "benfotiamine",
     category: "Vitamin",
     treats: "Brain Health, Nerve Health, Blood Sugar",
@@ -689,7 +727,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 36,
-    name: "Black Chokeberry (Aronia melanocarpa)",
+    name: "Aronia",
+    form: "Black chokeberry",
     slug: "black-chokeberry",
     category: "Antioxidant",
     treats: "Brain Health, Cardiovascular, Antioxidant",
@@ -709,6 +748,7 @@ export const supplements: Supplement[] = [
   {
     id: 37,
     name: "Spirulina",
+    form: "",
     slug: "spirulina",
     category: "Superfood / Algae",
     treats: "Brain Health, Energy, Nutritional Support",
@@ -727,7 +767,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 38,
-    name: "Lithium Orotate",
+    name: "Lithium",
+    form: "Orotate",
     slug: "lithium-orotate",
     category: "Mineral",
     treats: "Mood, Neuroprotection, Brain Health",
@@ -746,7 +787,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 39,
-    name: "Folic Acid (5-MTHF)",
+    name: "Folate",
+    form: "5-MTHF",
     slug: "folic-acid",
     category: "Vitamin",
     treats: "Mood, Brain Health, Methylation",
@@ -765,7 +807,8 @@ export const supplements: Supplement[] = [
   },
   {
     id: 40,
-    name: "Panax Ginseng",
+    name: "Ginseng",
+    form: "Panax",
     slug: "panax-ginseng",
     category: "Adaptogen",
     treats: "ADHD, Energy, Focus, Stress",

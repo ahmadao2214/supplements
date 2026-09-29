@@ -4,8 +4,8 @@ import SupplementDetail from "../../components/supplements/SupplementDetail";
 import { supplements, type Supplement } from "../../data/supplements";
 import { getRelatedSupplements } from "../../lib/supplement-utils";
 import { classifyTimeOfDay, classifyMeals, getTimeLabel, getMealLabel } from "../../lib/format-utils";
-import { tierLabels, tierDescriptions } from "../../lib/constants";
-import { TierBadge, AdderallBadge, ScheduleBadge, TimeBadge, MealBadge } from "../../components/ui/SupplementBadges";
+import { TierLabel, AdderallLabel, ScheduleLabel, TimeLabel, MealLabel } from "../../components/ui/SupplementBadges";
+import { TierIcon } from "../../components/ui/Icons";
 
 export function getStaticPaths() {
   return supplements.map((s) => ({
@@ -40,111 +40,98 @@ if (s.purchaseUrl) {
   } catch { /* graceful fallback */ }
 }
 
-// Show the raw text under a badge only when it adds information
+// Show the raw text under a label only when it adds information
 const timeNote = timeType && s.timeOfDay !== getTimeLabel(timeType) ? s.timeOfDay : null;
 const mealNote = mealType && s.withMeals !== getMealLabel(mealType) ? s.withMeals : null;
 ---
 
-<Layout title={`${s.name} — ADHD Supplement Database`} description={`${s.name}: ${s.treats}. ${s.benefits}`}>
+<Layout title={`${s.name} — ADHD Supplements`} description={`${s.name}${s.form ? ` (${s.form})` : ""}: ${s.treats}. ${s.benefits}`}>
   <main class="max-w-4xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8 pb-12">
     <a href="/" class="inline-flex items-center gap-1.5 min-h-11 -ml-1 px-1 text-sm text-ink-muted hover:text-ink transition-colors focus-ring">
       <span aria-hidden="true">←</span> All supplements
     </a>
 
-    <!-- Hero -->
-    <header class="mt-2 mb-6 sm:mb-8">
-      <p class="eyebrow mb-2">{s.category}</p>
-      <h1 class="font-serif text-[2rem] leading-[1.1] sm:text-5xl font-semibold mb-4">{s.name}</h1>
-      <div class="flex flex-wrap gap-1.5 mb-5">
-        <TierBadge supplement={s} />
-        <ScheduleBadge supplement={s} />
-        <AdderallBadge supplement={s} />
-      </div>
-      <p class="max-w-2xl font-body text-[1.0625rem] leading-relaxed text-ink-soft border-l-2 pl-4" style={`border-color: var(--color-tier${s.tier})`}>
-        <span class="font-display text-sm font-semibold" style={`color: var(--color-tier${s.tier}-text)`}>Why {tierLabels[s.tier]}.</span>
-        {" "}{s.tierReason}
+    <header class="mt-2 mb-6">
+      <h1 class="font-serif text-[2rem] leading-tight sm:text-5xl font-semibold">{s.name}</h1>
+      {s.form && <p class="mt-1 text-lg text-ink-muted">{s.form}</p>}
+      <p class="mt-5 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-soft">
+        <TierLabel supplement={s} />
+        <span class="text-ink-faint"> — </span>
+        <span class="font-body">{s.tierReason}</span>
       </p>
     </header>
 
-    <!-- Buy (React island) -->
     {s.purchaseUrl && (
       <section class="panel p-4 mb-6" aria-label="Buy">
         <SupplementDetail supplement={s} price={price} client:visible />
       </section>
     )}
 
-    <!-- At a glance -->
     <section class="panel mb-8" aria-labelledby="glance">
       <h2 id="glance" class="sr-only">At a glance</h2>
-      <dl class="grid grid-cols-2 md:grid-cols-3">
+      <dl class="grid grid-cols-2 md:grid-cols-3 text-sm text-ink-soft">
         <div class="p-4 border-b border-surface-border md:border-r col-span-2 md:col-span-1">
           <dt class="eyebrow mb-1.5">Dosage</dt>
-          <dd class="font-mono text-sm text-ink">{s.dosage}</dd>
+          <dd class="font-mono text-ink">{s.dosage}</dd>
         </div>
         <div class="p-4 border-b border-r border-surface-border">
           <dt class="eyebrow mb-1.5">Frequency</dt>
-          <dd class="text-sm text-ink">{s.frequency}</dd>
+          <dd class="text-ink">{s.frequency}</dd>
         </div>
         <div class="p-4 border-b border-surface-border">
-          <dt class="eyebrow mb-1.5">Time of day</dt>
-          <dd class="text-sm"><TimeBadge supplement={s} />{timeNote && <span class="block mt-1.5 text-xs text-ink-muted">{timeNote}</span>}</dd>
+          <dt class="eyebrow mb-1.5">Time</dt>
+          <dd><TimeLabel supplement={s} />{timeNote && <span class="block mt-1 text-xs text-ink-muted">{timeNote}</span>}</dd>
         </div>
         <div class="p-4 border-r border-surface-border max-md:border-b">
-          <dt class="eyebrow mb-1.5">With meals</dt>
-          <dd class="text-sm"><MealBadge supplement={s} />{mealNote && <span class="block mt-1.5 text-xs text-ink-muted">{mealNote}</span>}</dd>
+          <dt class="eyebrow mb-1.5">Meals</dt>
+          <dd><MealLabel supplement={s} />{mealNote && <span class="block mt-1 text-xs text-ink-muted">{mealNote}</span>}</dd>
         </div>
         <div class="p-4 md:border-r border-surface-border max-md:border-b">
-          <dt class="eyebrow mb-1.5">With Adderall</dt>
-          <dd class="text-sm"><AdderallBadge supplement={s} /><span class="block mt-1.5 text-xs text-ink-muted">{s.withAdderall}</span></dd>
+          <dt class="eyebrow mb-1.5">Adderall</dt>
+          <dd><AdderallLabel supplement={s} long /><span class="block mt-1 text-xs text-ink-muted">{s.withAdderall}</span></dd>
         </div>
         <div class="p-4 col-span-2 md:col-span-1">
           <dt class="eyebrow mb-1.5">Schedule</dt>
-          <dd class="text-sm"><ScheduleBadge supplement={s} /></dd>
+          <dd><ScheduleLabel supplement={s} /></dd>
         </div>
       </dl>
     </section>
 
-    <!-- Prose -->
-    <div class="space-y-7 mb-10 max-w-2xl">
-      <section>
-        <h2 class="eyebrow !text-ink-muted mb-2.5">Helps with</h2>
-        <ul class="flex flex-wrap gap-1.5">
-          {s.treats.split(",").map((t: string) => (
-            <li class="badge !text-ink-soft !text-[0.8125rem] !px-2.5 !py-1">{t.trim()}</li>
-          ))}
-        </ul>
-      </section>
-      <section>
-        <h2 class="eyebrow !text-ink-muted mb-2">Benefits</h2>
-        <p class="font-body text-[1.0625rem] leading-relaxed text-ink-soft">{s.benefits}</p>
-      </section>
-      <section>
-        <h2 class="eyebrow !text-ink-muted mb-2">Side effects</h2>
-        <p class="font-body text-[1.0625rem] leading-relaxed text-ink-soft">{s.sideEffects}</p>
-      </section>
-      <section>
-        <h2 class="eyebrow !text-ink-muted mb-2">Notes</h2>
-        <p class="font-body text-[1.0625rem] leading-relaxed text-ink-soft">{s.notes}</p>
-      </section>
-    </div>
+    <dl class="space-y-6 mb-10 max-w-2xl">
+      <div>
+        <dt class="eyebrow mb-1.5">Helps with</dt>
+        <dd class="text-[0.9375rem] text-ink-soft">{s.treats}</dd>
+      </div>
+      <div>
+        <dt class="eyebrow mb-1.5">Benefits</dt>
+        <dd class="font-body text-[1.0625rem] leading-relaxed text-ink-soft">{s.benefits}</dd>
+      </div>
+      <div>
+        <dt class="eyebrow mb-1.5">Side effects</dt>
+        <dd class="font-body text-[1.0625rem] leading-relaxed text-ink-soft">{s.sideEffects}</dd>
+      </div>
+      <div>
+        <dt class="eyebrow mb-1.5">Notes</dt>
+        <dd class="font-body text-[1.0625rem] leading-relaxed text-ink-soft">{s.notes}</dd>
+      </div>
+    </dl>
 
-    <!-- Related -->
     {related.length > 0 && (
       <section aria-labelledby="related">
-        <h2 id="related" class="font-serif text-xl font-semibold mb-3">Related supplements</h2>
-        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <h2 id="related" class="eyebrow mb-2">Related</h2>
+        <ul class="panel divide-y divide-surface-border overflow-hidden">
           {related.map((r) => (
             <li>
               <a
                 href={`/supplement/${r.slug}`}
-                class="relative flex items-center justify-between gap-3 panel overflow-hidden pl-4 pr-3 py-3 hover:border-surface-500 transition-colors focus-ring"
+                class="flex items-center gap-3 px-4 py-3 hover:bg-surface-hover transition-colors focus-ring"
               >
-                <span class={`absolute inset-y-0 left-0 w-[3px] tier-bar-${r.tier}`} aria-hidden="true"></span>
-                <span class="min-w-0">
-                  <span class="block text-sm font-semibold text-ink truncate">{r.name}</span>
-                  <span class="block text-xs text-ink-muted truncate">{r.treats}</span>
+                <TierIcon tier={r.tier} />
+                <span class="min-w-0 flex-1">
+                  <span class="block text-sm font-semibold text-ink">{r.name}</span>
+                  {r.form && <span class="block text-xs text-ink-muted">{r.form}</span>}
                 </span>
-                <span class="text-ink-faint shrink-0" aria-hidden="true">→</span>
+                <span class="text-ink-faint" aria-hidden="true">→</span>
               </a>
             </li>
           ))}

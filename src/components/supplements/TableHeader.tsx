@@ -4,26 +4,21 @@ import { allColumns } from "../../lib/constants";
 
 type SortKey = keyof Supplement;
 type SortDir = "asc" | "desc";
-type SelectAllState = "none" | "some" | "all";
 
 interface TableHeaderProps {
   visibleColumns: Set<string>;
   sortKey: SortKey;
   sortDir: SortDir;
   onSort: (key: SortKey) => void;
-  selectAllState: SelectAllState;
-  onSelectAll: () => void;
 }
 
-const thCls = "bg-surface-800 px-4 py-3 text-left border-b border-surface-border-strong whitespace-nowrap";
+const thCls = "bg-surface-800 py-3 text-left border-b border-surface-border-strong whitespace-nowrap";
 
 export const TableHeader = React.memo(function TableHeader({
   visibleColumns,
   sortKey,
   sortDir,
   onSort,
-  selectAllState,
-  onSelectAll,
 }: TableHeaderProps) {
   return (
     <thead>
@@ -32,26 +27,14 @@ export const TableHeader = React.memo(function TableHeader({
           .filter((col) => visibleColumns.has(col.key))
           .map((col) =>
             col.key === "purchaseUrl" ? (
-              <th key={col.key} scope="col" className={thCls}>
-                <label className="inline-flex items-center gap-2 cursor-pointer eyebrow">
-                  <input
-                    type="checkbox"
-                    checked={selectAllState === "all"}
-                    ref={(el) => {
-                      if (el) el.indeterminate = selectAllState === "some";
-                    }}
-                    onChange={onSelectAll}
-                    className="check focus-ring"
-                    aria-label="Select all purchasable supplements"
-                  />
-                  Cart
-                </label>
+              <th key={col.key} scope="col" className={`${thCls} px-4`}>
+                <span className="eyebrow">Cart</span>
               </th>
             ) : (
               <th
                 key={col.key}
                 scope="col"
-                className={thCls}
+                className={`${thCls} ${col.key === "tier" ? "pl-5 pr-1 w-10" : "px-4"}`}
                 aria-sort={sortKey === col.key ? (sortDir === "asc" ? "ascending" : "descending") : undefined}
               >
                 <button
@@ -69,7 +52,7 @@ export const TableHeader = React.memo(function TableHeader({
               </th>
             )
           )}
-        <th scope="col" className={`${thCls} w-12`}>
+        <th scope="col" className={`${thCls} px-2 w-12`}>
           <span className="sr-only">Details</span>
         </th>
       </tr>

@@ -1,11 +1,10 @@
 import React from "react";
 import type { Supplement } from "../../data/supplements";
-import { TierBadge, AdderallBadge, TimeBadge } from "../ui/SupplementBadges";
+import { TierIcon, PlusIcon, CheckIcon } from "../ui/Icons";
+import { AdderallLabel, TimeLabel, SupplementName } from "../ui/SupplementBadges";
 import { QtyStepperButton } from "../ui/QtyStepperButton";
 import { SupplementFacts } from "./SupplementFacts";
 import { formatPrice } from "../../lib/format-utils";
-
-type SortKey = keyof Supplement;
 
 interface MobileListProps {
   filtered: Supplement[];
@@ -16,13 +15,6 @@ interface MobileListProps {
   onCartToggle: (id: number) => void;
   onCartSetQty: (id: number, qty: number) => void;
 }
-
-const sortOptions: { key: SortKey; label: string }[] = [
-  { key: "tier", label: "Priority" },
-  { key: "name", label: "Name" },
-  { key: "category", label: "Category" },
-  { key: "timeOfDay", label: "Time" },
-];
 
 interface ItemProps {
   supplement: Supplement;
@@ -46,45 +38,47 @@ const MobileItem = React.memo(function MobileItem({
   onCartSetQty,
 }: ItemProps) {
   return (
-    <li className={`relative panel overflow-hidden ${inCart ? "border-sage-500/50" : ""}`}>
-      <span className={`absolute inset-y-0 left-0 w-[3px] tier-bar-${s.tier}`} aria-hidden="true" />
+    <li className={inCart ? "bg-sage-500/[0.06]" : ""}>
       <div className="flex items-stretch">
         <button
           type="button"
-          className="flex-1 min-w-0 text-left pl-4 pr-2 py-3.5 focus-ring"
+          className="flex-1 min-w-0 flex gap-3 text-left pl-4 pr-2 py-3.5 focus-ring"
           aria-expanded={isExpanded}
           onClick={() => onToggleExpand(s.id)}
         >
-          <span className="flex items-start justify-between gap-2">
-            <span className="font-semibold text-[0.9375rem] leading-snug text-ink">{s.name}</span>
-            <TierBadge supplement={s} />
-          </span>
-          <span className="block mt-1 font-mono text-xs text-ink-muted truncate">{s.dosage}</span>
-          <span className="flex flex-wrap gap-1.5 mt-2.5">
-            <TimeBadge supplement={s} />
-            <AdderallBadge supplement={s} />
+          <TierIcon tier={s.tier} className="mt-0.5" />
+          <span className="min-w-0 flex-1">
+            <SupplementName supplement={s} className="text-[0.9375rem]" />
+            <span className="block mt-1.5 font-mono text-xs text-ink-muted truncate">{s.dosage}</span>
+            <span className="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-[0.8125rem]">
+              <TimeLabel supplement={s} />
+              <AdderallLabel supplement={s} long />
+            </span>
           </span>
         </button>
         {s.purchaseUrl ? (
           <button
             type="button"
             onClick={() => onCartToggle(s.id)}
-            className={`shrink-0 w-14 flex flex-col items-center justify-center gap-0.5 border-l border-surface-border transition-colors focus-ring ${
-              inCart ? "bg-sage-500/15 text-sage-300" : "text-ink-muted active:bg-surface-700"
-            }`}
+            className="shrink-0 w-14 flex items-center justify-center focus-ring"
             aria-pressed={inCart}
             aria-label={inCart ? `Remove ${s.name} from cart` : `Add ${s.name} to cart`}
           >
-            <span className="text-lg leading-none" aria-hidden="true">{inCart ? "✓" : "+"}</span>
-            <span className="text-[0.6875rem] font-medium">{inCart ? "Added" : "Cart"}</span>
+            <span
+              className={`w-8 h-8 rounded-full inline-flex items-center justify-center transition-colors ${
+                inCart ? "bg-sage-500 text-white" : "border border-surface-border-strong text-ink-muted"
+              }`}
+            >
+              {inCart ? <CheckIcon /> : <PlusIcon />}
+            </span>
           </button>
         ) : null}
       </div>
 
       {inCart && (
-        <div className="flex items-center justify-between gap-3 pl-4 pr-3 py-2 border-t border-surface-border bg-surface-700/40">
-          <span className="text-xs text-ink-muted">
-            Quantity{price ? <span className="font-mono ml-2 text-ink-soft">{formatPrice(price * qty)}</span> : null}
+        <div className="flex items-center justify-between gap-3 pl-11 pr-3 pb-3 -mt-1">
+          <span className="text-xs text-ink-muted font-mono font-tabular">
+            {price ? formatPrice(price * qty) : null}
           </span>
           <QtyStepperButton
             size="sm"
@@ -97,7 +91,7 @@ const MobileItem = React.memo(function MobileItem({
       )}
 
       {isExpanded && (
-        <div className="pl-4 pr-4 pt-4 pb-4 border-t border-surface-border bg-surface-900/40">
+        <div className="pl-11 pr-4 pb-5 pt-1">
           <SupplementFacts supplement={s} />
         </div>
       )}
@@ -115,36 +109,20 @@ export function MobileList({
   onCartSetQty,
 }: MobileListProps) {
   return (
-    <ul className="space-y-2.5">
-        {filtered.map((s) => (
-          <MobileItem
-            key={s.id}
-            supplement={s}
-            isExpanded={expandedRow === s.id}
-            onToggleExpand={onToggleExpand}
-            inCart={cartItems.has(s.id)}
-            qty={cartItems.get(s.id) ?? 1}
-            price={prices[s.id]}
-            onCartToggle={onCartToggle}
-            onCartSetQty={onCartSetQty}
-          />
-        ))}
-    </ul>
-  );
-}
-
-/** Compact sort control for the list view, where there are no column headers to click. */
-export function MobileSortSelect({ sortKey, onSortKey }: { sortKey: SortKey; onSortKey: (key: SortKey) => void }) {
-  return (
-    <select
-      value={sortOptions.some((o) => o.key === sortKey) ? sortKey : "tier"}
-      onChange={(e) => onSortKey(e.target.value as SortKey)}
-      className="field !h-9 !w-auto !pl-3 !pr-8 !bg-[position:right_0.625rem_center]"
-      aria-label="Sort by"
-    >
-      {sortOptions.map((o) => (
-        <option key={o.key} value={o.key}>{o.label}</option>
+    <ul className="panel divide-y divide-surface-border overflow-hidden">
+      {filtered.map((s) => (
+        <MobileItem
+          key={s.id}
+          supplement={s}
+          isExpanded={expandedRow === s.id}
+          onToggleExpand={onToggleExpand}
+          inCart={cartItems.has(s.id)}
+          qty={cartItems.get(s.id) ?? 1}
+          price={prices[s.id]}
+          onCartToggle={onCartToggle}
+          onCartSetQty={onCartSetQty}
+        />
       ))}
-    </select>
+    </ul>
   );
 }

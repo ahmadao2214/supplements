@@ -1,6 +1,7 @@
 import React from "react";
 import type { Supplement } from "../../data/supplements";
-import { TierBadge, AdderallBadge, ScheduleBadge, TimeBadge, MealBadge } from "../ui/SupplementBadges";
+import { TierIcon } from "../ui/Icons";
+import { AdderallLabel, ScheduleLabel, TimeLabel, MealLabel, SupplementName } from "../ui/SupplementBadges";
 
 interface CellRendererProps {
   colKey: string;
@@ -10,25 +11,25 @@ interface CellRendererProps {
 export const CellRenderer = React.memo(function CellRenderer({ colKey, supplement: s }: CellRendererProps) {
   switch (colKey) {
     case "tier":
-      return <TierBadge supplement={s} />;
+      return <TierIcon tier={s.tier} />;
     case "withAdderall":
-      return <AdderallBadge supplement={s} />;
+      return <AdderallLabel supplement={s} />;
     case "schedule":
-      return <ScheduleBadge supplement={s} />;
+      return <ScheduleLabel supplement={s} />;
     case "timeOfDay":
-      return <TimeBadge supplement={s} />;
+      return <TimeLabel supplement={s} />;
     case "withMeals":
-      return <MealBadge supplement={s} />;
+      return <MealLabel supplement={s} />;
     case "dosage":
       return <span className="font-mono text-[0.8125rem] text-ink-soft">{s.dosage}</span>;
     case "name":
       return (
         <a
           href={`/supplement/${s.slug}`}
-          className="font-semibold text-ink hover:text-sage-300 hover:underline underline-offset-4 decoration-sage-400/50 transition-colors focus-ring"
+          className="group/name block focus-ring"
           onClick={(e) => e.stopPropagation()}
         >
-          {s.name}
+          <SupplementName supplement={s} className="[&>span:first-child]:group-hover/name:text-sage-300 [&>span:first-child]:transition-colors" />
         </a>
       );
     default:

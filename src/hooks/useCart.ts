@@ -96,8 +96,7 @@ export function useCart(filtered: Supplement[], prices: Record<number, number>) 
       .map(([id, qty]) => {
         const s = getSupplementById(id);
         if (!s) return null;
-        const shortName = s.name.replace(/\s*\(.*\)/, "");
-        return qty > 1 ? `${shortName} x${qty}` : shortName;
+        return qty > 1 ? `${s.name} ×${qty}` : s.name;
       })
       .filter(Boolean)
       .join(", ");

@@ -60,6 +60,7 @@ export function useSupplementFilters() {
         const matchesSearch =
           !q ||
           s.name.toLowerCase().includes(q) ||
+          s.form.toLowerCase().includes(q) ||
           s.treats.toLowerCase().includes(q) ||
           s.benefits.toLowerCase().includes(q) ||
           s.category.toLowerCase().includes(q) ||

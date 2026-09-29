@@ -11,7 +11,8 @@ import { ResultsCount } from "./ResultsCount";
 import { DataTable } from "./DataTable";
 import { CartBar } from "./CartBar";
 import { ViewToggle } from "./ViewToggle";
-import { MobileList, MobileSortSelect } from "./MobileList";
+import { MobileList } from "./MobileList";
+import { PlusIcon, CheckIcon } from "../ui/Icons";
 
 const CardGrid = lazy(() => import("./CardGrid").then((m) => ({ default: m.CardGrid })));
 
@@ -85,21 +86,30 @@ export default function SupplementDatabase({ prices = {} }: Props) {
           conditions={filters.conditions}
           activeFilterCount={filters.activeFilterCount}
           onReset={filters.resetFilters}
+          sortKey={filters.sortKey}
+          onSort={filters.setSort}
         />
       </div>
 
       <div className="flex items-center justify-between gap-2 mb-3">
-        <ResultsCount filteredCount={filters.filtered.length} tierFilter={filters.tierFilter} />
+        <ResultsCount filteredCount={filters.filtered.length} />
         <div className="flex items-center gap-2 shrink-0">
+          {filters.filtered.some((x) => x.purchaseUrl) ? (
+            <button
+              type="button"
+              className={`btn btn-sm focus-ring ${cart.selectAllState === "all" ? "btn-selected" : "btn-secondary"}`}
+              onClick={cart.handleSelectAll}
+              aria-label={cart.selectAllState === "all" ? "Remove all shown supplements from cart" : "Add all shown supplements to cart"}
+            >
+              {cart.selectAllState === "all" ? <CheckIcon /> : <PlusIcon />}
+              <span className="sm:hidden">{cart.selectAllState === "all" ? "All added" : "Add all"}</span>
+              <span className="hidden sm:inline">{cart.selectAllState === "all" ? "All in cart" : "Add all to cart"}</span>
+            </button>
+          ) : null}
           {view === "table" && (
-            <>
-              <div className="md:hidden">
-                <MobileSortSelect sortKey={filters.sortKey} onSortKey={filters.setSort} />
-              </div>
-              <div className="hidden md:block">
-                <ColumnToggles visibleColumns={visibleColumns} toggleColumn={toggleColumn} />
-              </div>
-            </>
+            <div className="hidden md:block">
+              <ColumnToggles visibleColumns={visibleColumns} toggleColumn={toggleColumn} />
+            </div>
           )}
           <ViewToggle view={view} onChange={setView} />
         </div>
@@ -139,8 +149,6 @@ export default function SupplementDatabase({ prices = {} }: Props) {
               prices={prices}
               onCartToggle={cart.toggleCartItem}
               onCartSetQty={cart.setCartQty}
-              selectAllState={cart.selectAllState}
-              onSelectAll={cart.handleSelectAll}
             />
           </div>
         </>

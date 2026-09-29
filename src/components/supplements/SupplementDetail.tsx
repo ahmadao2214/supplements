@@ -35,12 +35,9 @@ export default function SupplementDetail({ supplement: s, price }: Props) {
           onIncrease={() => setQty(qty + 1)}
           name={s.name}
         />
-        <div className="leading-tight">
-          {price ? (
-            <span className="block text-base font-semibold text-ink font-mono font-tabular">{formatPrice(price * qty)}</span>
-          ) : null}
-          <span className="block text-xs text-ink-muted">Sold by Swanson</span>
-        </div>
+        {price ? (
+          <span className="text-base font-semibold text-ink font-mono font-tabular">{formatPrice(price * qty)}</span>
+        ) : null}
       </div>
       <button
         type="button"

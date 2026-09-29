@@ -35,11 +35,11 @@ export const TableRow = React.memo(
     return (
       <>
         <tr
-          className={`tier-row tier-row-${s.tier}${inCart ? " cart-selected" : ""} group/row`}
+          className={`data-row${inCart ? " cart-selected" : ""} group/row`}
           onClick={() => onToggleExpand(s.id)}
         >
           {visibleCols.map((col) => (
-            <td key={col.key} className="px-4 py-3 border-b border-surface-border align-middle max-w-[300px] text-sm text-ink-soft">
+            <td key={col.key} className={`py-3 border-b border-surface-border align-middle max-w-[300px] text-sm text-ink-soft ${col.key === "tier" ? "pl-5 pr-1 w-10" : "px-4"}`}>
               {col.key === "purchaseUrl" ? (
                 <CartCell
                   suppId={s.id}

@@ -21,17 +21,9 @@ await Promise.all(suppsWithUrls.map(async (s) => {
 }));
 ---
 
-<Layout title="ADHD Supplement Database">
-  <header class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-14 pb-6 sm:pb-8">
-    <p class="eyebrow mb-3">Evidence-ranked reference</p>
-    <h1 class="font-serif text-[2rem] leading-[1.1] sm:text-5xl font-semibold">
-      ADHD Supplement Database
-    </h1>
-    <p class="mt-3 max-w-2xl text-[0.9375rem] sm:text-base text-ink-muted leading-relaxed">
-      Dosage, timing, and Adderall compatibility for {supplements.length} supplements,
-      ranked <span class="text-tier1-text">Core</span>, <span class="text-tier2-text">Add-On</span>
-      and <span class="text-tier3-text">Optional</span> by strength of evidence.
-    </p>
+<Layout title="ADHD Supplements">
+  <header class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-5 sm:pb-6">
+    <h1 class="font-serif text-[2rem] leading-tight sm:text-4xl font-semibold">ADHD Supplements</h1>
   </header>
   <main>
     <SupplementDatabase prices={prices} client:load />

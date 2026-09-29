@@ -17,21 +17,22 @@ export const DEFAULT_COLS = [
   "frequency",
   "timeOfDay",
   "withAdderall",
+  "purchaseUrl",
 ];
 
 export const allColumns: { key: string; label: string }[] = [
-  { key: "tier", label: "Priority" },
+  { key: "tier", label: "Tier" },
   { key: "name", label: "Supplement" },
   { key: "category", label: "Category" },
   { key: "treats", label: "Treats" },
   { key: "dosage", label: "Dosage" },
   { key: "frequency", label: "Frequency" },
-  { key: "timeOfDay", label: "Time of Day" },
-  { key: "withMeals", label: "With Meals?" },
-  { key: "withAdderall", label: "With Adderall?" },
+  { key: "timeOfDay", label: "Time" },
+  { key: "withMeals", label: "Meals" },
+  { key: "withAdderall", label: "Adderall" },
   { key: "schedule", label: "Schedule" },
   { key: "benefits", label: "Benefits" },
   { key: "sideEffects", label: "Side Effects" },
   { key: "notes", label: "Notes" },
-  { key: "purchaseUrl", label: "Buy" },
+  { key: "purchaseUrl", label: "Cart" },
 ];

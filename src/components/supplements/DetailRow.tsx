@@ -10,7 +10,7 @@ interface DetailRowProps {
 export const DetailRow = React.memo(function DetailRow({ supplement: s, colSpan }: DetailRowProps) {
   return (
     <tr className="bg-surface-800">
-      <td colSpan={colSpan} className="border-b border-surface-border px-5 py-5" style={{ boxShadow: `inset 3px 0 0 var(--color-tier${s.tier})` }}>
+      <td colSpan={colSpan} className="border-b border-surface-border px-5 py-5 pl-14">
         <SupplementFacts supplement={s} />
       </td>
     </tr>

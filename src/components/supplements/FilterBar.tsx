@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { SearchInput } from "./SearchInput";
 import { tierLabels } from "../../lib/constants";
+import { TierIcon } from "../ui/Icons";
+import type { Supplement } from "../../data/supplements";
+
+type SortKey = keyof Supplement;
+
+const sortOptions: { key: SortKey; label: string }[] = [
+  { key: "tier", label: "Tier" },
+  { key: "name", label: "Name" },
+  { key: "category", label: "Category" },
+  { key: "timeOfDay", label: "Time" },
+];
 
 interface FilterBarProps {
   search: string;
@@ -22,6 +33,8 @@ interface FilterBarProps {
   conditions: string[];
   activeFilterCount: number;
   onReset: () => void;
+  sortKey: SortKey;
+  onSort: (key: SortKey) => void;
 }
 
 function FilterSelect({ id, label, value, onChange, children }: {
@@ -69,7 +82,12 @@ export const FilterBar = React.memo(function FilterBar(props: FilterBarProps) {
 
       {showMore && (
         <div id="filter-panel" className="panel p-4 animate-slide-up">
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
+            <FilterSelect id="f-sort" label="Sort by" value={sortOptions.some((o) => o.key === props.sortKey) ? props.sortKey : "tier"} onChange={(v) => props.onSort(v as SortKey)}>
+              {sortOptions.map((o) => (
+                <option key={o.key} value={o.key}>{o.label}</option>
+              ))}
+            </FilterSelect>
             <FilterSelect id="f-schedule" label="Schedule" value={props.scheduleFilter} onChange={props.setScheduleFilter}>
               <option value="All">Any</option>
               {props.schedules.filter((s) => s !== "All").map((s) => (
@@ -95,13 +113,11 @@ export const FilterBar = React.memo(function FilterBar(props: FilterBarProps) {
                 <option key={c} value={c}>{c}</option>
               ))}
             </FilterSelect>
-            <div className="col-span-2 lg:col-span-1">
-              <FilterSelect id="f-category" label="Category" value={props.categoryFilter} onChange={props.setCategoryFilter}>
-                {props.categories.map((c) => (
-                  <option key={c} value={c}>{c === "All" ? "Any" : c}</option>
-                ))}
-              </FilterSelect>
-            </div>
+            <FilterSelect id="f-category" label="Category" value={props.categoryFilter} onChange={props.setCategoryFilter}>
+              {props.categories.map((c) => (
+                <option key={c} value={c}>{c === "All" ? "Any" : c}</option>
+              ))}
+            </FilterSelect>
           </div>
           {props.activeFilterCount > 0 && (
             <button type="button" onClick={props.onReset} className="btn btn-ghost btn-sm mt-3 -ml-2 focus-ring">
@@ -123,7 +139,7 @@ export const FilterBar = React.memo(function FilterBar(props: FilterBarProps) {
               aria-pressed={props.tierFilter === String(t)}
               onClick={() => props.setTierFilter(props.tierFilter === String(t) ? "All" : String(t))}
             >
-              <span className={`w-2 h-2 rounded-full tier-bar-${t}`} aria-hidden="true" />
+              <TierIcon tier={t} size={14} decorative />
               {tierLabels[t]}
             </button>
           ))}
