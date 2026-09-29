@@ -3,17 +3,19 @@ import { supplements } from "../../data/supplements";
 
 interface ResultsCountProps {
   filteredCount: number;
+  onReset: () => void;
 }
 
-export const ResultsCount = React.memo(function ResultsCount({ filteredCount }: ResultsCountProps) {
+/** Shown only while filtering, so the unfiltered list starts right under the controls. */
+export const ResultsCount = React.memo(function ResultsCount({ filteredCount, onReset }: ResultsCountProps) {
   return (
-    <p className="min-w-0 whitespace-nowrap text-[0.8125rem] text-ink-muted font-tabular" aria-live="polite">
-      {filteredCount === supplements.length ? (
-        // Unfiltered total is only worth the space on wider screens
-        <span className="max-sm:sr-only">{filteredCount} supplements</span>
-      ) : (
-        `${filteredCount} of ${supplements.length}`
-      )}
-    </p>
+    <div className="flex items-center justify-between gap-3 mb-2 text-[0.8125rem] text-ink-muted" aria-live="polite">
+      <span className="font-tabular">
+        {filteredCount} of {supplements.length}
+      </span>
+      <button type="button" onClick={onReset} className="min-h-9 px-2 -mr-2 rounded-md hover:text-ink focus-ring">
+        Clear
+      </button>
+    </div>
   );
 });

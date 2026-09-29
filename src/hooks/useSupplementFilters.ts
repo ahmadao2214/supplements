@@ -1,6 +1,9 @@
 import { useState, useMemo } from "react";
 import { supplements, conditions, type Supplement } from "../data/supplements";
 import { readParam } from "./useUrlState";
+import { getDoseTimes, type DoseTime } from "../lib/format-utils";
+
+const timeFilterMap: Record<string, DoseTime> = { Morning: "day", Evening: "night", Flexible: "flex" };
 
 type SortKey = keyof Supplement;
 type SortDir = "asc" | "desc";
@@ -74,7 +77,11 @@ export function useSupplementFilters() {
           (adderallFilter === "Caution" && s.withAdderall.toLowerCase().includes("cautious")) ||
           (adderallFilter === "Avoid" &&
             (s.withAdderall.toLowerCase().includes("no") || s.withAdderall.toLowerCase().includes("separate")));
-        const matchesTime = timeFilter === "All" || s.timeOfDay.toLowerCase().includes(timeFilter.toLowerCase());
+        const matchesTime =
+          timeFilter === "All" ||
+          (timeFilterMap[timeFilter]
+            ? getDoseTimes(s).includes(timeFilterMap[timeFilter])
+            : s.timeOfDay.toLowerCase().includes(timeFilter.toLowerCase()));
         const matchesTier = tierFilter === "All" || s.tier === Number(tierFilter);
         const matchesSchedule = scheduleFilter === "All" || s.schedule === scheduleFilter;
         return matchesSearch && matchesCategory && matchesCondition && matchesAdderall && matchesTime && matchesTier && matchesSchedule;

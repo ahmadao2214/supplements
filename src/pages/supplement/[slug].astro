@@ -3,7 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import SupplementDetail from "../../components/supplements/SupplementDetail";
 import { supplements, type Supplement } from "../../data/supplements";
 import { getRelatedSupplements } from "../../lib/supplement-utils";
-import { classifyTimeOfDay, classifyMeals, getTimeLabel, getMealLabel } from "../../lib/format-utils";
+import { classifyMeals, getMealLabel } from "../../lib/format-utils";
 import { TierLabel, AdderallLabel, ScheduleLabel, TimeLabel, MealLabel } from "../../components/ui/SupplementBadges";
 
 export function getStaticPaths() {
@@ -19,7 +19,6 @@ interface Props {
 
 const { supplement: s } = Astro.props;
 const related = getRelatedSupplements(s, 4);
-const timeType = classifyTimeOfDay(s.timeOfDay);
 const mealType = classifyMeals(s.withMeals);
 
 // Fetch price for this supplement
@@ -40,7 +39,6 @@ if (s.purchaseUrl) {
 }
 
 // Show the raw text under a label only when it adds information
-const timeNote = timeType && s.timeOfDay !== getTimeLabel(timeType) ? s.timeOfDay : null;
 const mealNote = mealType && s.withMeals !== getMealLabel(mealType) ? s.withMeals : null;
 ---
 
@@ -80,7 +78,7 @@ const mealNote = mealType && s.withMeals !== getMealLabel(mealType) ? s.withMeal
         </div>
         <div class="p-4 border-b border-surface-border">
           <dt class="eyebrow mb-1.5">Time</dt>
-          <dd><TimeLabel supplement={s} />{timeNote && <span class="block mt-1 text-xs text-ink-muted">{timeNote}</span>}</dd>
+          <dd><TimeLabel supplement={s} /></dd>
         </div>
         <div class="p-4 border-r border-surface-border max-md:border-b">
           <dt class="eyebrow mb-1.5">Meals</dt>

@@ -26,6 +26,24 @@ export function classifyTimeOfDay(val: string): "day" | "night" | "flex" | null 
   return null;
 }
 
+export type DoseTime = "day" | "night" | "flex";
+
+/**
+ * When the doses fall: once-daily follows the time-of-day text; multiple doses
+ * cover morning and evening unless the data keeps them all in the daytime
+ * (e.g. "Morning / Early Afternoon" for stimulating supplements).
+ */
+export function getDoseTimes(s: { frequency: string; timeOfDay: string }): DoseTime[] {
+  if (s.frequency.startsWith("Once")) {
+    const type = classifyTimeOfDay(s.timeOfDay);
+    return type ? [type] : [];
+  }
+  const t = s.timeOfDay.toLowerCase();
+  const mentionsNight = /evening|bed|night/.test(t);
+  if (!mentionsNight && t.includes("afternoon")) return ["day"];
+  return ["day", "night"];
+}
+
 export function getTimeLabel(type: "day" | "night" | "flex" | null): string {
   switch (type) {
     case "day": return "Morning";

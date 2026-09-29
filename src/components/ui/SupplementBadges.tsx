@@ -2,10 +2,11 @@ import type { Supplement } from "../../data/supplements";
 import { tierLabels } from "../../lib/constants";
 import {
   classifyAdderall,
-  classifyTimeOfDay,
   classifyMeals,
+  getDoseTimes,
   getTimeLabel,
   getMealLabel,
+  type DoseTime,
 } from "../../lib/format-utils";
 import { SunIcon, MoonIcon, ClockIcon, CheckIcon, AlertIcon, BanIcon } from "./Icons";
 
@@ -24,17 +25,33 @@ const adderallText = {
   avoid: { short: "Separate", long: "Separate from Adderall" },
 };
 
-const timeIcons = { day: SunIcon, night: MoonIcon, flex: ClockIcon };
+const timeIcons: Record<DoseTime, typeof SunIcon> = { day: SunIcon, night: MoonIcon, flex: ClockIcon };
+const timeTone: Record<DoseTime, string> = { day: "text-sun", night: "text-moon", flex: "text-ink-muted" };
 
-/** Icon only, for list rows; the words live in the legend and details. */
-export function TimeIcon({ supplement: s }: S) {
-  const type = classifyTimeOfDay(s.timeOfDay);
-  if (!type) return null;
-  const Icon = timeIcons[type];
+/** Sun and/or moon for when doses are taken — icons only; the legend and details carry the words. */
+export function DoseIcons({ supplement: s, size = 16 }: S & { size?: number }) {
+  const times = getDoseTimes(s);
+  if (times.length === 0) return null;
   return (
-    <span className="inline-flex text-ink-muted" title={s.timeOfDay}>
-      <Icon size={16} />
-      <span className="sr-only">{getTimeLabel(type)}</span>
+    <span className="inline-flex items-center gap-1" title={s.timeOfDay}>
+      {times.map((t) => {
+        const Icon = timeIcons[t];
+        return <Icon key={t} size={size} className={timeTone[t]} />;
+      })}
+      <span className="sr-only">{times.map(getTimeLabel).join(" and ")}</span>
+    </span>
+  );
+}
+
+/** Right-aligned dose timing block used in list rows and cards. */
+export function DoseSchedule({ supplement: s }: S) {
+  return (
+    <span className="flex flex-col items-end gap-1 shrink-0">
+      <span className="flex items-center gap-2">
+        <AdderallFlag supplement={s} />
+        <DoseIcons supplement={s} />
+      </span>
+      <span className="text-xs text-ink-muted whitespace-nowrap">{s.frequency}</span>
     </span>
   );
 }
@@ -53,17 +70,13 @@ export function AdderallFlag({ supplement: s }: S) {
 }
 
 export function TimeLabel({ supplement: s }: S) {
-  const type = classifyTimeOfDay(s.timeOfDay);
-  if (!type) return <span>{s.timeOfDay}</span>;
-  const Icon = timeIcons[type];
   return (
-    <span className={`${meta} text-ink-soft`} title={s.timeOfDay}>
-      <Icon className="text-ink-muted" />
-      {getTimeLabel(type)}
+    <span className="inline-flex items-center gap-2">
+      <DoseIcons supplement={s} size={14} />
+      <span>{s.timeOfDay}</span>
     </span>
   );
 }
-
 
 /** Neutral when safe; color is reserved for the cases that need attention. */
 export function AdderallLabel({ supplement: s, long = false }: S & { long?: boolean }) {

@@ -22,8 +22,7 @@ export const ViewToggle = React.memo(function ViewToggle({ view, onChange }: Vie
         aria-checked={view === "table"}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
-        <span className="md:hidden max-[374px]:sr-only">List</span>
-        <span className="hidden md:inline">Table</span>
+        Table
       </button>
       <button
         type="button"
@@ -33,7 +32,7 @@ export const ViewToggle = React.memo(function ViewToggle({ view, onChange }: Vie
         aria-checked={view === "grid"}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>
-        <span className="max-[374px]:sr-only">Grid</span>
+        Grid
       </button>
     </div>
   );

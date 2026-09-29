@@ -68,3 +68,50 @@ export function PlusIcon({ size = 14, className = "" }: IconProps) {
     </svg>
   );
 }
+
+function CartBase() {
+  return (
+    <>
+      <path d="M1.5 2h1.6l1.5 7.6a1 1 0 0 0 1 .8h6.2a1 1 0 0 0 1-.8l.9-4.6H4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="6.25" cy="13.25" r="1" fill="currentColor" />
+      <circle cx="11.25" cy="13.25" r="1" fill="currentColor" />
+    </>
+  );
+}
+
+export function CartPlusIcon({ size = 18, className = "" }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <CartBase />
+      <path d="M8.75 5.5v3M7.25 7h3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function CartCheckIcon({ size = 18, className = "" }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <CartBase />
+      <path d="m7 7 1.25 1.25L10.5 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function SlidersIcon({ size = 18, className = "" }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <path d="M2 4.5h7M12.5 4.5H14M2 11.5h2M7.5 11.5H14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="10.75" cy="4.5" r="1.6" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="5.75" cy="11.5" r="1.6" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+export function SearchIcon({ size = 16, className = "" }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <circle cx="7" cy="7" r="4.75" stroke="currentColor" strokeWidth="1.5" />
+      <path d="m13.5 13.5-3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}

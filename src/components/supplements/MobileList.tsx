@@ -1,7 +1,7 @@
 import React from "react";
 import type { Supplement } from "../../data/supplements";
 import { PlusIcon, CheckIcon } from "../ui/Icons";
-import { AdderallFlag, TimeIcon, SupplementName } from "../ui/SupplementBadges";
+import { DoseSchedule, SupplementName } from "../ui/SupplementBadges";
 import { QtyStepperButton } from "../ui/QtyStepperButton";
 import { SupplementFacts } from "./SupplementFacts";
 import { formatPrice } from "../../lib/format-utils";
@@ -47,16 +47,13 @@ const MobileItem = React.memo(function MobileItem({
           onClick={() => onToggleExpand(s.id)}
         >
           <span className="flex items-start justify-between gap-3">
-            <SupplementName supplement={s} className="text-[0.9375rem]" />
-            <span className="flex items-center gap-2.5 pt-0.5 shrink-0">
-              <AdderallFlag supplement={s} />
-              <TimeIcon supplement={s} />
+            <span className="min-w-0">
+              <SupplementName supplement={s} className="text-[0.9375rem]" />
+              <span className="block mt-1 text-[0.8125rem] text-ink-muted font-tabular">{s.dosage}</span>
             </span>
-          </span>
-          <span className="block mt-1 text-[0.8125rem] text-ink-muted truncate">
-            <span className="font-tabular">{s.dosage}</span>
-            <span className="text-ink-faint"> · </span>
-            {s.frequency}
+            <span className="pt-0.5">
+              <DoseSchedule supplement={s} />
+            </span>
           </span>
         </button>
         {s.purchaseUrl ? (

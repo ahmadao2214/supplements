@@ -26,7 +26,7 @@ export const allColumns: { key: string; label: string }[] = [
   { key: "treats", label: "Treats" },
   { key: "dosage", label: "Dosage" },
   { key: "frequency", label: "Frequency" },
-  { key: "timeOfDay", label: "Time" },
+  { key: "timeOfDay", label: "When" },
   { key: "withMeals", label: "Meals" },
   { key: "withAdderall", label: "Adderall" },
   { key: "schedule", label: "Schedule" },

@@ -1,7 +1,7 @@
 import React from "react";
 import type { Supplement } from "../../data/supplements";
 import { PlusIcon, CheckIcon } from "../ui/Icons";
-import { AdderallFlag, TimeIcon } from "../ui/SupplementBadges";
+import { DoseSchedule } from "../ui/SupplementBadges";
 
 interface SupplementCardProps {
   supplement: Supplement;
@@ -40,16 +40,9 @@ export const SupplementCard = React.memo(function SupplementCard({
         )}
       </div>
 
-      <div className="flex items-center justify-between gap-3 mt-auto pt-4 text-[0.8125rem] text-ink-muted">
-        <span className="truncate">
-          <span className="font-tabular">{s.dosage}</span>
-          <span className="text-ink-faint"> · </span>
-          {s.frequency}
-        </span>
-        <span className="flex items-center gap-2.5 shrink-0">
-          <AdderallFlag supplement={s} />
-          <TimeIcon supplement={s} />
-        </span>
+      <div className="flex items-end justify-between gap-3 mt-auto pt-4">
+        <span className="text-[0.8125rem] text-ink-muted font-tabular truncate">{s.dosage}</span>
+        <DoseSchedule supplement={s} />
       </div>
     </article>
   );

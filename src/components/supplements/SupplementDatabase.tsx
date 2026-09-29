@@ -12,7 +12,7 @@ import { DataTable } from "./DataTable";
 import { CartBar } from "./CartBar";
 import { ViewToggle } from "./ViewToggle";
 import { MobileList } from "./MobileList";
-import { PlusIcon, CheckIcon } from "../ui/Icons";
+import { CartPlusIcon, CartCheckIcon } from "../ui/Icons";
 import { IconLegend } from "../ui/IconLegend";
 
 const CardGrid = lazy(() => import("./CardGrid").then((m) => ({ default: m.CardGrid })));
@@ -63,10 +63,38 @@ export default function SupplementDatabase({ prices = {} }: Props) {
   ]);
 
   const empty = filters.filtered.length === 0;
+  const allInCart = cart.selectAllState === "all";
+  const canAddAll = filters.filtered.some((x) => x.purchaseUrl);
+
+  const actions = (
+    <div className="flex items-center gap-2 shrink-0">
+      {canAddAll && (
+        <button
+          type="button"
+          className={`w-11 h-9 inline-flex items-center justify-center rounded-[var(--radius-md)] border transition-colors focus-ring ${
+            allInCart
+              ? "bg-sage-500/15 border-sage-400/45 text-sage-300"
+              : "bg-surface-800 border-surface-border-strong text-ink-soft hover:text-ink hover:border-surface-500"
+          }`}
+          onClick={cart.handleSelectAll}
+          aria-pressed={allInCart}
+          aria-label={allInCart ? "Remove all shown supplements from cart" : "Add all shown supplements to cart"}
+          title={allInCart ? "Remove all from cart" : "Add all to cart"}
+        >
+          {allInCart ? <CartCheckIcon size={20} /> : <CartPlusIcon size={20} />}
+        </button>
+      )}
+      <div className="hidden md:flex items-center gap-2">
+        {view === "table" && <ColumnToggles visibleColumns={visibleColumns} toggleColumn={toggleColumn} />}
+        <ViewToggle view={view} onChange={setView} />
+      </div>
+    </div>
+  );
 
   return (
     <div className={`max-w-7xl mx-auto px-4 sm:px-6 ${cart.cartItems.size > 0 ? "pb-32" : "pb-12"}`}>
-      <div className="mb-5">
+      {/* Controls stay pinned on phones so search and tiers are always a thumb away */}
+      <div className="max-md:sticky max-md:top-0 z-30 -mx-4 px-4 py-3 bg-surface-900/90 backdrop-blur-md md:mx-0 md:px-0 md:pt-0 md:pb-5 md:bg-transparent md:backdrop-blur-none">
         <FilterBar
           search={filters.search}
           setSearch={filters.setSearch}
@@ -89,32 +117,13 @@ export default function SupplementDatabase({ prices = {} }: Props) {
           onReset={filters.resetFilters}
           sortKey={filters.sortKey}
           onSort={filters.setSort}
+          actions={actions}
         />
       </div>
 
-      <div className="flex items-center justify-between gap-2 mb-3">
-        <ResultsCount filteredCount={filters.filtered.length} />
-        <div className="flex items-center gap-2 shrink-0">
-          {filters.filtered.some((x) => x.purchaseUrl) ? (
-            <button
-              type="button"
-              className={`btn btn-sm focus-ring ${cart.selectAllState === "all" ? "btn-selected" : "btn-secondary"}`}
-              onClick={cart.handleSelectAll}
-              aria-label={cart.selectAllState === "all" ? "Remove all shown supplements from cart" : "Add all shown supplements to cart"}
-            >
-              {cart.selectAllState === "all" ? <CheckIcon /> : <PlusIcon />}
-              <span className="sm:hidden">{cart.selectAllState === "all" ? "All added" : "Add all"}</span>
-              <span className="hidden sm:inline">{cart.selectAllState === "all" ? "All in cart" : "Add all to cart"}</span>
-            </button>
-          ) : null}
-          {view === "table" && (
-            <div className="hidden md:block">
-              <ColumnToggles visibleColumns={visibleColumns} toggleColumn={toggleColumn} />
-            </div>
-          )}
-          <ViewToggle view={view} onChange={setView} />
-        </div>
-      </div>
+      {!empty && filters.filtered.length !== supplements.length && (
+        <ResultsCount filteredCount={filters.filtered.length} onReset={filters.resetFilters} />
+      )}
 
       {empty ? (
         <div className="panel px-6 py-12 text-center">
@@ -124,8 +133,9 @@ export default function SupplementDatabase({ prices = {} }: Props) {
             Reset search &amp; filters
           </button>
         </div>
-      ) : view === "table" ? (
+      ) : (
         <>
+          {/* Phones always get the list; grid is a single column there, so it adds nothing */}
           <div className="md:hidden">
             <MobileList
               filtered={filters.filtered}
@@ -138,32 +148,33 @@ export default function SupplementDatabase({ prices = {} }: Props) {
             />
           </div>
           <div className="hidden md:block">
-            <DataTable
-              filtered={filters.filtered}
-              visibleColumns={visibleColumns}
-              sortKey={filters.sortKey}
-              sortDir={filters.sortDir}
-              onSort={filters.handleSort}
-              expandedRow={expandedRow}
-              onToggleExpand={onToggleExpand}
-              cartItems={cart.cartItems}
-              prices={prices}
-              onCartToggle={cart.toggleCartItem}
-              onCartSetQty={cart.setCartQty}
-            />
+            {view === "table" ? (
+              <DataTable
+                filtered={filters.filtered}
+                visibleColumns={visibleColumns}
+                sortKey={filters.sortKey}
+                sortDir={filters.sortDir}
+                onSort={filters.handleSort}
+                expandedRow={expandedRow}
+                onToggleExpand={onToggleExpand}
+                cartItems={cart.cartItems}
+                prices={prices}
+                onCartToggle={cart.toggleCartItem}
+                onCartSetQty={cart.setCartQty}
+              />
+            ) : (
+              <Suspense fallback={<div className="text-center py-8 text-ink-muted">Loading…</div>}>
+                <CardGrid
+                  filtered={filters.filtered}
+                  cartItems={cart.cartItems}
+                  onCartToggle={cart.toggleCartItem}
+                />
+              </Suspense>
+            )}
           </div>
+          <IconLegend className="mt-4 px-1" />
         </>
-      ) : (
-        <Suspense fallback={<div className="text-center py-8 text-ink-muted">Loading…</div>}>
-          <CardGrid
-            filtered={filters.filtered}
-            cartItems={cart.cartItems}
-            onCartToggle={cart.toggleCartItem}
-          />
-        </Suspense>
       )}
-
-      {!empty && <IconLegend className="mt-4 px-1" />}
 
       <CartBar
         itemCount={cart.cartItems.size}

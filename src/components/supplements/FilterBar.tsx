@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { SearchInput } from "./SearchInput";
 import { tierLabels } from "../../lib/constants";
+import { SlidersIcon } from "../ui/Icons";
 import type { Supplement } from "../../data/supplements";
 
 type SortKey = keyof Supplement;
@@ -34,6 +35,8 @@ interface FilterBarProps {
   onReset: () => void;
   sortKey: SortKey;
   onSort: (key: SortKey) => void;
+  /** Controls shown at the end of the tier chip row (add all, view options). */
+  actions?: React.ReactNode;
 }
 
 function FilterSelect({ id, label, value, onChange, children }: {
@@ -56,27 +59,46 @@ function FilterSelect({ id, label, value, onChange, children }: {
 export const FilterBar = React.memo(function FilterBar(props: FilterBarProps) {
   const [showMore, setShowMore] = useState(props.activeFilterCount > 0);
 
+  const filtersToggle = (
+    <button
+      type="button"
+      onClick={() => setShowMore(!showMore)}
+      className={`relative h-9 inline-flex items-center gap-1.5 px-2.5 rounded-md text-sm font-medium transition-colors focus-ring ${
+        showMore || props.activeFilterCount > 0 ? "text-sage-300 bg-sage-500/15" : "text-ink-muted hover:text-ink hover:bg-surface-700"
+      }`}
+      aria-expanded={showMore}
+      aria-controls="filter-panel"
+      aria-label={props.activeFilterCount > 0 ? `Filters, ${props.activeFilterCount} active` : "Filters"}
+    >
+      <SlidersIcon />
+      <span className="hidden sm:inline">Filters</span>
+      {props.activeFilterCount > 0 && (
+        <span className="inline-flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-sage-500 text-white text-[0.625rem] font-tabular">
+          {props.activeFilterCount}
+        </span>
+      )}
+    </button>
+  );
+
   return (
     <div className="space-y-3">
-      <div className="flex gap-2">
-        <SearchInput value={props.search} onChange={props.setSearch} />
-        <button
-          type="button"
-          onClick={() => setShowMore(!showMore)}
-          className={`btn shrink-0 focus-ring ${showMore || props.activeFilterCount > 0 ? "btn-selected" : "btn-secondary"}`}
-          aria-expanded={showMore}
-          aria-controls="filter-panel"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-            <path d="M4 6h16M7 12h10M10 18h4" />
-          </svg>
-          <span>Filters</span>
-          {props.activeFilterCount > 0 && (
-            <span className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-sage-500 text-white text-[0.6875rem] font-tabular">
-              {props.activeFilterCount}
-            </span>
-          )}
-        </button>
+      <SearchInput value={props.search} onChange={props.setSearch} trailing={filtersToggle} />
+
+      <div className="flex items-center gap-2">
+        <div className="flex flex-1 min-w-0 gap-1.5 overflow-x-auto no-scrollbar" role="group" aria-label="Filter by tier">
+          {([1, 2, 3] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              className="chip focus-ring"
+              aria-pressed={props.tierFilter === String(t)}
+              onClick={() => props.setTierFilter(props.tierFilter === String(t) ? "All" : String(t))}
+            >
+              {tierLabels[t]}
+            </button>
+          ))}
+        </div>
+        {props.actions}
       </div>
 
       {showMore && (
@@ -102,9 +124,8 @@ export const FilterBar = React.memo(function FilterBar(props: FilterBarProps) {
             <FilterSelect id="f-time" label="Time of day" value={props.timeFilter} onChange={props.setTimeFilter}>
               <option value="All">Any</option>
               <option value="Morning">Morning</option>
-              <option value="Afternoon">Afternoon</option>
               <option value="Evening">Evening</option>
-              <option value="Bed">Before bed</option>
+              <option value="Flexible">Flexible</option>
             </FilterSelect>
             <FilterSelect id="f-condition" label="Condition" value={props.conditionFilter} onChange={props.setConditionFilter}>
               <option value="All">Any</option>
@@ -126,22 +147,6 @@ export const FilterBar = React.memo(function FilterBar(props: FilterBarProps) {
         </div>
       )}
 
-      <div className="flex gap-1.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0" role="group" aria-label="Filter by priority tier">
-          <button type="button" className="chip focus-ring" aria-pressed={props.tierFilter === "All"} onClick={() => props.setTierFilter("All")}>
-            All
-          </button>
-          {([1, 2, 3] as const).map((t) => (
-            <button
-              key={t}
-              type="button"
-              className="chip focus-ring"
-              aria-pressed={props.tierFilter === String(t)}
-              onClick={() => props.setTierFilter(props.tierFilter === String(t) ? "All" : String(t))}
-            >
-              {tierLabels[t]}
-            </button>
-          ))}
-      </div>
     </div>
   );
 });

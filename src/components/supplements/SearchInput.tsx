@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
+import { SearchIcon } from "../ui/Icons";
 
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
+  /** Control rendered inside the right edge of the field (e.g. the filters toggle). */
+  trailing?: React.ReactNode;
 }
 
-export const SearchInput = React.memo(function SearchInput({ value, onChange }: SearchInputProps) {
+export const SearchInput = React.memo(function SearchInput({ value, onChange, trailing }: SearchInputProps) {
   const [local, setLocal] = useState(value);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -25,31 +28,36 @@ export const SearchInput = React.memo(function SearchInput({ value, onChange }: 
 
   return (
     <div className="relative flex-1 min-w-0">
-      <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-3.5-3.5" />
-      </svg>
+      <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint pointer-events-none" />
       <input
         type="search"
         inputMode="search"
         enterKeyHint="search"
         autoComplete="off"
-        placeholder="Search name, condition, benefit…"
+        placeholder="Search supplements"
         value={local}
         onChange={(e) => update(e.target.value)}
-        className="field !pl-10 !pr-10 [&::-webkit-search-cancel-button]:hidden"
+        className={`field !pl-10 [&::-webkit-search-cancel-button]:hidden ${trailing ? "!pr-28" : "!pr-10"}`}
         aria-label="Search supplements"
       />
-      {local && (
-        <button
-          type="button"
-          onClick={() => update("")}
-          className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 inline-flex items-center justify-center rounded-md text-ink-faint hover:text-ink focus-ring"
-          aria-label="Clear search"
-        >
-          ✕
-        </button>
-      )}
+      <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
+        {local && (
+          <button
+            type="button"
+            onClick={() => update("")}
+            className="w-9 h-9 inline-flex items-center justify-center rounded-md text-ink-faint hover:text-ink focus-ring"
+            aria-label="Clear search"
+          >
+            ✕
+          </button>
+        )}
+        {trailing && (
+          <>
+            <span className="w-px h-5 bg-surface-border-strong mx-1" aria-hidden="true" />
+            {trailing}
+          </>
+        )}
+      </div>
     </div>
   );
 });

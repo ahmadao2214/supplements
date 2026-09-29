@@ -26,9 +26,13 @@
   --color-sage-500: #4f8a5f;
   --color-sage-600: #417452;
 
+  /* Time of day — soft tints so the icons read without shouting */
+  --color-sun: #dcc47f;
+  --color-moon: #a3b3dc;
+
   /* Status — used only where something needs attention */
-  --color-caution: #e2b25c;
-  --color-avoid: #e8857c;
+  --color-caution: #ec9a55;
+  --color-avoid: #e9726b;
 
   /* Typography — serif for titles & prose, sans for UI, mono for data */
   --font-display: 'Lexend Deca', system-ui, sans-serif;
