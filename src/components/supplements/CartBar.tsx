@@ -1,4 +1,5 @@
 import React from "react";
+import { formatPrice } from "../../lib/format-utils";
 
 interface CartBarProps {
   itemCount: number;
@@ -17,44 +18,36 @@ export const CartBar = React.memo(function CartBar({
   onClear,
   onOpenCart,
 }: CartBarProps) {
+  const visible = itemCount > 0;
   return (
     <div
-      className={`sticky bottom-0 z-20 transition-all duration-250 ease-out ${
-        itemCount > 0
-          ? "translate-y-0 opacity-100 pointer-events-auto"
-          : "translate-y-full opacity-0 pointer-events-none"
+      className={`fixed inset-x-0 bottom-0 z-40 transition-all duration-200 ease-out ${
+        visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
       }`}
-      role="status"
-      aria-live="polite"
+      role="region"
+      aria-label="Cart"
+      aria-hidden={!visible}
     >
-      <div className="flex items-center justify-between gap-4 px-4 py-3 bg-surface-800 border-t border-surface-border shadow-elevated rounded-t-xl">
-        <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-          <span className="text-sm font-semibold text-cyan-400 font-display">
-            {itemCount} {itemCount === 1 ? "item" : "items"}
-            {cartTotal !== itemCount && ` (${cartTotal} total)`}
-            {cartSubtotal.total > 0 && (
-              <span className="font-tabular font-mono">
-                {" — "}${cartSubtotal.total.toFixed(2)}
-                {!cartSubtotal.allPriced && "+"}
-              </span>
-            )}
-          </span>
-          <span className="text-xs text-sage-400/50 truncate font-body">
-            {cartNames}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            className="px-3 py-1.5 bg-transparent border border-surface-border rounded-xl text-sage-400/60 text-sm cursor-pointer hover:border-avoid hover:text-avoid transition-colors font-display focus-ring"
-            onClick={onClear}
-          >
+      <div className="bg-surface-800/95 backdrop-blur-md border-t border-surface-border-strong shadow-elevated">
+        <div className="max-w-7xl mx-auto flex items-center gap-3 px-4 sm:px-6 pt-3 pb-safe">
+          <div className="min-w-0 flex-1" aria-live="polite">
+            <p className="text-sm font-semibold text-ink">
+              {cartTotal} {cartTotal === 1 ? "item" : "items"}
+              {cartSubtotal.total > 0 && (
+                <span className="font-mono font-tabular text-sage-300">
+                  {" · "}{formatPrice(cartSubtotal.total)}{!cartSubtotal.allPriced && "+"}
+                </span>
+              )}
+            </p>
+            <p className="text-xs text-ink-muted truncate">{cartNames}</p>
+          </div>
+          <button type="button" className="btn btn-ghost btn-sm shrink-0 focus-ring" onClick={onClear} tabIndex={visible ? 0 : -1}>
             Clear
           </button>
-          <button
-            className="px-4 py-1.5 bg-sage-600 border-none rounded-xl text-white text-sm font-semibold cursor-pointer hover:bg-sage-500 transition-colors whitespace-nowrap font-display focus-ring"
-            onClick={onOpenCart}
-          >
-            Open Swanson Cart
+          <button type="button" className="btn btn-primary shrink-0 focus-ring" onClick={onOpenCart} tabIndex={visible ? 0 : -1}>
+            <span className="sm:hidden">Checkout</span>
+            <span className="hidden sm:inline">Open Swanson cart</span>
+            <span aria-hidden="true">↗</span>
           </button>
         </div>
       </div>

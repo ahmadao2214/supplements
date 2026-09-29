@@ -1,5 +1,6 @@
 import React from "react";
 import { QtyStepperButton } from "../ui/QtyStepperButton";
+import { formatPrice } from "../../lib/format-utils";
 
 interface CartCellProps {
   suppId: number;
@@ -23,36 +24,30 @@ export const CartCell = React.memo(function CartCell({
   onSetQty,
 }: CartCellProps) {
   if (!purchaseUrl) {
-    return <span className="text-surface-500 text-sm">--</span>;
+    return <span className="text-ink-faint text-sm">—</span>;
   }
 
   return (
-    <div className="flex items-center gap-1.5 flex-wrap" onClick={(e) => e.stopPropagation()}>
-      <label className="inline-flex items-center cursor-pointer">
-        <input
-          type="checkbox"
-          checked={inCart}
-          onChange={() => onToggle(suppId)}
-          className="w-4 h-4 accent-sage-500 cursor-pointer focus-ring"
-          aria-label={`Add ${name} to cart`}
-        />
-      </label>
-      {inCart && price && (
-        <span className="text-xs text-sage-400/70 font-tabular font-mono">${price.toFixed(2)}</span>
-      )}
+    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+      <input
+        type="checkbox"
+        checked={inCart}
+        onChange={() => onToggle(suppId)}
+        className="check focus-ring"
+        aria-label={`Add ${name} to cart`}
+      />
       {inCart && (
         <QtyStepperButton
+          size="sm"
           qty={qty}
           onDecrease={() => onSetQty(suppId, qty - 1)}
           onIncrease={() => onSetQty(suppId, qty + 1)}
           name={name}
         />
       )}
-      {inCart && price && qty > 1 && (
-        <span className="text-[0.7rem] text-cyan-400 font-tabular font-mono w-full pl-5">
-          ${(price * qty).toFixed(2)}
-        </span>
-      )}
+      {inCart && price ? (
+        <span className="text-xs text-ink-muted font-tabular font-mono">{formatPrice(price * qty)}</span>
+      ) : null}
     </div>
   );
 });

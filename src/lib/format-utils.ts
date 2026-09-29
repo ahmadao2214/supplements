@@ -1,7 +1,6 @@
 // Pure classification functions — no JSX, just class names and labels
 
 export type BadgeType = "safe" | "caution" | "avoid";
-export type TierBadgeType = "tier1" | "tier2" | "tier3";
 
 export function classifyAdderall(val: string): BadgeType {
   const lower = val.toLowerCase();
@@ -36,15 +35,6 @@ export function getTimeLabel(type: "day" | "night" | "flex" | null): string {
   }
 }
 
-export function getTimeEmoji(type: "day" | "night" | "flex" | null): string {
-  switch (type) {
-    case "day": return "\u2600\uFE0F";
-    case "night": return "\uD83C\uDF19";
-    case "flex": return "\uD83D\uDD04";
-    default: return "";
-  }
-}
-
 export function classifyMeals(val: string): "yes" | "fat" | "no" | "optional" | null {
   const lower = val.toLowerCase();
   if (lower.includes("fat") || lower.includes("piperine")) return "fat";
@@ -64,35 +54,14 @@ export function getMealLabel(type: "yes" | "fat" | "no" | "optional" | null): st
   }
 }
 
-export function getMealEmoji(type: "yes" | "fat" | "no" | "optional" | null): string {
-  switch (type) {
-    case "fat": return "\uD83E\uDD51";
-    case "yes": return "\uD83C\uDF7D\uFE0F";
-    case "no": return "\uD83D\uDEAB";
-    case "optional": return "\u2796";
-    default: return "";
-  }
-}
-
-export function getScheduleEmoji(schedule: string): string {
-  if (schedule.includes("Off Days")) return "\u{1F504}";
-  if (schedule.includes("Adderall Days Only")) return "\u{1F48A}";
-  if (schedule.includes("Evening on Adderall")) return "\u{1F319}";
-  return "\u{1F4C5}";
-}
-
-export function getAdderallEmoji(type: BadgeType): string {
-  switch (type) {
-    case "safe": return "\u2705";
-    case "caution": return "\u26A0\uFE0F";
-    case "avoid": return "\u{1F6AB}";
-  }
-}
-
 export function getAdderallLabel(type: BadgeType): string {
   switch (type) {
     case "safe": return "Safe";
     case "caution": return "Caution";
-    case "avoid": return "Avoid/Separate";
+    case "avoid": return "Avoid / separate";
   }
+}
+
+export function formatPrice(n: number): string {
+  return `$${n.toFixed(2)}`;
 }

@@ -1,19 +1,6 @@
 import React from "react";
 import type { Supplement } from "../../data/supplements";
-import { tierLabels, tierDescriptions } from "../../lib/constants";
-import {
-  classifyAdderall,
-  classifySchedule,
-  classifyTimeOfDay,
-  classifyMeals,
-  getAdderallEmoji,
-  getAdderallLabel,
-  getScheduleEmoji,
-  getTimeLabel,
-  getTimeEmoji,
-  getMealLabel,
-  getMealEmoji,
-} from "../../lib/format-utils";
+import { TierBadge, AdderallBadge, ScheduleBadge, TimeBadge, MealBadge } from "../ui/SupplementBadges";
 
 interface CellRendererProps {
   colKey: string;
@@ -22,66 +9,28 @@ interface CellRendererProps {
 
 export const CellRenderer = React.memo(function CellRenderer({ colKey, supplement: s }: CellRendererProps) {
   switch (colKey) {
-    case "tier": {
-      const cls = `badge-tier${s.tier}`;
-      return (
-        <span className={`badge ${cls}`} title={tierDescriptions[s.tier]}>
-          T{s.tier} {tierLabels[s.tier]}
-        </span>
-      );
-    }
-    case "withAdderall": {
-      const type = classifyAdderall(s.withAdderall);
-      return (
-        <span className={`badge badge-${type}`}>
-          {getAdderallEmoji(type)} {getAdderallLabel(type)}
-        </span>
-      );
-    }
-    case "schedule": {
-      const cls = classifySchedule(s.schedule);
-      return (
-        <span className={`badge badge-${cls}`}>
-          {getScheduleEmoji(s.schedule)} {s.schedule}
-        </span>
-      );
-    }
-    case "timeOfDay": {
-      const type = classifyTimeOfDay(s.timeOfDay);
-      if (type) {
-        return (
-          <span className={`badge badge-time-${type}`} title={s.timeOfDay}>
-            {getTimeEmoji(type)} {getTimeLabel(type)}
-          </span>
-        );
-      }
-      return <>{s.timeOfDay}</>;
-    }
-    case "withMeals": {
-      const type = classifyMeals(s.withMeals);
-      if (type) {
-        return (
-          <span className={`badge badge-meal-${type}`} title={s.withMeals}>
-            {getMealEmoji(type)} {getMealLabel(type)}
-          </span>
-        );
-      }
-      return <>{s.withMeals}</>;
-    }
-    case "frequency": {
-      return <>{s.frequency}</>;
-    }
-    case "name": {
+    case "tier":
+      return <TierBadge supplement={s} />;
+    case "withAdderall":
+      return <AdderallBadge supplement={s} />;
+    case "schedule":
+      return <ScheduleBadge supplement={s} />;
+    case "timeOfDay":
+      return <TimeBadge supplement={s} />;
+    case "withMeals":
+      return <MealBadge supplement={s} />;
+    case "dosage":
+      return <span className="font-mono text-[0.8125rem] text-ink-soft">{s.dosage}</span>;
+    case "name":
       return (
         <a
           href={`/supplement/${s.slug}`}
-          className="font-display font-semibold text-sage-200 hover:text-cyan-400 transition-colors"
+          className="font-semibold text-ink hover:text-sage-300 hover:underline underline-offset-4 decoration-sage-400/50 transition-colors focus-ring"
           onClick={(e) => e.stopPropagation()}
         >
           {s.name}
         </a>
       );
-    }
     default:
       return <>{s[colKey as keyof Supplement] as string}</>;
   }

@@ -35,6 +35,24 @@ export function useSupplementFilters() {
     }
   };
 
+  const setSort = (key: SortKey) => {
+    setSortKey(key);
+    setSortDir("asc");
+  };
+
+  const activeFilterCount = [categoryFilter, conditionFilter, adderallFilter, timeFilter, scheduleFilter]
+    .filter((v) => v !== "All").length;
+
+  const resetFilters = () => {
+    setSearch("");
+    setCategoryFilter("All");
+    setConditionFilter("All");
+    setAdderallFilter("All");
+    setTimeFilter("All");
+    setTierFilter("All");
+    setScheduleFilter("All");
+  };
+
   const filtered = useMemo(() => {
     return supplements
       .filter((s) => {
@@ -76,7 +94,8 @@ export function useSupplementFilters() {
     timeFilter, setTimeFilter,
     tierFilter, setTierFilter,
     scheduleFilter, setScheduleFilter,
-    sortKey, sortDir, handleSort,
+    sortKey, sortDir, handleSort, setSort,
+    activeFilterCount, resetFilters,
     filtered,
     categories, schedules, conditions,
   };

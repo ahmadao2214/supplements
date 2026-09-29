@@ -38,8 +38,8 @@ export function DataTable({
   onSelectAll,
 }: DataTableProps) {
   return (
-    <div className="overflow-x-auto border border-surface-border rounded-xl shadow-card">
-      <table className="w-full border-collapse text-sm">
+    <div className="overflow-x-auto panel shadow-card">
+      <table className="w-full border-collapse">
         <TableHeader
           visibleColumns={visibleColumns}
           sortKey={sortKey}
@@ -49,7 +49,7 @@ export function DataTable({
           onSelectAll={onSelectAll}
         />
         <tbody>
-          {filtered.map((s, i) => (
+          {filtered.map((s) => (
             <TableRow
               key={s.id}
               supplement={s}
@@ -61,7 +61,6 @@ export function DataTable({
               price={prices[s.id]}
               onCartToggle={onCartToggle}
               onCartSetQty={onCartSetQty}
-              striped={i % 2 === 1}
             />
           ))}
         </tbody>

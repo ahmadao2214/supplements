@@ -1,6 +1,6 @@
 import React from "react";
 import { supplements } from "../../data/supplements";
-import { tierDescriptions } from "../../lib/constants";
+import { tierLabels, tierDescriptions } from "../../lib/constants";
 
 interface ResultsCountProps {
   filteredCount: number;
@@ -11,12 +11,16 @@ export const ResultsCount = React.memo(function ResultsCount({
   filteredCount,
   tierFilter,
 }: ResultsCountProps) {
+  const tier = Number(tierFilter);
   return (
-    <div className="text-xs text-sage-400/50 mb-2 font-display">
-      Showing {filteredCount} of {supplements.length} supplements
-      {tierFilter !== "All" && (
-        <span> — Tier {tierFilter}: {tierDescriptions[Number(tierFilter)]}</span>
-      )}
-    </div>
+    <p className="min-w-0 whitespace-nowrap text-[0.8125rem] text-ink-muted" aria-live="polite">
+      <span className="text-ink-soft font-medium font-tabular">{filteredCount}</span>
+      {filteredCount !== supplements.length && <span className="font-tabular"> of {supplements.length}</span>}
+      <span className="sm:hidden"> results</span>
+      <span className="max-sm:hidden"> supplements</span>
+      {tier ? (
+        <span className="hidden md:inline text-ink-faint"> · {tierLabels[tier]}: {tierDescriptions[tier].toLowerCase()}</span>
+      ) : null}
+    </p>
   );
 });

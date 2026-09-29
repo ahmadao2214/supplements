@@ -15,6 +15,8 @@ interface TableHeaderProps {
   onSelectAll: () => void;
 }
 
+const thCls = "bg-surface-800 px-4 py-3 text-left border-b border-surface-border-strong whitespace-nowrap";
+
 export const TableHeader = React.memo(function TableHeader({
   visibleColumns,
   sortKey,
@@ -30,45 +32,45 @@ export const TableHeader = React.memo(function TableHeader({
           .filter((col) => visibleColumns.has(col.key))
           .map((col) =>
             col.key === "purchaseUrl" ? (
-              <th
-                key={col.key}
-                className="bg-surface-800 px-3 py-2.5 text-left font-semibold text-xs uppercase tracking-wider text-sage-400/50 border-b-2 border-surface-border cursor-default font-display"
-              >
-                <div className="flex items-center gap-1.5">
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={selectAllState === "all"}
-                      ref={(el) => {
-                        if (el) el.indeterminate = selectAllState === "some";
-                      }}
-                      onChange={onSelectAll}
-                      className="w-4 h-4 accent-sage-500 cursor-pointer focus-ring"
-                      aria-label="Select all purchasable supplements"
-                    />
-                  </label>
-                  <span>Cart</span>
-                </div>
+              <th key={col.key} scope="col" className={thCls}>
+                <label className="inline-flex items-center gap-2 cursor-pointer eyebrow">
+                  <input
+                    type="checkbox"
+                    checked={selectAllState === "all"}
+                    ref={(el) => {
+                      if (el) el.indeterminate = selectAllState === "some";
+                    }}
+                    onChange={onSelectAll}
+                    className="check focus-ring"
+                    aria-label="Select all purchasable supplements"
+                  />
+                  Cart
+                </label>
               </th>
             ) : (
               <th
                 key={col.key}
-                onClick={() => onSort(col.key as SortKey)}
-                className={`bg-surface-800 px-3 py-2.5 text-left font-semibold text-xs uppercase tracking-wider border-b-2 border-surface-border cursor-pointer select-none whitespace-nowrap hover:text-cyan-400 transition-colors font-display ${
-                  sortKey === col.key ? "text-cyan-400" : "text-sage-400/50"
-                }`}
+                scope="col"
+                className={thCls}
                 aria-sort={sortKey === col.key ? (sortDir === "asc" ? "ascending" : "descending") : undefined}
               >
-                {col.label}
-                {sortKey === col.key && (
-                  <span className="text-[0.65rem] ml-1">
-                    {sortDir === "asc" ? "▲" : "▼"}
+                <button
+                  type="button"
+                  onClick={() => onSort(col.key as SortKey)}
+                  className={`eyebrow inline-flex items-center gap-1 hover:text-ink transition-colors focus-ring ${
+                    sortKey === col.key ? "!text-sage-300" : ""
+                  }`}
+                >
+                  {col.label}
+                  <span className={`text-[0.6rem] ${sortKey === col.key ? "" : "opacity-0"}`} aria-hidden="true">
+                    {sortDir === "asc" || sortKey !== col.key ? "▲" : "▼"}
                   </span>
-                )}
+                </button>
               </th>
             )
           )}
-        <th className="bg-surface-800 px-3 py-2.5 text-center text-sage-400/30 border-b-2 border-surface-border w-[40px] font-display">
+        <th scope="col" className={`${thCls} w-12`}>
+          <span className="sr-only">Details</span>
         </th>
       </tr>
     </thead>

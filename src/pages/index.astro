@@ -22,18 +22,18 @@ await Promise.all(suppsWithUrls.map(async (s) => {
 ---
 
 <Layout title="ADHD Supplement Database">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-2">
-    <div class="flex items-baseline gap-3 flex-wrap">
-      <h1 class="font-display text-xl sm:text-2xl font-bold text-sage-200 tracking-tight">
-        ADHD / ADD Supplement Database
-      </h1>
-      <span class="text-xs text-sage-400/40 font-display">
-        Informational only — not medical advice. Consult a healthcare professional.
-      </span>
-    </div>
-    <p class="mt-0.5 text-sm text-sage-400/60 font-display">
-      Dosages, timing, Adderall compatibility, and more.
+  <header class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-14 pb-6 sm:pb-8">
+    <p class="eyebrow mb-3">Evidence-ranked reference</p>
+    <h1 class="font-serif text-[2rem] leading-[1.1] sm:text-5xl font-semibold">
+      ADHD Supplement Database
+    </h1>
+    <p class="mt-3 max-w-2xl text-[0.9375rem] sm:text-base text-ink-muted leading-relaxed">
+      Dosage, timing, and Adderall compatibility for {supplements.length} supplements,
+      ranked <span class="text-tier1-text">Core</span>, <span class="text-tier2-text">Add-On</span>
+      and <span class="text-tier3-text">Optional</span> by strength of evidence.
     </p>
-  </div>
-  <SupplementDatabase prices={prices} client:load />
+  </header>
+  <main>
+    <SupplementDatabase prices={prices} client:load />
+  </main>
 </Layout>

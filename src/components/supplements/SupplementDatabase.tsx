@@ -5,13 +5,13 @@ import { useSupplementFilters } from "../../hooks/useSupplementFilters";
 import { useCart } from "../../hooks/useCart";
 import { useColumns } from "../../hooks/useColumns";
 import { syncToUrl, readParam } from "../../hooks/useUrlState";
-import { TierLegend } from "./TierLegend";
 import { FilterBar } from "./FilterBar";
 import { ColumnToggles } from "./ColumnToggles";
 import { ResultsCount } from "./ResultsCount";
 import { DataTable } from "./DataTable";
 import { CartBar } from "./CartBar";
 import { ViewToggle } from "./ViewToggle";
+import { MobileList, MobileSortSelect } from "./MobileList";
 
 const CardGrid = lazy(() => import("./CardGrid").then((m) => ({ default: m.CardGrid })));
 
@@ -60,11 +60,11 @@ export default function SupplementDatabase({ prices = {} }: Props) {
     visibleColumns, cart.cartItems, view,
   ]);
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 pb-8">
-      <TierLegend />
+  const empty = filters.filtered.length === 0;
 
-      <div className="mb-4">
+  return (
+    <div className={`max-w-7xl mx-auto px-4 sm:px-6 ${cart.cartItems.size > 0 ? "pb-32" : "pb-12"}`}>
+      <div className="mb-5">
         <FilterBar
           search={filters.search}
           setSearch={filters.setSearch}
@@ -83,42 +83,69 @@ export default function SupplementDatabase({ prices = {} }: Props) {
           categories={filters.categories}
           schedules={filters.schedules}
           conditions={filters.conditions}
+          activeFilterCount={filters.activeFilterCount}
+          onReset={filters.resetFilters}
         />
-        <div className="mt-2 flex items-center justify-between gap-3 flex-wrap">
+      </div>
+
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <ResultsCount filteredCount={filters.filtered.length} tierFilter={filters.tierFilter} />
+        <div className="flex items-center gap-2 shrink-0">
           {view === "table" && (
-            <ColumnToggles visibleColumns={visibleColumns} toggleColumn={toggleColumn} />
+            <>
+              <div className="md:hidden">
+                <MobileSortSelect sortKey={filters.sortKey} onSortKey={filters.setSort} />
+              </div>
+              <div className="hidden md:block">
+                <ColumnToggles visibleColumns={visibleColumns} toggleColumn={toggleColumn} />
+              </div>
+            </>
           )}
           <ViewToggle view={view} onChange={setView} />
         </div>
       </div>
 
-      <ResultsCount filteredCount={filters.filtered.length} tierFilter={filters.tierFilter} />
-
-      {view === "table" ? (
+      {empty ? (
+        <div className="panel px-6 py-12 text-center">
+          <p className="font-serif text-lg text-ink mb-1">No matches</p>
+          <p className="text-sm text-ink-muted mb-4">Try a different search or loosen your filters.</p>
+          <button type="button" className="btn btn-secondary btn-sm focus-ring" onClick={filters.resetFilters}>
+            Reset search &amp; filters
+          </button>
+        </div>
+      ) : view === "table" ? (
         <>
-          <DataTable
-            filtered={filters.filtered}
-            visibleColumns={visibleColumns}
-            sortKey={filters.sortKey}
-            sortDir={filters.sortDir}
-            onSort={filters.handleSort}
-            expandedRow={expandedRow}
-            onToggleExpand={onToggleExpand}
-            cartItems={cart.cartItems}
-            prices={prices}
-            onCartToggle={cart.toggleCartItem}
-            onCartSetQty={cart.setCartQty}
-            selectAllState={cart.selectAllState}
-            onSelectAll={cart.handleSelectAll}
-          />
-          {filters.filtered.length === 0 && (
-            <div className="text-center py-8 text-sage-400/50 font-display">
-              No supplements match your filters. Try adjusting your search criteria.
-            </div>
-          )}
+          <div className="md:hidden">
+            <MobileList
+              filtered={filters.filtered}
+              expandedRow={expandedRow}
+              onToggleExpand={onToggleExpand}
+              cartItems={cart.cartItems}
+              prices={prices}
+              onCartToggle={cart.toggleCartItem}
+              onCartSetQty={cart.setCartQty}
+            />
+          </div>
+          <div className="hidden md:block">
+            <DataTable
+              filtered={filters.filtered}
+              visibleColumns={visibleColumns}
+              sortKey={filters.sortKey}
+              sortDir={filters.sortDir}
+              onSort={filters.handleSort}
+              expandedRow={expandedRow}
+              onToggleExpand={onToggleExpand}
+              cartItems={cart.cartItems}
+              prices={prices}
+              onCartToggle={cart.toggleCartItem}
+              onCartSetQty={cart.setCartQty}
+              selectAllState={cart.selectAllState}
+              onSelectAll={cart.handleSelectAll}
+            />
+          </div>
         </>
       ) : (
-        <Suspense fallback={<div className="text-center py-8 text-sage-400/50 font-display">Loading grid...</div>}>
+        <Suspense fallback={<div className="text-center py-8 text-ink-muted">Loading…</div>}>
           <CardGrid
             filtered={filters.filtered}
             cartItems={cart.cartItems}
