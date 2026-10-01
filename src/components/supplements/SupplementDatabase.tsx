@@ -71,12 +71,7 @@ function Database({ prices, params, live }: DatabaseProps) {
     if (cartSize > 0) {
       const choice = await ask({
         title: `Load ${templateLabel(t)}?`,
-        body: (
-          <p>
-            Your cart already has {cartSize} {cartSize === 1 ? "supplement" : "supplements"}.
-            Replace it, or add what's missing? Adding keeps the larger quantity, so nothing doubles up.
-          </p>
-        ),
+        body: <p>Your cart has {cartSize} {cartSize === 1 ? "item" : "items"}.</p>,
         choices: [
           { value: "cancel", label: "Cancel", variant: "ghost" },
           { value: "add", label: "Add to cart" },

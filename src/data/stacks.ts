@@ -3,7 +3,6 @@ import { supplements } from "./supplements";
 export interface Stack {
   id: string;
   name: string;
-  description: string;
   /** Supplement slugs; each loads with quantity 1 */
   slugs: string[];
 }
@@ -13,7 +12,6 @@ export const stacks: Stack[] = [
   {
     id: "main",
     name: "Main stack",
-    description: "Every Core supplement, plus Lion's Mane, Probiotics, Vitamin K2 and Saffron",
     slugs: [
       // Core
       "omega-3-fish-oil",

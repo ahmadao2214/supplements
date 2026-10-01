@@ -32,11 +32,7 @@ export function TemplatesDialog({ open, onClose, templates, cartCount, prices, o
     if (!open && el.open) el.close();
   }, [open]);
 
-  const groups: { kind: Template["kind"]; label: string; empty?: string }[] = [
-    { kind: "stack", label: "Starter" },
-    { kind: "saved", label: "Saved", empty: "Templates you save from your cart show up here." },
-    { kind: "checkout", label: "Recent checkouts", empty: "Carts you send to Swanson show up here, so you can reorder." },
-  ];
+  const single = templates.length === 1;
 
   return (
     <dialog
@@ -54,63 +50,49 @@ export function TemplatesDialog({ open, onClose, templates, cartCount, prices, o
           </button>
         </div>
 
-        <div className="px-5 py-4 space-y-6">
-          {cartCount > 0 && (
-            <form
-              className="space-y-1.5"
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (!name.trim()) return;
-                onSave(name);
-                setName("");
-              }}
-            >
-              <label htmlFor="template-name" className="eyebrow block">
-                Save current cart ({cartCount} {cartCount === 1 ? "item" : "items"})
-              </label>
-              <div className="flex gap-2">
-                <input
-                  id="template-name"
-                  className="field"
-                  placeholder="e.g. Sleep stack"
-                  value={name}
-                  maxLength={60}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <button type="submit" className="btn btn-secondary shrink-0 focus-ring" disabled={!name.trim()}>
-                  Save
-                </button>
-              </div>
-            </form>
-          )}
+        <div className="px-5 py-4 space-y-5">
+          <form
+            className="space-y-1.5"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!name.trim() || cartCount === 0) return;
+              onSave(name);
+              setName("");
+            }}
+          >
+            <label htmlFor="template-name" className="eyebrow block">New template</label>
+            <div className="flex gap-2">
+              <input
+                id="template-name"
+                className="field disabled:opacity-60"
+                placeholder={cartCount > 0 ? "Name" : "Cart is empty"}
+                value={name}
+                maxLength={60}
+                disabled={cartCount === 0}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <button type="submit" className="btn btn-secondary shrink-0 focus-ring disabled:opacity-60" disabled={cartCount === 0 || !name.trim()}>
+                Save
+              </button>
+            </div>
+          </form>
 
-          {groups.map((g) => {
-            const list = templates.filter((t) => t.kind === g.kind);
-            if (!list.length && !g.empty) return null;
-            return (
-              <section key={g.kind} aria-labelledby={`tpl-${g.kind}`}>
-                <h3 id={`tpl-${g.kind}`} className="eyebrow mb-2">{g.label}</h3>
-                {list.length ? (
-                  <ul className="space-y-2">
-                    {list.map((t) => (
-                      <TemplateRow key={t.id} template={t} prices={prices} onLoad={onLoad} onDelete={onDelete} />
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-ink-muted">{g.empty}</p>
-                )}
-              </section>
-            );
-          })}
+          <ul className="space-y-2">
+            {templates.map((t) => (
+              <TemplateRow key={t.id} template={t} prices={prices} expanded={single} onLoad={onLoad} onDelete={onDelete} />
+            ))}
+          </ul>
         </div>
       </div>
     </dialog>
   );
 }
 
-function TemplateRow({ template: t, prices, onLoad, onDelete }: {
+function TemplateRow({ template: t, prices, expanded, onLoad, onDelete }: {
   template: Template;
   prices: Record<number, number>;
+  /** Show the item list without a toggle */
+  expanded: boolean;
   onLoad: (t: Template) => void;
   onDelete: (t: Template) => void;
 }) {
@@ -118,13 +100,6 @@ function TemplateRow({ template: t, prices, onLoad, onDelete }: {
   const count = t.items.reduce((n, [, qty]) => n + qty, 0);
   const total = t.items.reduce((sum, [id, qty]) => sum + (prices[id] ?? 0) * qty, 0);
   const allPriced = t.items.every(([id]) => prices[id]);
-  const names = t.items
-    .map(([id, qty]) => {
-      const s = getSupplementById(id);
-      return s ? (qty > 1 ? `${s.name} ×${qty}` : s.name) : null;
-    })
-    .filter(Boolean)
-    .join(", ");
   const title = t.kind === "checkout" ? `Checkout · ${formatDate(t.date)}` : t.name;
 
   const copyLink = async () => {
@@ -135,23 +110,55 @@ function TemplateRow({ template: t, prices, onLoad, onDelete }: {
     } catch { /* clipboard blocked — nothing useful to show */ }
   };
 
+  const summary = (
+    <span className="text-xs text-ink-muted">
+      {count} {count === 1 ? "item" : "items"}
+      {total > 0 && <span className="font-mono font-tabular"> · {formatPrice(total)}{!allPriced && "+"}</span>}
+    </span>
+  );
+
+  const itemList = (
+    <ul className="mt-2 divide-y divide-surface-border text-sm">
+      {t.items.map(([id, qty]) => {
+        const s = getSupplementById(id);
+        if (!s) return null;
+        return (
+          <li key={id} className="flex items-baseline justify-between gap-3 py-1.5">
+            <span className="min-w-0 text-ink-soft">
+              {s.name}
+              {s.form && <span className="text-ink-muted"> · {s.form}</span>}
+            </span>
+            {qty > 1 && <span className="shrink-0 font-tabular text-ink-muted">×{qty}</span>}
+          </li>
+        );
+      })}
+    </ul>
+  );
+
   return (
     <li className="rounded-[var(--radius-md)] border border-surface-border bg-surface-900/40 p-3">
       <div className="flex items-start gap-3">
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-ink">{title}</p>
-          <p className="text-xs text-ink-muted">
-            {count} {count === 1 ? "item" : "items"}
-            {total > 0 && <span className="font-mono font-tabular"> · {formatPrice(total)}{!allPriced && "+"}</span>}
-            {t.kind === "saved" && t.date && <> · saved {formatDate(t.date)}</>}
-          </p>
+          {expanded && summary}
         </div>
         <button type="button" className="btn btn-secondary btn-sm shrink-0 focus-ring" onClick={() => onLoad(t)}>
           Load
         </button>
       </div>
-      {t.description && <p className="mt-2 text-xs text-ink-soft">{t.description}</p>}
-      <p className="mt-1.5 text-xs text-ink-muted line-clamp-2">{names}</p>
+
+      {expanded ? itemList : (
+        <details className="group">
+          <summary className="mt-1 inline-flex items-center gap-1.5 cursor-pointer list-none rounded focus-ring [&::-webkit-details-marker]:hidden">
+            {summary}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-ink-muted transition-transform group-open:rotate-180">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+          {itemList}
+        </details>
+      )}
+
       <div className="mt-2 -ml-2 flex gap-1">
         <button type="button" className="btn btn-ghost btn-sm focus-ring" onClick={copyLink}>
           {copied ? "✓ Link copied" : "Copy link"}

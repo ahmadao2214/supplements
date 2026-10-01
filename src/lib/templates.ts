@@ -12,7 +12,6 @@ export interface Template {
   id: string;
   kind: TemplateKind;
   name: string;
-  description?: string;
   items: [number, number][];
   /** ISO timestamp; saved templates and checkouts only */
   date?: string;
@@ -71,7 +70,7 @@ export function writeStored(data: StoredTemplates, storage: Storage | undefined 
 // --- Pure operations ----------------------------------------------------------
 
 export function builtInTemplates(): Template[] {
-  return stacks.map((s) => ({ id: `stack:${s.id}`, kind: "stack", name: s.name, description: s.description, items: stackItems(s) }));
+  return stacks.map((s) => ({ id: `stack:${s.id}`, kind: "stack", name: s.name, items: stackItems(s) }));
 }
 
 /** Name for headings and messages, e.g. "Main stack" or "your Sep 30 checkout". */

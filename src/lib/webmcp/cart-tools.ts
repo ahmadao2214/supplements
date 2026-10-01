@@ -199,7 +199,6 @@ export function createCartTools(deps: CartToolDeps): ModelContextTool[] {
             id: t.id,
             name: displayName(t),
             type: templateTypeLabel[t.kind],
-            description: t.description,
             date: t.date,
             items: snap.items.map((i) => ({ name: i.name, quantity: i.quantity })),
             itemCount: snap.itemCount,
@@ -244,7 +243,7 @@ export function createCartTools(deps: CartToolDeps): ModelContextTool[] {
       const choice = await deps.confirm({
         title,
         lines: t.items.map(itemLine),
-        note: `Your cart already has ${cartSize} ${cartSize === 1 ? "supplement" : "supplements"}. Adding keeps the larger quantity, so nothing doubles up.`,
+        note: `Your cart has ${cartSize} ${cartSize === 1 ? "item" : "items"}.`,
         choices: [
           { value: "decline", label: "Decline" },
           { value: "add", label: "Add to cart" },
@@ -330,7 +329,7 @@ export function createCartTools(deps: CartToolDeps): ModelContextTool[] {
       const choice = await deps.confirm({
         title: "Ready to check out?",
         lines: [...cart].map(itemLine),
-        note: `Subtotal ${formatPrice(snap.subtotal)}${snap.subtotalComplete ? "" : "+"}. Opens your cart on swansonvitamins.com in a new tab; you review and pay there.`,
+        note: `Subtotal ${formatPrice(snap.subtotal)}${snap.subtotalComplete ? "" : "+"}`,
         choices: [
           { value: "decline", label: "Not now" },
           { value: "open", label: "Open Swanson cart", primary: true, onSelect: deps.checkout },
