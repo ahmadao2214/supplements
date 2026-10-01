@@ -35,6 +35,12 @@ export function useCart(filtered: Supplement[], prices: Record<number, number>) 
 
   const clearCart = useCallback(() => setCartItems(new Map()), []);
 
+  /** Functional update, so changes made after an async confirmation apply to the latest cart. */
+  const updateCart = useCallback(
+    (fn: (prev: Map<number, number>) => Map<number, number>) => setCartItems((prev) => new Map(fn(prev))),
+    []
+  );
+
   const filteredPurchasable = useMemo(
     () => filtered.filter((s) => s.purchaseUrl),
     [filtered]
@@ -107,6 +113,7 @@ export function useCart(filtered: Supplement[], prices: Record<number, number>) 
     toggleCartItem,
     setCartQty,
     clearCart,
+    updateCart,
     selectAllState,
     handleSelectAll,
     cartTotal,

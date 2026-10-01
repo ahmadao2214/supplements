@@ -27,3 +27,8 @@ export function buildCartUrl(cartItems: Map<number, number>): string {
   }
   return `https://www.swansonvitamins.com/cart/${parts.join(",")}`;
 }
+
+/** "id:qty,id:qty" — the format of the `cart` URL parameter. */
+export function serializeCart(cartItems: Map<number, number>): string {
+  return [...cartItems].map(([id, qty]) => `${id}:${qty}`).join(",");
+}
