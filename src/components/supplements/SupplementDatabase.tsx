@@ -4,7 +4,7 @@ import { DEFAULT_COLS } from "../../lib/constants";
 import { useSupplementFilters } from "../../hooks/useSupplementFilters";
 import { useCart } from "../../hooks/useCart";
 import { useColumns } from "../../hooks/useColumns";
-import { syncToUrl, readParam } from "../../hooks/useUrlState";
+import { syncToUrl, readParam, currentParams, useHydrated } from "../../hooks/useUrlState";
 import { buildCartUrl, serializeCart } from "../../lib/cart-utils";
 import { useWebMcpTools } from "../../hooks/useWebMcpTools";
 import { FilterBar } from "./FilterBar";
@@ -30,11 +30,31 @@ interface Props {
   prices?: Record<number, number>;
 }
 
+const noParams = new URLSearchParams();
+
+/**
+ * The page is built without a query string, so the island first renders with
+ * defaults to match that HTML exactly, then remounts with state from the URL.
+ */
 export default function SupplementDatabase({ prices = {} }: Props) {
-  const [view, setView] = useState<ViewMode>(() => readParam("view", "table") as ViewMode);
-  const filters = useSupplementFilters();
-  const { visibleColumns, toggleColumn } = useColumns();
-  const cart = useCart(filters.filtered, prices);
+  const hydrated = useHydrated();
+  return hydrated
+    ? <Database key="url" prices={prices} params={currentParams()} live />
+    : <Database key="static" prices={prices} params={noParams} live={false} />;
+}
+
+interface DatabaseProps {
+  prices: Record<number, number>;
+  params: URLSearchParams;
+  /** False for the hydration pass: don't write the URL or register agent tools yet */
+  live: boolean;
+}
+
+function Database({ prices, params, live }: DatabaseProps) {
+  const [view, setView] = useState<ViewMode>(() => readParam(params, "view", "table") as ViewMode);
+  const filters = useSupplementFilters(params);
+  const { visibleColumns, toggleColumn } = useColumns(params);
+  const cart = useCart(filters.filtered, prices, params);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
   const { templates, getTemplates, saveTemplate, deleteTemplate, recordCheckout } = useTemplates();
   const { ask, dialog } = useChoiceDialog();
@@ -110,14 +130,15 @@ export default function SupplementDatabase({ prices = {} }: Props) {
     checkout: handleCheckout,
     notify,
     ask,
-  });
+  }, live);
 
   const onToggleExpand = useCallback((id: number) => {
     setExpandedRow((prev) => (prev === id ? null : id));
   }, []);
 
-  // Sync all state to URL
+  // Sync all state to URL (not during hydration, when state is still the defaults)
   useEffect(() => {
+    if (!live) return;
     const colStr = [...visibleColumns].sort().join(",");
     const defaultStr = [...DEFAULT_COLS].sort().join(",");
 
@@ -139,7 +160,7 @@ export default function SupplementDatabase({ prices = {} }: Props) {
     filters.search, filters.categoryFilter, filters.conditionFilter,
     filters.adderallFilter, filters.timeFilter, filters.tierFilter,
     filters.scheduleFilter, filters.sortKey, filters.sortDir,
-    visibleColumns, cart.cartItems, view,
+    visibleColumns, cart.cartItems, view, live,
   ]);
 
   const empty = filters.filtered.length === 0;

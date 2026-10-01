@@ -2,9 +2,9 @@ import { useState } from "react";
 import { DEFAULT_COLS } from "../lib/constants";
 import { readSetParam } from "./useUrlState";
 
-export function useColumns() {
+export function useColumns(params: URLSearchParams) {
   const [visibleColumns, setVisibleColumns] = useState<Set<string>>(() =>
-    readSetParam("cols", DEFAULT_COLS)
+    readSetParam(params, "cols", DEFAULT_COLS)
   );
 
   const toggleColumn = (key: string) => {

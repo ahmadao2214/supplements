@@ -3,11 +3,11 @@ import { supplements, type Supplement } from "../data/supplements";
 import { initSupplementMap, getSupplementById } from "../lib/cart-utils";
 import { readMapParam } from "./useUrlState";
 
-export function useCart(filtered: Supplement[], prices: Record<number, number>) {
+export function useCart(filtered: Supplement[], prices: Record<number, number>, params: URLSearchParams) {
   // Initialize supplement map for cart URL building
   initSupplementMap(supplements);
 
-  const [cartItems, setCartItems] = useState<Map<number, number>>(() => readMapParam("cart"));
+  const [cartItems, setCartItems] = useState<Map<number, number>>(() => readMapParam(params, "cart"));
 
   const toggleCartItem = useCallback((id: number) => {
     setCartItems((prev) => {

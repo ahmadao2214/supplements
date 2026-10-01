@@ -3,16 +3,16 @@ import { supplements, conditions } from "../data/supplements";
 import { readParam } from "./useUrlState";
 import { filterSupplements, sortSupplements, type SortKey, type SortDir } from "../lib/supplement-query";
 
-export function useSupplementFilters() {
-  const [search, setSearch] = useState(() => readParam("q", ""));
-  const [categoryFilter, setCategoryFilter] = useState(() => readParam("cat", "All"));
-  const [conditionFilter, setConditionFilter] = useState(() => readParam("cond", "All"));
-  const [adderallFilter, setAdderallFilter] = useState(() => readParam("add", "All"));
-  const [timeFilter, setTimeFilter] = useState(() => readParam("time", "All"));
-  const [tierFilter, setTierFilter] = useState(() => readParam("tier", "All"));
-  const [scheduleFilter, setScheduleFilter] = useState(() => readParam("sched", "All"));
-  const [sortKey, setSortKey] = useState<SortKey>(() => readParam("sort", "tier") as SortKey);
-  const [sortDir, setSortDir] = useState<SortDir>(() => readParam("dir", "asc") as SortDir);
+export function useSupplementFilters(params: URLSearchParams) {
+  const [search, setSearch] = useState(() => readParam(params, "q", ""));
+  const [categoryFilter, setCategoryFilter] = useState(() => readParam(params, "cat", "All"));
+  const [conditionFilter, setConditionFilter] = useState(() => readParam(params, "cond", "All"));
+  const [adderallFilter, setAdderallFilter] = useState(() => readParam(params, "add", "All"));
+  const [timeFilter, setTimeFilter] = useState(() => readParam(params, "time", "All"));
+  const [tierFilter, setTierFilter] = useState(() => readParam(params, "tier", "All"));
+  const [scheduleFilter, setScheduleFilter] = useState(() => readParam(params, "sched", "All"));
+  const [sortKey, setSortKey] = useState<SortKey>(() => readParam(params, "sort", "tier") as SortKey);
+  const [sortDir, setSortDir] = useState<SortDir>(() => readParam(params, "dir", "asc") as SortDir);
 
   const categories = useMemo(
     () => ["All", ...new Set(supplements.map((s) => s.category))],

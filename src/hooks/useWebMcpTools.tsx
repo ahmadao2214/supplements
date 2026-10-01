@@ -11,12 +11,12 @@ type Deps = Omit<CartToolDeps, "confirm"> & {
  * Registers the cart and template tools for as long as the island is mounted.
  * Tools are registered once; they read the latest state through a ref.
  */
-export function useWebMcpTools(deps: Deps) {
+export function useWebMcpTools(deps: Deps, enabled = true) {
   const latest = useRef(deps);
   latest.current = deps;
 
   useEffect(() => {
-    if (!getModelContext()) return;
+    if (!enabled || !getModelContext()) return;
     const controller = new AbortController();
     const confirm = ({ title, lines, note, choices, signal }: ConfirmRequest) =>
       latest.current.ask({
@@ -54,5 +54,5 @@ export function useWebMcpTools(deps: Deps) {
     });
     registerTools(tools, controller.signal);
     return () => controller.abort();
-  }, []);
+  }, [enabled]);
 }
