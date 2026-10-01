@@ -1,13 +1,13 @@
 import { useState, useMemo, useCallback } from "react";
 import { supplements, type Supplement } from "../data/supplements";
-import { buildCartUrl, initSupplementMap, getSupplementById } from "../lib/cart-utils";
+import { initSupplementMap, getSupplementById } from "../lib/cart-utils";
 import { readMapParam } from "./useUrlState";
 
-export function useCart(filtered: Supplement[], prices: Record<number, number>) {
+export function useCart(filtered: Supplement[], prices: Record<number, number>, params: URLSearchParams) {
   // Initialize supplement map for cart URL building
   initSupplementMap(supplements);
 
-  const [cartItems, setCartItems] = useState<Map<number, number>>(() => readMapParam("cart"));
+  const [cartItems, setCartItems] = useState<Map<number, number>>(() => readMapParam(params, "cart"));
 
   const toggleCartItem = useCallback((id: number) => {
     setCartItems((prev) => {
@@ -34,6 +34,12 @@ export function useCart(filtered: Supplement[], prices: Record<number, number>) 
   }, []);
 
   const clearCart = useCallback(() => setCartItems(new Map()), []);
+
+  /** Functional update, so changes made after an async confirmation apply to the latest cart. */
+  const updateCart = useCallback(
+    (fn: (prev: Map<number, number>) => Map<number, number>) => setCartItems((prev) => new Map(fn(prev))),
+    []
+  );
 
   const filteredPurchasable = useMemo(
     () => filtered.filter((s) => s.purchaseUrl),
@@ -85,12 +91,6 @@ export function useCart(filtered: Supplement[], prices: Record<number, number>) 
     return { total, allPriced };
   }, [cartItems, prices]);
 
-  const openSwansonCart = useCallback(() => {
-    if (cartItems.size === 0) return;
-    const url = buildCartUrl(cartItems);
-    window.open(url, "_blank", "noopener,noreferrer");
-  }, [cartItems]);
-
   const cartNames = useMemo(() => {
     return [...cartItems]
       .map(([id, qty]) => {
@@ -107,11 +107,11 @@ export function useCart(filtered: Supplement[], prices: Record<number, number>) 
     toggleCartItem,
     setCartQty,
     clearCart,
+    updateCart,
     selectAllState,
     handleSelectAll,
     cartTotal,
     cartSubtotal,
-    openSwansonCart,
     cartNames,
   };
 }

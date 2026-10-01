@@ -1,22 +1,35 @@
+import { useSyncExternalStore } from "react";
+
 const isBrowser = typeof window !== "undefined";
 
-function getParams(): URLSearchParams {
-  if (!isBrowser) return new URLSearchParams();
-  return new URLSearchParams(window.location.search);
+/** The page's query string; empty on the server. */
+export function currentParams(): URLSearchParams {
+  return new URLSearchParams(isBrowser ? window.location.search : "");
 }
 
-export function readParam(key: string, fallback: string): string {
-  return getParams().get(key) ?? fallback;
+const noopSubscribe = () => () => {};
+
+/**
+ * False on the server and during hydration, true afterwards. The site is built
+ * without a query string, so anything rendered from the URL must wait for this
+ * or the first client render won't match the static HTML.
+ */
+export function useHydrated(): boolean {
+  return useSyncExternalStore(noopSubscribe, () => true, () => false);
 }
 
-export function readSetParam(key: string, fallback: string[]): Set<string> {
-  const raw = getParams().get(key);
+export function readParam(params: URLSearchParams, key: string, fallback: string): string {
+  return params.get(key) ?? fallback;
+}
+
+export function readSetParam(params: URLSearchParams, key: string, fallback: string[]): Set<string> {
+  const raw = params.get(key);
   if (raw) return new Set(raw.split(",").filter(Boolean));
   return new Set(fallback);
 }
 
-export function readMapParam(key: string): Map<number, number> {
-  const raw = getParams().get(key);
+export function readMapParam(params: URLSearchParams, key: string): Map<number, number> {
+  const raw = params.get(key);
   if (!raw) return new Map();
   const map = new Map<number, number>();
   for (const pair of raw.split(",")) {

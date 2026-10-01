@@ -115,3 +115,12 @@ export function SearchIcon({ size = 16, className = "" }: IconProps) {
     </svg>
   );
 }
+
+export function StackIcon({ size = 18, className = "" }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <path d="M8 2 14 5 8 8 2 5 8 2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      <path d="m2 8 6 3 6-3M2 11l6 3 6-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}

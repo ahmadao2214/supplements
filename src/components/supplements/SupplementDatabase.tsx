@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from "react";
 import { supplements } from "../../data/supplements";
 import { DEFAULT_COLS } from "../../lib/constants";
 import { useSupplementFilters } from "../../hooks/useSupplementFilters";
 import { useCart } from "../../hooks/useCart";
 import { useColumns } from "../../hooks/useColumns";
-import { syncToUrl, readParam } from "../../hooks/useUrlState";
+import { syncToUrl, readParam, currentParams, useHydrated } from "../../hooks/useUrlState";
+import { buildCartUrl, serializeCart } from "../../lib/cart-utils";
+import { useWebMcpTools } from "../../hooks/useWebMcpTools";
 import { FilterBar } from "./FilterBar";
 import { ColumnToggles } from "./ColumnToggles";
 import { ResultsCount } from "./ResultsCount";
@@ -12,7 +14,12 @@ import { DataTable } from "./DataTable";
 import { CartBar } from "./CartBar";
 import { ViewToggle } from "./ViewToggle";
 import { MobileList } from "./MobileList";
-import { CartPlusIcon, CartCheckIcon } from "../ui/Icons";
+import { CartPlusIcon, CartCheckIcon, StackIcon } from "../ui/Icons";
+import { TemplatesDialog } from "./TemplatesDialog";
+import { useChoiceDialog } from "../ui/ChoiceDialog";
+import { useTemplates } from "../../hooks/useTemplates";
+import { useNotice } from "../../hooks/useNotice";
+import { applyTemplate, templateLabel, type ApplyMode, type Template } from "../../lib/templates";
 import { IconLegend } from "../ui/IconLegend";
 
 const CardGrid = lazy(() => import("./CardGrid").then((m) => ({ default: m.CardGrid })));
@@ -23,19 +30,110 @@ interface Props {
   prices?: Record<number, number>;
 }
 
+const noParams = new URLSearchParams();
+
+/**
+ * The page is built without a query string, so the island first renders with
+ * defaults to match that HTML exactly, then remounts with state from the URL.
+ */
 export default function SupplementDatabase({ prices = {} }: Props) {
-  const [view, setView] = useState<ViewMode>(() => readParam("view", "table") as ViewMode);
-  const filters = useSupplementFilters();
-  const { visibleColumns, toggleColumn } = useColumns();
-  const cart = useCart(filters.filtered, prices);
+  const hydrated = useHydrated();
+  return hydrated
+    ? <Database key="url" prices={prices} params={currentParams()} live />
+    : <Database key="static" prices={prices} params={noParams} live={false} />;
+}
+
+interface DatabaseProps {
+  prices: Record<number, number>;
+  params: URLSearchParams;
+  /** False for the hydration pass: don't write the URL or register agent tools yet */
+  live: boolean;
+}
+
+function Database({ prices, params, live }: DatabaseProps) {
+  const [view, setView] = useState<ViewMode>(() => readParam(params, "view", "table") as ViewMode);
+  const filters = useSupplementFilters(params);
+  const { visibleColumns, toggleColumn } = useColumns(params);
+  const cart = useCart(filters.filtered, prices, params);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const { templates, getTemplates, saveTemplate, deleteTemplate, recordCheckout } = useTemplates();
+  const { ask, dialog } = useChoiceDialog();
+  const { notice, notify } = useNotice();
+  const [templatesOpen, setTemplatesOpen] = useState(false);
+
+  const cartSize = cart.cartItems.size;
+  const { updateCart } = cart;
+
+  const loadTemplate = useCallback(async (t: Template) => {
+    setTemplatesOpen(false);
+    let mode: ApplyMode = "replace";
+    // Only an empty cart loads straight away; otherwise the user picks replace or add
+    if (cartSize > 0) {
+      const choice = await ask({
+        title: `Load ${templateLabel(t)}?`,
+        body: <p>Your cart has {cartSize} {cartSize === 1 ? "item" : "items"}.</p>,
+        choices: [
+          { value: "cancel", label: "Cancel", variant: "ghost" },
+          { value: "add", label: "Add to cart" },
+          { value: "replace", label: "Replace cart", variant: "primary" },
+        ],
+      });
+      if (choice !== "add" && choice !== "replace") return;
+      mode = choice;
+    }
+    updateCart((prev) => applyTemplate(prev, t.items, mode));
+    notify(`${mode === "add" ? "Added" : "Loaded"} ${templateLabel(t)}`);
+  }, [ask, cartSize, updateCart, notify]);
+
+  const confirmDelete = useCallback(async (t: Template) => {
+    setTemplatesOpen(false);
+    const choice = await ask({
+      title: `Delete ${templateLabel(t)}?`,
+      choices: [
+        { value: "cancel", label: "Cancel", variant: "ghost" },
+        { value: "delete", label: "Delete", variant: "primary" },
+      ],
+    });
+    if (choice === "delete") {
+      deleteTemplate(t.id);
+      notify(`Deleted ${templateLabel(t)}`);
+    }
+    setTemplatesOpen(true);
+  }, [ask, deleteTemplate, notify]);
+
+  // Latest cart for agent tools, which can run between renders
+  const cartRef = useRef(cart.cartItems);
+  cartRef.current = cart.cartItems;
+
+  const handleCheckout = useCallback(() => {
+    const items = cartRef.current;
+    if (items.size === 0) return;
+    window.open(buildCartUrl(items), "_blank", "noopener,noreferrer");
+    recordCheckout(items);
+  }, [recordCheckout]);
+
+  useWebMcpTools({
+    getCart: () => cartRef.current,
+    setCart: (next) => {
+      cartRef.current = next;
+      updateCart(() => next);
+    },
+    getPrices: () => prices,
+    getTemplates,
+    saveTemplate,
+    deleteTemplate,
+    checkout: handleCheckout,
+    notify,
+    ask,
+  }, live);
 
   const onToggleExpand = useCallback((id: number) => {
     setExpandedRow((prev) => (prev === id ? null : id));
   }, []);
 
-  // Sync all state to URL
+  // Sync all state to URL (not during hydration, when state is still the defaults)
   useEffect(() => {
+    if (!live) return;
     const colStr = [...visibleColumns].sort().join(",");
     const defaultStr = [...DEFAULT_COLS].sort().join(",");
 
@@ -51,15 +149,13 @@ export default function SupplementDatabase({ prices = {} }: Props) {
       dir: filters.sortDir !== "asc" ? filters.sortDir : undefined,
       cols: colStr !== defaultStr ? colStr : undefined,
       view: view !== "table" ? view : undefined,
-      cart: cart.cartItems.size > 0
-        ? [...cart.cartItems].map(([id, qty]) => `${id}:${qty}`).join(",")
-        : undefined,
+      cart: cart.cartItems.size > 0 ? serializeCart(cart.cartItems) : undefined,
     });
   }, [
     filters.search, filters.categoryFilter, filters.conditionFilter,
     filters.adderallFilter, filters.timeFilter, filters.tierFilter,
     filters.scheduleFilter, filters.sortKey, filters.sortDir,
-    visibleColumns, cart.cartItems, view,
+    visibleColumns, cart.cartItems, view, live,
   ]);
 
   const empty = filters.filtered.length === 0;
@@ -68,6 +164,17 @@ export default function SupplementDatabase({ prices = {} }: Props) {
 
   const actions = (
     <div className="flex items-center gap-2 shrink-0">
+      <button
+        type="button"
+        className="h-9 inline-flex items-center gap-1.5 px-2.5 rounded-[var(--radius-md)] border bg-surface-800 border-surface-border-strong text-sm font-medium text-ink-soft hover:text-ink hover:border-surface-500 transition-colors focus-ring"
+        onClick={() => setTemplatesOpen(true)}
+        aria-haspopup="dialog"
+        aria-label="Templates"
+        title="Templates"
+      >
+        <StackIcon size={18} />
+        <span className="hidden sm:inline">Templates</span>
+      </button>
       {canAddAll && (
         <button
           type="button"
@@ -182,8 +289,33 @@ export default function SupplementDatabase({ prices = {} }: Props) {
         cartSubtotal={cart.cartSubtotal}
         cartNames={cart.cartNames}
         onClear={cart.clearCart}
-        onOpenCart={cart.openSwansonCart}
+        onOpenCart={handleCheckout}
       />
+
+      <TemplatesDialog
+        open={templatesOpen}
+        onClose={() => setTemplatesOpen(false)}
+        templates={templates}
+        cartCount={cartSize}
+        prices={prices}
+        onLoad={loadTemplate}
+        onSave={(name) => {
+          saveTemplate(name, cart.cartItems);
+          notify(`Saved "${name.trim()}"`);
+        }}
+        onDelete={confirmDelete}
+      />
+      {dialog}
+
+      <div
+        role="status"
+        aria-live="polite"
+        className={`fixed left-1/2 -translate-x-1/2 z-50 transition-[bottom] ${cartSize > 0 ? "bottom-24" : "bottom-6"}`}
+      >
+        {notice && (
+          <p className="panel px-4 py-2 text-sm text-ink shadow-elevated animate-slide-up whitespace-nowrap">{notice}</p>
+        )}
+      </div>
     </div>
   );
 }
