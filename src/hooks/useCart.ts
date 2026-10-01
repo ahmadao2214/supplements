@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { supplements, type Supplement } from "../data/supplements";
-import { buildCartUrl, initSupplementMap, getSupplementById } from "../lib/cart-utils";
+import { initSupplementMap, getSupplementById } from "../lib/cart-utils";
 import { readMapParam } from "./useUrlState";
 
 export function useCart(filtered: Supplement[], prices: Record<number, number>) {
@@ -91,12 +91,6 @@ export function useCart(filtered: Supplement[], prices: Record<number, number>) 
     return { total, allPriced };
   }, [cartItems, prices]);
 
-  const openSwansonCart = useCallback(() => {
-    if (cartItems.size === 0) return;
-    const url = buildCartUrl(cartItems);
-    window.open(url, "_blank", "noopener,noreferrer");
-  }, [cartItems]);
-
   const cartNames = useMemo(() => {
     return [...cartItems]
       .map(([id, qty]) => {
@@ -118,7 +112,6 @@ export function useCart(filtered: Supplement[], prices: Record<number, number>) 
     handleSelectAll,
     cartTotal,
     cartSubtotal,
-    openSwansonCart,
     cartNames,
   };
 }

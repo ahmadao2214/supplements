@@ -1,11 +1,12 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from "react";
 import { supplements } from "../../data/supplements";
 import { DEFAULT_COLS } from "../../lib/constants";
 import { useSupplementFilters } from "../../hooks/useSupplementFilters";
 import { useCart } from "../../hooks/useCart";
 import { useColumns } from "../../hooks/useColumns";
 import { syncToUrl, readParam } from "../../hooks/useUrlState";
-import { serializeCart } from "../../lib/cart-utils";
+import { buildCartUrl, serializeCart } from "../../lib/cart-utils";
+import { useWebMcpTools } from "../../hooks/useWebMcpTools";
 import { FilterBar } from "./FilterBar";
 import { ColumnToggles } from "./ColumnToggles";
 import { ResultsCount } from "./ResultsCount";
@@ -35,7 +36,7 @@ export default function SupplementDatabase({ prices = {} }: Props) {
   const { visibleColumns, toggleColumn } = useColumns();
   const cart = useCart(filters.filtered, prices);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
-  const { templates, saveTemplate, deleteTemplate, recordCheckout } = useTemplates();
+  const { templates, getTemplates, saveTemplate, deleteTemplate, recordCheckout } = useTemplates();
   const { ask, dialog } = useChoiceDialog();
   const { notice, notify } = useNotice();
   const [templatesOpen, setTemplatesOpen] = useState(false);
@@ -85,10 +86,31 @@ export default function SupplementDatabase({ prices = {} }: Props) {
     setTemplatesOpen(true);
   }, [ask, deleteTemplate, notify]);
 
+  // Latest cart for agent tools, which can run between renders
+  const cartRef = useRef(cart.cartItems);
+  cartRef.current = cart.cartItems;
+
   const handleCheckout = useCallback(() => {
-    cart.openSwansonCart();
-    recordCheckout(cart.cartItems);
-  }, [cart.openSwansonCart, cart.cartItems, recordCheckout]);
+    const items = cartRef.current;
+    if (items.size === 0) return;
+    window.open(buildCartUrl(items), "_blank", "noopener,noreferrer");
+    recordCheckout(items);
+  }, [recordCheckout]);
+
+  useWebMcpTools({
+    getCart: () => cartRef.current,
+    setCart: (next) => {
+      cartRef.current = next;
+      updateCart(() => next);
+    },
+    getPrices: () => prices,
+    getTemplates,
+    saveTemplate,
+    deleteTemplate,
+    checkout: handleCheckout,
+    notify,
+    ask,
+  });
 
   const onToggleExpand = useCallback((id: number) => {
     setExpandedRow((prev) => (prev === id ? null : id));

@@ -40,6 +40,8 @@ export function useTemplates() {
   const recordCheckout = useCallback((cart: CartItems) => update((s) => withCheckout(s, cart)), [update]);
 
   const templates = useMemo(() => allTemplates(stored), [stored]);
+  /** Current list even before the next render — for agent tools called back to back */
+  const getTemplates = useCallback(() => allTemplates(storedRef.current), []);
 
-  return { templates, saveTemplate, deleteTemplate, recordCheckout };
+  return { templates, getTemplates, saveTemplate, deleteTemplate, recordCheckout };
 }
