@@ -131,7 +131,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Only supplement if blood test confirms deficiency; unnecessary if levels are normal",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-albion-chelated-ferrochel-iron-glycinate-18-mg-180-caps?variant=46319100952714",
   },
   {
     id: 6,
@@ -215,7 +215,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Strong nootropic that complements dopamine pathway via acetylcholine; add after core is stable",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-alpha-gpc-alpha-glycerophosphocholine-300-mg-60-veg-caps?variant=46319101837450",
   },
   {
     id: 10,
@@ -236,7 +236,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Good evidence but overlaps with other core stack supplements; add if budget allows",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-phosphatidylserine-100-mg-90-sgels?variant=46319110258826",
   },
   {
     id: 11,
@@ -257,7 +257,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Stimulating like Adderall — risk of overstimulation; better as a weekend/off-day option",
     schedule: "Off Days Only",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-superior-herbs-rhodiola-rosea-extract-60-caps?variant=46319098953866",
   },
   {
     id: 12,
@@ -299,7 +299,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Unique NGF-boosting mechanism not covered by other supplements; strong long-term benefit",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-full-spectrum-lions-mane-mushroom-500-mg-60-caps?variant=46319076704394",
   },
   {
     id: 14,
@@ -320,7 +320,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Excellent for managing Adderall crash and cortisol; add once core stack is established",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/youtheory-ashwagandha-60-veg-caps?variant=46319145386122",
   },
   {
     id: 15,
@@ -341,7 +341,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Questionable oral bioavailability (may not cross BBB); L-Theanine is a better alternative",
     schedule: "Daily — Evening on Adderall Days",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-gaba-500-mg-100-caps?variant=46319078113418",
   },
   {
     id: 16,
@@ -362,7 +362,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "More targeted for OCD/panic than core ADHD; consider if anxiety is a primary concern",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-pure-inositol-powder-8-oz-227-grams-pwdr?variant=46319087190154",
   },
   {
     id: 17,
@@ -383,7 +383,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Useful antioxidant but requires strict timing separation from Adderall; not essential to supplement",
     schedule: "Daily — Evening on Adderall Days",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-vitamin-c-rose-hips-500-mg-400-caps?variant=46319092760714",
   },
   {
     id: 18,
@@ -404,7 +404,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Growing gut-brain axis evidence; supports mood and cognition indirectly but meaningfully",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-probiotics-probiotic-digestive-health-20-billion-cfu-60-veg-caps?variant=46319094857866",
   },
   {
     id: 19,
@@ -425,7 +425,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "General energy support; not ADHD-specific but helpful for brain fog and mitochondrial health",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-ubiquinol-100-mg-120-sgels?variant=46319113863306",
   },
   {
     id: 20,
@@ -446,7 +446,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Directly counteracts Adderall insomnia; essential if sleep is disrupted on stimulant days",
     schedule: "Adderall Days Only",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-melatonin-1-mg-120-caps?variant=46319083290762",
   },
   {
     id: 21,
@@ -467,7 +467,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Mild cognitive benefit; cerebral blood flow support is nice-to-have, not essential",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-delayed-release-ginkgo-120-mg-100-veg-drcaps?variant=46319104131210",
   },
   {
     id: 22,
@@ -488,7 +488,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Essential companion to Vitamin D3; if you take D3, you should take K2",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/doctors-best-natural-vitamin-k2-mk-7-menaq7-100-mcg-60-veg-caps?variant=46318756233354",
   },
   {
     id: 23,
@@ -509,7 +509,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Serotonin interaction risk requires careful management; only if sleep/mood is primary concern",
     schedule: "Daily — Evening on Adderall Days",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-5-htp-extra-strength-100-mg-60-caps?variant=46319099904138",
   },
   {
     id: 24,
@@ -530,7 +530,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Strong general cognitive evidence but not ADHD-specific; great if you also exercise",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-creatine-powder-2-lb-3-oz-1-kg-pwdr?variant=46319072673930",
   },
   {
     id: 25,
@@ -572,7 +572,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Strong antidepressant evidence; supports methylation which is critical for neurotransmitter production",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-same-200-mg-60-tabs?variant=46319111274634",
   },
   {
     id: 27,
@@ -593,7 +593,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "General antioxidant neuroprotection; not ADHD-specific but supports long-term brain health",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/carlson-tocotrienols-natural-vitamin-e-30-sgels?variant=46318731001994",
   },
   {
     id: 28,
@@ -614,7 +614,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Important antioxidant but body produces its own; NAC (precursor) may be more cost-effective",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-l-glutathione-250-mg-60-veg-caps?variant=46319106949258",
   },
   {
     id: 29,
@@ -625,7 +625,7 @@ export const supplements: Supplement[] = [
     treats: "Memory, Focus, Cerebral Circulation",
     dosage: "10–20 mg",
     dosageNote: "",
-    frequency: "3x daily",
+    frequency: "Twice daily",
     timeOfDay: "Morning",
     withMeals: "Yes (improves absorption)",
     withAdderall: "Use cautiously — both increase cerebral blood flow",
@@ -635,7 +635,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Interesting nootropic for cerebral circulation but limited ADHD-specific evidence; regulatory concerns in some regions",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-vinpocetine-10-mg-90-caps?variant=46319092236426",
   },
   {
     id: 30,
@@ -656,7 +656,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Strong anti-inflammatory and BDNF support; neuroinflammation reduction benefits ADHD brain function",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-superior-herbs-curcumin-complex-350-mg-120-veg-caps?variant=46319096365194",
   },
   {
     id: 31,
@@ -677,7 +677,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "General antioxidant and neuroprotective; not ADHD-specific but supports overall brain health",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-superior-herbs-olive-leaf-extract-500-mg-120-caps?variant=46319098560650",
   },
   {
     id: 32,
@@ -698,7 +698,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Hormone precursor requires medical supervision; only consider with blood work confirming need",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-pregnenolone-10-mg-90-caps?variant=46319087255690",
   },
   {
     id: 33,
@@ -719,7 +719,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Traditional cognitive support with some evidence but limited ADHD-specific data; safe addition if interested",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-gotu-kola-435-mg-60-caps?variant=46319079456906",
   },
   {
     id: 34,
@@ -740,7 +740,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Mild cognitive benefit from antioxidant and anti-inflammatory properties; low risk, low priority",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-superior-herbs-rosemary-extract-500-mg-60-caps?variant=46319098593418",
   },
   {
     id: 35,
@@ -761,7 +761,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Neuroprotective B1 variant but niche use case; mainly beneficial if glucose metabolism is a concern",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-high-potency-benfotiamine-160-mg-60-caps?variant=46319106621578",
   },
   {
     id: 36,
@@ -782,7 +782,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Powerful antioxidant but no direct ADHD evidence; general neuroprotection via polyphenols",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-premium-full-spectrum-aronia-chokeberry-400-mg-60-caps?variant=46319074476170",
   },
   {
     id: 37,
@@ -803,7 +803,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Nutrient-dense superfood but broad rather than targeted; general health support rather than ADHD-specific",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-greenfoods-formulas-spirulina-500-mg-180-tabs?variant=46319064023178",
   },
   {
     id: 38,
@@ -824,7 +824,7 @@ export const supplements: Supplement[] = [
     tier: 2,
     tierReason: "Micro-dose lithium has emerging neuroprotective evidence and may reduce ADHD-related impulsivity; safe at low doses",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-lithium-orotate-5-mg-elemental-lithium-60-veg-caps?variant=46319106916490",
   },
   {
     id: 39,
@@ -845,7 +845,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Important for methylation but typically covered by B-Complex (id: 7); only add separately if specific need",
     schedule: "Daily",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/swanson-ultra-folate-5-methyltetrahydrofolic-acid-400-mcg-30-veg-caps?variant=46319105015946",
   },
   {
     id: 40,
@@ -866,7 +866,7 @@ export const supplements: Supplement[] = [
     tier: 3,
     tierReason: "Stimulating adaptogen with ADHD-relevant cognitive benefits but overlaps with Adderall's stimulant effects; better on off days",
     schedule: "Off Days Only",
-    purchaseUrl: "",
+    purchaseUrl: "https://www.swansonvitamins.com/p/now-foods-panax-ginseng-100-caps?variant=46318963949706",
   },
 ];
 
