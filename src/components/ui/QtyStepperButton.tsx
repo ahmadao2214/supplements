@@ -5,6 +5,7 @@ interface QtyStepperButtonProps {
   onDecrease: () => void;
   onIncrease: () => void;
   name: string;
+  size?: "sm" | "md";
 }
 
 export const QtyStepperButton = React.memo(function QtyStepperButton({
@@ -12,24 +13,19 @@ export const QtyStepperButton = React.memo(function QtyStepperButton({
   onDecrease,
   onIncrease,
   name,
+  size = "md",
 }: QtyStepperButtonProps) {
+  const dim = size === "sm" ? "w-8 h-8" : "w-11 h-11 md:w-10 md:h-10";
+  const btn = `${dim} inline-flex items-center justify-center text-ink-muted text-base hover:bg-surface-600 hover:text-ink transition-colors focus-ring`;
   return (
-    <div className="inline-flex items-center border border-surface-border rounded-lg overflow-hidden">
-      <button
-        className="w-6 h-6 inline-flex items-center justify-center bg-surface-700 text-sage-400/60 text-sm hover:bg-surface-600 hover:text-sage-300 transition-colors focus-ring"
-        onClick={onDecrease}
-        aria-label={`Decrease ${name} quantity`}
-      >
+    <div className="inline-flex items-center bg-surface-700 border border-surface-border-strong rounded-[var(--radius-md)] overflow-hidden">
+      <button type="button" className={btn} onClick={onDecrease} aria-label={`Decrease ${name} quantity`}>
         −
       </button>
-      <span className="w-6 text-center text-xs font-bold text-cyan-400 bg-surface-900 leading-6 font-mono font-tabular">
+      <span className="min-w-6 text-center text-sm font-semibold text-ink font-mono font-tabular" aria-live="polite">
         {qty}
       </span>
-      <button
-        className="w-6 h-6 inline-flex items-center justify-center bg-surface-700 text-sage-400/60 text-sm hover:bg-surface-600 hover:text-sage-300 transition-colors focus-ring"
-        onClick={onIncrease}
-        aria-label={`Increase ${name} quantity`}
-      >
+      <button type="button" className={btn} onClick={onIncrease} aria-label={`Increase ${name} quantity`}>
         +
       </button>
     </div>

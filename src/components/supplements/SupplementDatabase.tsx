@@ -5,13 +5,15 @@ import { useSupplementFilters } from "../../hooks/useSupplementFilters";
 import { useCart } from "../../hooks/useCart";
 import { useColumns } from "../../hooks/useColumns";
 import { syncToUrl, readParam } from "../../hooks/useUrlState";
-import { TierLegend } from "./TierLegend";
 import { FilterBar } from "./FilterBar";
 import { ColumnToggles } from "./ColumnToggles";
 import { ResultsCount } from "./ResultsCount";
 import { DataTable } from "./DataTable";
 import { CartBar } from "./CartBar";
 import { ViewToggle } from "./ViewToggle";
+import { MobileList } from "./MobileList";
+import { CartPlusIcon, CartCheckIcon } from "../ui/Icons";
+import { IconLegend } from "../ui/IconLegend";
 
 const CardGrid = lazy(() => import("./CardGrid").then((m) => ({ default: m.CardGrid })));
 
@@ -60,11 +62,39 @@ export default function SupplementDatabase({ prices = {} }: Props) {
     visibleColumns, cart.cartItems, view,
   ]);
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 pb-8">
-      <TierLegend />
+  const empty = filters.filtered.length === 0;
+  const allInCart = cart.selectAllState === "all";
+  const canAddAll = filters.filtered.some((x) => x.purchaseUrl);
 
-      <div className="mb-4">
+  const actions = (
+    <div className="flex items-center gap-2 shrink-0">
+      {canAddAll && (
+        <button
+          type="button"
+          className={`w-11 h-9 inline-flex items-center justify-center rounded-[var(--radius-md)] border transition-colors focus-ring ${
+            allInCart
+              ? "bg-sage-500/15 border-sage-400/45 text-sage-300"
+              : "bg-surface-800 border-surface-border-strong text-ink-soft hover:text-ink hover:border-surface-500"
+          }`}
+          onClick={cart.handleSelectAll}
+          aria-pressed={allInCart}
+          aria-label={allInCart ? "Remove all shown supplements from cart" : "Add all shown supplements to cart"}
+          title={allInCart ? "Remove all from cart" : "Add all to cart"}
+        >
+          {allInCart ? <CartCheckIcon size={20} /> : <CartPlusIcon size={20} />}
+        </button>
+      )}
+      <div className="hidden md:flex items-center gap-2">
+        {view === "table" && <ColumnToggles visibleColumns={visibleColumns} toggleColumn={toggleColumn} />}
+        <ViewToggle view={view} onChange={setView} />
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={`max-w-7xl mx-auto px-4 sm:px-6 ${cart.cartItems.size > 0 ? "pb-32" : "pb-12"}`}>
+      {/* Controls stay pinned on phones so search and tiers are always a thumb away */}
+      <div className="max-md:sticky max-md:top-0 z-30 -mx-4 px-4 py-3 bg-surface-900/90 backdrop-blur-md md:mx-0 md:px-0 md:pt-0 md:pb-5 md:bg-transparent md:backdrop-blur-none">
         <FilterBar
           search={filters.search}
           setSearch={filters.setSearch}
@@ -83,48 +113,67 @@ export default function SupplementDatabase({ prices = {} }: Props) {
           categories={filters.categories}
           schedules={filters.schedules}
           conditions={filters.conditions}
+          activeFilterCount={filters.activeFilterCount}
+          onReset={filters.resetFilters}
+          sortKey={filters.sortKey}
+          onSort={filters.setSort}
+          actions={actions}
         />
-        <div className="mt-2 flex items-center justify-between gap-3 flex-wrap">
-          {view === "table" && (
-            <ColumnToggles visibleColumns={visibleColumns} toggleColumn={toggleColumn} />
-          )}
-          <ViewToggle view={view} onChange={setView} />
-        </div>
       </div>
 
-      <ResultsCount filteredCount={filters.filtered.length} tierFilter={filters.tierFilter} />
+      {!empty && filters.filtered.length !== supplements.length && (
+        <ResultsCount filteredCount={filters.filtered.length} onReset={filters.resetFilters} />
+      )}
 
-      {view === "table" ? (
-        <>
-          <DataTable
-            filtered={filters.filtered}
-            visibleColumns={visibleColumns}
-            sortKey={filters.sortKey}
-            sortDir={filters.sortDir}
-            onSort={filters.handleSort}
-            expandedRow={expandedRow}
-            onToggleExpand={onToggleExpand}
-            cartItems={cart.cartItems}
-            prices={prices}
-            onCartToggle={cart.toggleCartItem}
-            onCartSetQty={cart.setCartQty}
-            selectAllState={cart.selectAllState}
-            onSelectAll={cart.handleSelectAll}
-          />
-          {filters.filtered.length === 0 && (
-            <div className="text-center py-8 text-sage-400/50 font-display">
-              No supplements match your filters. Try adjusting your search criteria.
-            </div>
-          )}
-        </>
+      {empty ? (
+        <div className="panel px-6 py-12 text-center">
+          <p className="font-serif text-lg text-ink mb-1">No matches</p>
+          <p className="text-sm text-ink-muted mb-4">Try a different search or loosen your filters.</p>
+          <button type="button" className="btn btn-secondary btn-sm focus-ring" onClick={filters.resetFilters}>
+            Reset search &amp; filters
+          </button>
+        </div>
       ) : (
-        <Suspense fallback={<div className="text-center py-8 text-sage-400/50 font-display">Loading grid...</div>}>
-          <CardGrid
-            filtered={filters.filtered}
-            cartItems={cart.cartItems}
-            onCartToggle={cart.toggleCartItem}
-          />
-        </Suspense>
+        <>
+          {/* Phones always get the list; grid is a single column there, so it adds nothing */}
+          <div className="md:hidden">
+            <MobileList
+              filtered={filters.filtered}
+              expandedRow={expandedRow}
+              onToggleExpand={onToggleExpand}
+              cartItems={cart.cartItems}
+              prices={prices}
+              onCartToggle={cart.toggleCartItem}
+              onCartSetQty={cart.setCartQty}
+            />
+          </div>
+          <div className="hidden md:block">
+            {view === "table" ? (
+              <DataTable
+                filtered={filters.filtered}
+                visibleColumns={visibleColumns}
+                sortKey={filters.sortKey}
+                sortDir={filters.sortDir}
+                onSort={filters.handleSort}
+                expandedRow={expandedRow}
+                onToggleExpand={onToggleExpand}
+                cartItems={cart.cartItems}
+                prices={prices}
+                onCartToggle={cart.toggleCartItem}
+                onCartSetQty={cart.setCartQty}
+              />
+            ) : (
+              <Suspense fallback={<div className="text-center py-8 text-ink-muted">Loading…</div>}>
+                <CardGrid
+                  filtered={filters.filtered}
+                  cartItems={cart.cartItems}
+                  onCartToggle={cart.toggleCartItem}
+                />
+              </Suspense>
+            )}
+          </div>
+          <IconLegend className="mt-4 px-1" />
+        </>
       )}
 
       <CartBar

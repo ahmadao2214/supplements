@@ -15,7 +15,6 @@ interface TableRowProps {
   price?: number;
   onCartToggle: (id: number) => void;
   onCartSetQty: (id: number, qty: number) => void;
-  striped?: boolean;
 }
 
 export const TableRow = React.memo(
@@ -29,7 +28,6 @@ export const TableRow = React.memo(
     price,
     onCartToggle,
     onCartSetQty,
-    striped,
   }: TableRowProps) {
     const visibleCols = allColumns.filter((col) => visibleColumns.has(col.key));
     const colSpan = visibleCols.length + 1;
@@ -37,12 +35,11 @@ export const TableRow = React.memo(
     return (
       <>
         <tr
-          className={`tier-row tier-row-${s.tier}${inCart ? " cart-selected" : ""}${striped ? " tier-row-stripe" : ""} group/row`}
+          className={`data-row${inCart ? " cart-selected" : ""} group/row`}
           onClick={() => onToggleExpand(s.id)}
-          aria-expanded={isExpanded}
         >
           {visibleCols.map((col) => (
-            <td key={col.key} className="px-3 py-2 border-b border-surface-border align-top max-w-[280px] font-display text-sage-200/90">
+            <td key={col.key} className={`py-3 border-b border-surface-border align-middle max-w-[300px] text-sm text-ink-soft ${col.key === "frequency" ? "px-4 w-32 whitespace-nowrap" : ["timeOfDay", "withAdderall"].includes(col.key) ? "px-4 w-24" : "px-4"}`}>
               {col.key === "purchaseUrl" ? (
                 <CartCell
                   suppId={s.id}
@@ -59,13 +56,21 @@ export const TableRow = React.memo(
               )}
             </td>
           ))}
-          <td className="px-3 py-2 border-b border-surface-border text-center w-[50px]">
-            <span
-              className={`inline-flex items-center justify-center w-5 h-5 text-sage-400/40 group-hover/row:text-sage-300 transition-all text-xs ${isExpanded ? "rotate-90" : ""}`}
-              aria-hidden="true"
+          <td className="px-2 py-3 border-b border-surface-border text-center w-12">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center w-8 h-8 rounded-md text-ink-faint group-hover/row:text-ink-soft hover:bg-surface-600 transition-colors focus-ring"
+              aria-expanded={isExpanded}
+              aria-label={`${isExpanded ? "Collapse" : "Expand"} ${s.name} details`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleExpand(s.id);
+              }}
             >
-              ›
-            </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
           </td>
         </tr>
         {isExpanded && <DetailRow supplement={s} colSpan={colSpan} />}
@@ -78,6 +83,5 @@ export const TableRow = React.memo(
     prev.inCart === next.inCart &&
     prev.cartQty === next.cartQty &&
     prev.visibleColumns === next.visibleColumns &&
-    prev.price === next.price &&
-    prev.striped === next.striped
+    prev.price === next.price
 );

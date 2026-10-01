@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react";
 import type { Supplement } from "../../data/supplements";
 import { supplements } from "../../data/supplements";
-import { buildCartUrl, initSupplementMap, extractVariantId } from "../../lib/cart-utils";
+import { buildCartUrl, initSupplementMap } from "../../lib/cart-utils";
+import { formatPrice } from "../../lib/format-utils";
 import { QtyStepperButton } from "../ui/QtyStepperButton";
 
 interface Props {
@@ -26,27 +27,24 @@ export default function SupplementDetail({ supplement: s, price }: Props) {
   if (!s.purchaseUrl) return null;
 
   return (
-    <div className="flex items-center gap-3 flex-wrap">
-      <QtyStepperButton
-        qty={qty}
-        onDecrease={() => setQty(Math.max(1, qty - 1))}
-        onIncrease={() => setQty(qty + 1)}
-        name={s.name}
-      />
-      {price && (
-        <span className="text-sm text-sage-400/70 font-mono font-tabular">
-          ${(price * qty).toFixed(2)}
-        </span>
-      )}
+    <div className="flex flex-wrap items-center gap-3">
+      <div className="flex items-center gap-3 mr-auto">
+        <QtyStepperButton
+          qty={qty}
+          onDecrease={() => setQty(Math.max(1, qty - 1))}
+          onIncrease={() => setQty(qty + 1)}
+          name={s.name}
+        />
+        {price ? (
+          <span className="text-base font-semibold text-ink font-mono font-tabular">{formatPrice(price * qty)}</span>
+        ) : null}
+      </div>
       <button
-        className={`px-5 py-2 rounded-xl text-sm font-semibold font-display transition-all focus-ring ${
-          added
-            ? "bg-safe/20 text-safe border border-safe/30"
-            : "bg-sage-600 text-white hover:bg-sage-500 hover:shadow-glow-sage"
-        }`}
+        type="button"
+        className={`btn w-full sm:w-auto focus-ring ${added ? "btn-selected" : "btn-primary"}`}
         onClick={handleAddToCart}
       >
-        {added ? "✓ Opening Swanson..." : "Buy on Swanson"}
+        {added ? "✓ Opening Swanson…" : "Buy on Swanson ↗"}
       </button>
     </div>
   );

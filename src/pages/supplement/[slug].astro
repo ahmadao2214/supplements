@@ -3,20 +3,8 @@ import Layout from "../../layouts/Layout.astro";
 import SupplementDetail from "../../components/supplements/SupplementDetail";
 import { supplements, type Supplement } from "../../data/supplements";
 import { getRelatedSupplements } from "../../lib/supplement-utils";
-import {
-  classifyAdderall,
-  classifySchedule,
-  classifyTimeOfDay,
-  classifyMeals,
-  getAdderallEmoji,
-  getAdderallLabel,
-  getScheduleEmoji,
-  getTimeLabel,
-  getTimeEmoji,
-  getMealLabel,
-  getMealEmoji,
-} from "../../lib/format-utils";
-import { tierLabels, tierDescriptions } from "../../lib/constants";
+import { classifyMeals, getMealLabel } from "../../lib/format-utils";
+import { TierLabel, AdderallLabel, ScheduleLabel, TimeLabel, MealLabel } from "../../components/ui/SupplementBadges";
 
 export function getStaticPaths() {
   return supplements.map((s) => ({
@@ -31,9 +19,6 @@ interface Props {
 
 const { supplement: s } = Astro.props;
 const related = getRelatedSupplements(s, 4);
-const adderallType = classifyAdderall(s.withAdderall);
-const schedCls = classifySchedule(s.schedule);
-const timeType = classifyTimeOfDay(s.timeOfDay);
 const mealType = classifyMeals(s.withMeals);
 
 // Fetch price for this supplement
@@ -53,160 +38,102 @@ if (s.purchaseUrl) {
   } catch { /* graceful fallback */ }
 }
 
-const mealLabel = getMealLabel(mealType);
-const mealEmoji = getMealEmoji(mealType);
-const timeLabel = getTimeLabel(timeType);
-const timeEm = getTimeEmoji(timeType);
+// Show the raw text under a label only when it adds information
+const mealNote = mealType && s.withMeals !== getMealLabel(mealType) ? s.withMeals : null;
 ---
 
-<Layout title={`${s.name} — ADHD Supplement Database`} description={`${s.name}: ${s.treats}. ${s.benefits}`}>
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6">
-    <!-- Back link -->
-    <a href="/" class="inline-flex items-center gap-1.5 text-sm text-sage-400/60 hover:text-cyan-400 transition-colors font-display mb-6 focus-ring">
-      ← Back to Database
+<Layout title={`${s.name} — ADHD Supplements`} description={`${s.name}${s.form ? ` (${s.form})` : ""}: ${s.treats}. ${s.benefits}`}>
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8 pb-12">
+    <a href="/" class="inline-flex items-center gap-1.5 min-h-11 -ml-1 px-1 text-sm text-ink-muted hover:text-ink transition-colors focus-ring">
+      <span aria-hidden="true">←</span> All supplements
     </a>
 
-    <!-- Hero -->
-    <div class="relative overflow-hidden rounded-xl bg-surface-800 border border-surface-border mb-6">
-      <div class={`h-1.5 ${s.tier === 1 ? 'bg-tier1' : s.tier === 2 ? 'bg-tier2' : 'bg-tier3'}`}></div>
-      <div class="p-6">
-        <div class="flex items-start justify-between gap-4 flex-wrap mb-3">
-          <div>
-            <h1 class="text-2xl sm:text-3xl font-display font-bold text-sage-200 tracking-tight mb-1">
-              {s.name}
-            </h1>
-            <span class="text-sm text-sage-400/60 font-display">{s.category}</span>
-          </div>
-          <div class="flex gap-2 shrink-0">
-            <span class={`badge badge-tier${s.tier}`}>T{s.tier} {tierLabels[s.tier]}</span>
-            <span class={`badge badge-${schedCls}`}>{getScheduleEmoji(s.schedule)} {s.schedule}</span>
-          </div>
-        </div>
+    <header class="mt-2 mb-6">
+      <h1 class="font-serif text-[2rem] leading-tight sm:text-5xl font-semibold">{s.name}</h1>
+      {s.form && <p class="mt-1 text-lg text-ink-muted">{s.form}</p>}
+      <p class="mt-5 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-soft">
+        <TierLabel supplement={s} />
+        <span class="text-ink-faint"> — </span>
+        <span class="font-body">{s.tierReason}</span>
+      </p>
+    </header>
 
-        <!-- Tier reason -->
-        <div class="text-sm text-sage-400/70 mb-4 px-3 py-2 bg-cyan-400/5 border-l-3 border-cyan-400 rounded-r-lg font-display">
-          <strong class="text-cyan-400">Why {tierLabels[s.tier]}:</strong> {s.tierReason}
-        </div>
-
-        <!-- Cart action (React island) -->
+    {s.purchaseUrl && (
+      <section class="panel p-4 mb-6" aria-label="Buy">
         <SupplementDetail supplement={s} price={price} client:visible />
-      </div>
-    </div>
-
-    <!-- Info Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-      <!-- Dosage -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Dosage</div>
-        <div class="text-sm text-sage-200 font-mono">{s.dosage}</div>
-      </div>
-
-      <!-- Frequency -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Frequency</div>
-        <div class="text-sm text-sage-200 font-display">{s.frequency}</div>
-      </div>
-
-      <!-- Time of Day -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Time of Day</div>
-        <div class="text-sm">
-          {timeType ? (
-            <span class={`badge badge-time-${timeType}`}>{timeEm} {timeLabel}</span>
-          ) : (
-            <span class="text-sage-200">{s.timeOfDay}</span>
-          )}
-        </div>
-        {timeType && s.timeOfDay !== timeLabel && (
-          <div class="text-xs text-sage-400/40 mt-1 font-display">{s.timeOfDay}</div>
-        )}
-      </div>
-
-      <!-- With Meals -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">With Meals?</div>
-        <div class="text-sm">
-          {mealType ? (
-            <span class={`badge badge-meal-${mealType}`}>{mealEmoji} {mealLabel}</span>
-          ) : (
-            <span class="text-sage-200">{s.withMeals}</span>
-          )}
-        </div>
-        {mealType && s.withMeals !== mealLabel && (
-          <div class="text-xs text-sage-400/40 mt-1 font-display">{s.withMeals}</div>
-        )}
-      </div>
-
-      <!-- Adderall Compatibility -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">With Adderall?</div>
-        <div class="text-sm">
-          <span class={`badge badge-${adderallType}`}>{getAdderallEmoji(adderallType)} {getAdderallLabel(adderallType)}</span>
-        </div>
-        <div class="text-xs text-sage-400/60 mt-1 font-display">{s.withAdderall}</div>
-      </div>
-
-      <!-- Schedule -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-1">Schedule</div>
-        <div class="text-sm">
-          <span class={`badge badge-${schedCls}`}>{getScheduleEmoji(s.schedule)} {s.schedule}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Full-width sections -->
-    <div class="space-y-4 mb-6">
-      <!-- Treats -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-2">Treats</div>
-        <div class="flex flex-wrap gap-2">
-          {s.treats.split(",").map((t: string) => (
-            <span class="px-2.5 py-0.5 bg-sage-800/50 text-sage-300 text-xs rounded-full font-display border border-sage-700/50">
-              {t.trim()}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <!-- Benefits -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-2">Benefits</div>
-        <p class="text-sm text-sage-200/80 font-body leading-relaxed">{s.benefits}</p>
-      </div>
-
-      <!-- Side Effects -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-2">Side Effects</div>
-        <p class="text-sm text-sage-200/80 font-body leading-relaxed">{s.sideEffects}</p>
-      </div>
-
-      <!-- Notes -->
-      <div class="bg-surface-800 border border-surface-border rounded-xl p-4">
-        <div class="text-xs text-sage-400/50 font-display uppercase tracking-wider mb-2">Notes</div>
-        <p class="text-sm text-sage-200/80 font-body leading-relaxed">{s.notes}</p>
-      </div>
-    </div>
-
-    <!-- Related Supplements -->
-    {related.length > 0 && (
-      <div>
-        <h2 class="text-lg font-display font-bold text-sage-300 mb-3">Related Supplements</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {related.map((r) => (
-            <a
-              href={`/supplement/${r.slug}`}
-              class="flex items-start gap-3 p-3 bg-surface-800 border border-surface-border rounded-xl hover:border-sage-600/50 hover:shadow-card transition-all focus-ring"
-            >
-              <span class={`badge badge-tier${r.tier} shrink-0 mt-0.5`}>T{r.tier}</span>
-              <div class="min-w-0">
-                <div class="text-sm font-display font-semibold text-sage-200 truncate">{r.name}</div>
-                <div class="text-xs text-sage-400/50 font-display truncate">{r.treats}</div>
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
+      </section>
     )}
-  </div>
+
+    <section class="panel mb-8" aria-labelledby="glance">
+      <h2 id="glance" class="sr-only">At a glance</h2>
+      <dl class="grid grid-cols-2 md:grid-cols-3 text-sm text-ink-soft">
+        <div class="p-4 border-b border-surface-border md:border-r col-span-2 md:col-span-1">
+          <dt class="eyebrow mb-1.5">Dosage</dt>
+          <dd class="font-tabular text-ink">{s.dosage}</dd>
+          {s.dosageNote && <dd class="mt-1 text-xs text-ink-muted">{s.dosageNote}</dd>}
+        </div>
+        <div class="p-4 border-b border-r border-surface-border">
+          <dt class="eyebrow mb-1.5">Frequency</dt>
+          <dd class="text-ink">{s.frequency}</dd>
+        </div>
+        <div class="p-4 border-b border-surface-border">
+          <dt class="eyebrow mb-1.5">Time</dt>
+          <dd><TimeLabel supplement={s} /></dd>
+        </div>
+        <div class="p-4 border-r border-surface-border max-md:border-b">
+          <dt class="eyebrow mb-1.5">Meals</dt>
+          <dd><MealLabel supplement={s} />{mealNote && <span class="block mt-1 text-xs text-ink-muted">{mealNote}</span>}</dd>
+        </div>
+        <div class="p-4 md:border-r border-surface-border max-md:border-b">
+          <dt class="eyebrow mb-1.5">Adderall</dt>
+          <dd><AdderallLabel supplement={s} long />{s.withAdderall !== "Yes — safe to combine" && <span class="block mt-1 text-xs text-ink-muted">{s.withAdderall}</span>}</dd>
+        </div>
+        <div class="p-4 col-span-2 md:col-span-1">
+          <dt class="eyebrow mb-1.5">Schedule</dt>
+          <dd><ScheduleLabel supplement={s} /></dd>
+        </div>
+      </dl>
+    </section>
+
+    <dl class="space-y-6 mb-10 max-w-2xl">
+      <div>
+        <dt class="eyebrow mb-1.5">Helps with</dt>
+        <dd class="text-[0.9375rem] text-ink-soft">{s.treats}</dd>
+      </div>
+      <div>
+        <dt class="eyebrow mb-1.5">Benefits</dt>
+        <dd class="font-body text-[1.0625rem] leading-relaxed text-ink-soft">{s.benefits}</dd>
+      </div>
+      <div>
+        <dt class="eyebrow mb-1.5">Side effects</dt>
+        <dd class="font-body text-[1.0625rem] leading-relaxed text-ink-soft">{s.sideEffects}</dd>
+      </div>
+      <div>
+        <dt class="eyebrow mb-1.5">Notes</dt>
+        <dd class="font-body text-[1.0625rem] leading-relaxed text-ink-soft">{s.notes}</dd>
+      </div>
+    </dl>
+
+    {related.length > 0 && (
+      <section aria-labelledby="related">
+        <h2 id="related" class="eyebrow mb-2">Related</h2>
+        <ul class="panel divide-y divide-surface-border overflow-hidden">
+          {related.map((r) => (
+            <li>
+              <a
+                href={`/supplement/${r.slug}`}
+                class="flex items-center gap-3 px-4 py-3 hover:bg-surface-hover transition-colors focus-ring"
+              >
+                <span class="min-w-0 flex-1">
+                  <span class="block text-sm font-semibold text-ink">{r.name}</span>
+                  {r.form && <span class="block text-xs text-ink-muted">{r.form}</span>}
+                </span>
+                <span class="text-ink-faint" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </main>
 </Layout>

@@ -11,21 +11,23 @@ export const ColumnToggles = React.memo(function ColumnToggles({
   toggleColumn,
 }: ColumnTogglesProps) {
   return (
-    <details className="bg-surface-800 border border-surface-border rounded-xl">
-      <summary className="px-3 py-2 cursor-pointer text-sm text-sage-400/60 select-none hover:text-sage-300 font-display">
-        Configure Columns ({visibleColumns.size} visible)
+    <details className="relative group">
+      <summary className="list-none [&::-webkit-details-marker]:hidden inline-flex items-center gap-1.5 h-9 px-3 rounded-[var(--radius-md)] border border-surface-border bg-surface-800 text-[0.8125rem] font-medium text-ink-muted hover:text-ink cursor-pointer select-none focus-ring">
+        Columns
+        <span className="text-ink-faint font-tabular">{visibleColumns.size}</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="group-open:rotate-180 transition-transform" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
       </summary>
-      <div className="flex flex-wrap gap-x-5 gap-y-2 px-3 pb-3">
+      <div className="absolute right-0 top-full mt-2 z-30 w-64 panel p-2 shadow-elevated animate-fade-in">
         {allColumns.map((col) => (
           <label
             key={col.key}
-            className="flex items-center gap-1.5 text-xs text-sage-400/60 cursor-pointer hover:text-sage-300 font-display"
+            className="flex items-center gap-2.5 px-2 py-1.5 rounded-md text-sm text-ink-soft cursor-pointer hover:bg-surface-700"
           >
             <input
               type="checkbox"
               checked={visibleColumns.has(col.key)}
               onChange={() => toggleColumn(col.key)}
-              className="accent-sage-500"
+              className="check focus-ring"
             />
             {col.label}
           </label>
