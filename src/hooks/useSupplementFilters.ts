@@ -1,12 +1,7 @@
 import { useState, useMemo } from "react";
-import { supplements, conditions, type Supplement } from "../data/supplements";
+import { supplements, conditions } from "../data/supplements";
 import { readParam } from "./useUrlState";
-import { getDoseTimes, type DoseTime } from "../lib/format-utils";
-
-const timeFilterMap: Record<string, DoseTime> = { Morning: "day", Evening: "night", Flexible: "flex" };
-
-type SortKey = keyof Supplement;
-type SortDir = "asc" | "desc";
+import { filterSupplements, sortSupplements, type SortKey, type SortDir } from "../lib/supplement-query";
 
 export function useSupplementFilters() {
   const [search, setSearch] = useState(() => readParam("q", ""));
@@ -56,43 +51,22 @@ export function useSupplementFilters() {
     setScheduleFilter("All");
   };
 
-  const filtered = useMemo(() => {
-    return supplements
-      .filter((s) => {
-        const q = search.toLowerCase();
-        const matchesSearch =
-          !q ||
-          s.name.toLowerCase().includes(q) ||
-          s.form.toLowerCase().includes(q) ||
-          s.treats.toLowerCase().includes(q) ||
-          s.benefits.toLowerCase().includes(q) ||
-          s.category.toLowerCase().includes(q) ||
-          s.tierReason.toLowerCase().includes(q);
-        const matchesCategory = categoryFilter === "All" || s.category === categoryFilter;
-        const matchesCondition =
-          conditionFilter === "All" || s.treats.toLowerCase().includes(conditionFilter.toLowerCase());
-        const matchesAdderall =
-          adderallFilter === "All" ||
-          (adderallFilter === "Safe" && s.withAdderall.toLowerCase().includes("yes")) ||
-          (adderallFilter === "Caution" && s.withAdderall.toLowerCase().includes("cautious")) ||
-          (adderallFilter === "Avoid" &&
-            (s.withAdderall.toLowerCase().includes("no") || s.withAdderall.toLowerCase().includes("separate")));
-        const matchesTime =
-          timeFilter === "All" ||
-          (timeFilterMap[timeFilter]
-            ? getDoseTimes(s).includes(timeFilterMap[timeFilter])
-            : s.timeOfDay.toLowerCase().includes(timeFilter.toLowerCase()));
-        const matchesTier = tierFilter === "All" || s.tier === Number(tierFilter);
-        const matchesSchedule = scheduleFilter === "All" || s.schedule === scheduleFilter;
-        return matchesSearch && matchesCategory && matchesCondition && matchesAdderall && matchesTime && matchesTier && matchesSchedule;
-      })
-      .sort((a, b) => {
-        const aVal = String(a[sortKey]).toLowerCase();
-        const bVal = String(b[sortKey]).toLowerCase();
-        const cmp = aVal.localeCompare(bVal);
-        return sortDir === "asc" ? cmp : -cmp;
-      });
-  }, [search, categoryFilter, conditionFilter, adderallFilter, timeFilter, tierFilter, scheduleFilter, sortKey, sortDir]);
+  const filtered = useMemo(
+    () => sortSupplements(
+      filterSupplements({
+        search,
+        category: categoryFilter,
+        condition: conditionFilter,
+        adderall: adderallFilter,
+        time: timeFilter,
+        tier: tierFilter,
+        schedule: scheduleFilter,
+      }),
+      sortKey,
+      sortDir
+    ),
+    [search, categoryFilter, conditionFilter, adderallFilter, timeFilter, tierFilter, scheduleFilter, sortKey, sortDir]
+  );
 
   return {
     search, setSearch,
