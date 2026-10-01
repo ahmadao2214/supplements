@@ -28,30 +28,29 @@ const adderallText = {
 const timeIcons: Record<DoseTime, typeof SunIcon> = { day: SunIcon, night: MoonIcon, flex: ClockIcon };
 const timeTone: Record<DoseTime, string> = { day: "text-sun", night: "text-moon", flex: "text-ink-muted" };
 
-/** Sun and/or moon for when doses are taken — icons only; the legend and details carry the words. */
+/** One sun/moon/clock per dose — icons only; the legend and details carry the words. */
 export function DoseIcons({ supplement: s, size = 16 }: S & { size?: number }) {
   const times = getDoseTimes(s);
   if (times.length === 0) return null;
   return (
     <span className="inline-flex items-center gap-1" title={s.timeOfDay}>
-      {times.map((t) => {
+      {times.map((t, i) => {
         const Icon = timeIcons[t];
-        return <Icon key={t} size={size} className={timeTone[t]} />;
+        return <Icon key={i} size={size} className={timeTone[t]} />;
       })}
-      <span className="sr-only">{times.map(getTimeLabel).join(" and ")}</span>
+      <span className="sr-only">
+        {s.frequency}, {[...new Set(times)].map(getTimeLabel).join(" and ").toLowerCase()}
+      </span>
     </span>
   );
 }
 
-/** Right-aligned dose timing block used in list rows and cards. */
+/** Right-aligned dose icons (plus any Adderall warning) for list rows and cards. */
 export function DoseSchedule({ supplement: s }: S) {
   return (
-    <span className="flex flex-col items-end gap-1 shrink-0">
-      <span className="flex items-center gap-2">
-        <AdderallFlag supplement={s} />
-        <DoseIcons supplement={s} />
-      </span>
-      <span className="text-xs text-ink-muted whitespace-nowrap">{s.frequency}</span>
+    <span className="flex items-center gap-2 shrink-0">
+      <AdderallFlag supplement={s} />
+      <DoseIcons supplement={s} />
     </span>
   );
 }

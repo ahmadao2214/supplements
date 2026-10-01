@@ -13,7 +13,6 @@ export const tierDescriptions: Record<number, string> = {
 export const DEFAULT_COLS = [
   "name",
   "dosage",
-  "frequency",
   "timeOfDay",
   "withAdderall",
   "purchaseUrl",
